@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = 'dms_backend.User'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend', # default
@@ -54,11 +55,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # our "app"
+    'dms_backend.apps.DmsBackendConfig',
     # Third-Party
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    'guardian'
+    'guardian',
+    'rest_framework_jwt'
 ]
 
 # Configure drf to worj with JWT
