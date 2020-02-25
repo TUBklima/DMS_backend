@@ -54,8 +54,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # our "app"
-    'dms_backend.apps.DmsBackendConfig',
     # Third-Party
     'rest_framework',
     'rest_framework.authtoken',
