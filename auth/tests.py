@@ -14,8 +14,7 @@ class UserTest(APITestCase):
     def setUp(self):
         self.user = User.objects.create_superuser(username='foo', email='foo@baa.de', first_name="foo",
                                                   last_name="baa", password="xxx")
-        User.objects.create_user(username="Bob", password="Bob")
-
+        User.objects.create_user(username="Bob", password="Bob", email="bob@baa.de")
 
     def test_login(self):
         """
@@ -46,5 +45,10 @@ class UserTest(APITestCase):
         url = reverse('users')
         response = self.client.get(url+"?username=foo")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1, msg="Test expects just one user foo")
         self.assertEqual(response.data[0]['username'], 'foo')
+
+    def test_default_is_not_active(self):
+        bob = User.objects.get(username='Bob')
+        self.assertFalse(bob.is_active, msg="New users should be in_active by default")
+        foo = User.objects.get(username='foo')
+        self.assertTrue(foo.is_active, msg="New superusers are active by default") # otherwise we could never lock in the first time
