@@ -1,7 +1,5 @@
 .idea
 venv
 tags
-*.ctags
-*.sqlite3
 *.pyc
 __pycache__/
