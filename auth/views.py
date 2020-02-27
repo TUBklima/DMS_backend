@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from auth.serializers import *
 from auth.models import *
+from auth.filters import UserFilter
 
 
 class UserApi(APIView):
@@ -15,6 +16,7 @@ class UserApi(APIView):
         '''
 
         users = User.objects.all()
-        serializer = UserSerializer(users, many=True)
+        f = UserFilter(request.GET, queryset=users)
+        serializer = UserSerializer(f.qs, many=True)
         return Response(serializer.data)
 

@@ -14,6 +14,8 @@ class UserTest(APITestCase):
     def setUp(self):
         self.user = User.objects.create_superuser(username='foo', email='foo@baa.de', first_name="foo",
                                                   last_name="baa", password="xxx")
+        User.objects.create_user(username="Bob", password="Bob")
+
 
     def test_login(self):
         """
@@ -35,7 +37,14 @@ class UserTest(APITestCase):
 
     def test_list_users(self):
         self.client.force_login(self.user)
-        User.objects.create_user(username="Bob", password="Bob")
         url = reverse('users')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_filter_users(self):
+        self.client.force_login(self.user)
+        url = reverse('users')
+        response = self.client.get(url+"?username=foo")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1, msg="Test expects just one user foo")
+        self.assertEqual(response.data[0]['username'], 'foo')
