@@ -16,11 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from rest_framework_jwt.views import obtain_jwt_token
-from auth import views as auth_views
+#  from auth import views as auth_views
 
 urlpatterns = [
     path('data/', include('data.urls')),
     path('admin/', admin.site.urls),
     path('login/', obtain_jwt_token, name="login"),
-    path('users/', auth_views.UserApi.as_view(), name="users")
+    #  path('users/', auth_views.UserApi.as_view(), name="users")
 ]
