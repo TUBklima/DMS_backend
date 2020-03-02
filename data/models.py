@@ -1,9 +1,12 @@
 #  import datetime
 import uc2data
 import pandas as pd
+import random
+import string
 
 from django.db import models
 from django.utils import timezone
+from django.conf import settings
 #  from auth.serializers import UserSerializer
 
 tab01 = pd.read_csv('http://www.uc2-program.org/uc2_table_A1.csv', sep="\t").reset_index()
@@ -36,6 +39,9 @@ class DataFile(models.Model):
 
     def __str__(self):
         return self.input_name
+
+    def cf_check(self):
+        return {'ok': True}
 
     def upload(self):
         self.upload_date = timezone.now()
@@ -75,12 +81,13 @@ class UC2Observation(DataFile):
     creation_time = models.CharField('creation_time', max_length=23, default=timezone.now)
     origin_time = models.CharField(max_length=23, default=timezone.now)
 
-    def upload(self):
+    def uc2_check(self):
         ds = uc2data.Dataset(self.file_id)
         ds.uc2_check()
         if ds.check_result.errors:
             print("File is not compatible with UC2 data standard.")
             print(ds.check_result.errors)
+            return False
 
 
 class Variable(models.Model):
@@ -92,3 +99,17 @@ class Variable(models.Model):
 
     def __str__(self):
         return self.variable_name
+
+
+def get_file_info(new_filename):
+    f = DataFile()
+    opened = open(settings.BASE_DIR + "/" + f.path.field.generate_filename(f.path.instance, new_filename))
+    var = {}
+    for line in opened:
+        key, val = line.partition("=")[::2]
+        var[key.strip()] = val.strip()
+    return var
+
+
+def make_path():
+    return ''.join(random.choice(string.ascii_lowercase) for i in range(6))+'.nc'
