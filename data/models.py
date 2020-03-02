@@ -21,8 +21,9 @@ LICENCE = [("test", "Choose a License"), ("UC2", "[UC]2 Open Licence")]
 class DataFile(models.Model):
     input_name = models.CharField(max_length=200)
     file_id = models.CharField(max_length=200)
+    file_path = models.FileField(max_length=200, null=False, unique=True, upload_to='files/')
     keywords = models.CharField(max_length=200)
-    #  uploader = models.ManyToManyField(UserSerializer)
+    uploader = models.ManyToManyField("User")
     author = models.CharField(max_length=200)
     source = models.CharField(max_length=200)
     institution = models.CharField(max_length=200, choices=INSTITUTION, default=None)
@@ -30,6 +31,8 @@ class DataFile(models.Model):
     upload_date = models.DateTimeField('upload_date', default=timezone.now)
     download_count = models.PositiveIntegerField(default=0)
     licence = models.CharField(max_length=200, default="[UC]2 Open Licence")
+    is_invalid = models.BooleanField(null=False, default=False)
+    is_old = models.BooleanField(null=False, default=False)
 
     def __str__(self):
         return self.input_name
@@ -85,6 +88,7 @@ class Variable(models.Model):
     long_name = models.CharField(max_length=200)
     standard_name = models.CharField(max_length=200)
     data_file = models.ForeignKey('UC2Observation', on_delete=models.SET_NULL, null=True)
+    dependencies = models.ForeignKey("DataFile", )
 
     def __str__(self):
         return self.variable_name
