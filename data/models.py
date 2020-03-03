@@ -3,11 +3,12 @@ import uc2data
 import pandas as pd
 import random
 import string
+from pathlib import Path
 
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
-#  from auth.serializers import UserSerializer
+from django.contrib.auth.models import User
 
 tab01 = pd.read_csv('http://www.uc2-program.org/uc2_table_A1.csv', sep="\t").reset_index()
 tab02 = pd.read_csv('http://www.uc2-program.org/uc2_table_A2.csv', sep="\t").reset_index()
@@ -19,14 +20,22 @@ DATA_CONTENT = [daco for daco in zip(tab02.iloc[:, 0], tab02.loc[:, 'data_conten
 INSTITUTION = [inst for inst in zip(tab03.iloc[:, 0], tab03.loc[:, 'institution'])]
 SITE = [site for site in zip(tab04.iloc[:, 0], tab04.loc[:, 'site'])]
 LICENCE = [("test", "Choose a License"), ("UC2", "[UC]2 Open Licence")]
+DATA_TYPE = [
+    ("", "What data type do you want to upload?"),
+    ("UC2Obs", "UC2Observation"),
+    ("UC2Mod", "UC2Model"),
+    ("sta_dr", "Static Driver"),
+    ("dyn_in", "Dynamic Driver"),
+]
 
 
 class DataFile(models.Model):
+    data_type = models.CharField(max_length=200, choices=DATA_TYPE, default=None)
     input_name = models.CharField(max_length=200)
     file_id = models.CharField(max_length=200)
-    file_path = models.FileField(max_length=200, null=False, unique=True, upload_to='files/')
+    file_path = models.FileField(max_length=200, null=False, unique=True, upload_to='files/', default=settings.BASE_DIR)
     keywords = models.CharField(max_length=200)
-    uploader = models.ManyToManyField("User")
+    uploader = models.ManyToManyField(User)
     author = models.CharField(max_length=200)
     source = models.CharField(max_length=200)
     institution = models.CharField(max_length=200, choices=INSTITUTION, default=None)
@@ -45,6 +54,9 @@ class DataFile(models.Model):
 
     def upload(self):
         self.upload_date = timezone.now()
+
+    def download(self):
+        self.download_count += 1
 
     class Meta:
         abstract = True
@@ -94,8 +106,7 @@ class Variable(models.Model):
     variable_name = models.CharField(max_length=32)
     long_name = models.CharField(max_length=200)
     standard_name = models.CharField(max_length=200)
-    data_file = models.ForeignKey('UC2Observation', on_delete=models.SET_NULL, null=True)
-    dependencies = models.ForeignKey("DataFile", )
+    data_file = models.ForeignKey(UC2Observation, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.variable_name
@@ -103,11 +114,13 @@ class Variable(models.Model):
 
 def get_file_info(new_filename):
     f = DataFile()
-    opened = open(settings.BASE_DIR + "/" + f.path.field.generate_filename(f.path.instance, new_filename))
+    base_dir = Path(settings.BASE_DIR)
+    to_open = base_dir / f.file_path.field.generate_filename(f.file_path.instance, new_filename)
     var = {}
-    for line in opened:
-        key, val = line.partition("=")[::2]
-        var[key.strip()] = val.strip()
+    with to_open.open() as opened:
+        for line in opened:
+            key, val = line.partition("=")[::2]
+            var[key.strip()] = val.strip()
     return var
 
 
