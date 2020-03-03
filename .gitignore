@@ -1,5 +1,5 @@
 .idea
 venv
 tags
-.ctags
-
+*.pyc
+__pycache__/
