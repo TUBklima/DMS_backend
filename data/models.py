@@ -1,5 +1,5 @@
 #  import datetime
-import uc2data
+import uc2data as uc2
 import pandas as pd
 import random
 import string
@@ -17,7 +17,7 @@ tab04 = pd.read_csv('http://www.uc2-program.org/uc2_table_A4.csv', sep="\t").res
 
 VARIABLE = [vari for vari in zip(tab01.iloc[:, 0], tab01.loc[:, 'variable'])]
 DATA_CONTENT = [daco for daco in zip(tab02.iloc[:, 0], tab02.loc[:, 'data_content'])]
-INSTITUTION = [inst for inst in zip(tab03.iloc[:, 0], tab03.loc[:, 'institution'])]
+INSTITUTION = [inst for inst in zip(tab03.loc[:, 'institution'], tab03.loc[:, 'institution'])]
 SITE = [site for site in zip(tab04.iloc[:, 0], tab04.loc[:, 'site'])]
 LICENCE = [("test", "Choose a License"), ("UC2", "[UC]2 Open Licence")]
 DATA_TYPE = [
@@ -79,7 +79,7 @@ class UC2Observation(DataFile):
     feature_type = models.CharField(max_length=32, choices=FEATURE_TYPE, default=None)
     data_content = models.CharField(max_length=200)
     version = models.PositiveSmallIntegerField(default=1)
-    acronym = models.CharField(max_length=10, default="Ups")
+    acronym = models.CharField(max_length=10, default="HUBgeo")
     # spatial atts
     location = models.CharField(max_length=3, default="B")
     site = models.CharField(max_length=12, default=None)
@@ -93,6 +93,10 @@ class UC2Observation(DataFile):
     creation_time = models.CharField('creation_time', max_length=23, default=timezone.now)
     origin_time = models.CharField(max_length=23, default=timezone.now)
 
+    def __str__(self):
+        # TODO remove version from def __str__ as it will be part of filename_autogen
+        return self.file_id + '_' + str(self.version)
+
     def uc2_check(self):
         ds = uc2data.Dataset(self.file_id)
         ds.uc2_check()
@@ -100,6 +104,18 @@ class UC2Observation(DataFile):
             print("File is not compatible with UC2 data standard.")
             print(ds.check_result.errors)
             return False
+
+    def get_file_info(self, new_filename):
+        base_dir = Path(settings.BASE_DIR)
+        to_open = base_dir / f.file_path.field.generate_filename(f.file_path.instance, new_filename)
+        with uc2.Dataset(to_open) as f:
+            f.ds.uc2_check()
+            if f.ds.check_result:
+                raise Exception
+            attrs = f.ds.attrs
+            data_vars = f.ds.data_vars
+        return var
+
 
 
 class Variable(models.Model):
@@ -110,18 +126,6 @@ class Variable(models.Model):
 
     def __str__(self):
         return self.variable_name
-
-
-def get_file_info(new_filename):
-    f = DataFile()
-    base_dir = Path(settings.BASE_DIR)
-    to_open = base_dir / f.file_path.field.generate_filename(f.file_path.instance, new_filename)
-    var = {}
-    with to_open.open() as opened:
-        for line in opened:
-            key, val = line.partition("=")[::2]
-            var[key.strip()] = val.strip()
-    return var
 
 
 def make_path():
