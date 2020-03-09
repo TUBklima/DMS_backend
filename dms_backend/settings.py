@@ -59,18 +59,17 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'guardian',
-    'rest_framework_jwt',
     # our stuff
     'auth.apps.AuthConfig'
 ]
 
-# Configure drf to worj with JWT
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
