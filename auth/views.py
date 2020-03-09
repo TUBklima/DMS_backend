@@ -25,14 +25,25 @@ class UserApi(APIView):
         serializer = UserSerializer(f.qs, many=True)
         return Response(serializer.data)
 
+    def patch(self, request):
+        if 'id' in request.data:
+            user = User.objects.filter(id=id)
+        else:
+            user = request.user
+
+        us = UserSerializer(user, data=request.data, partial=True)
+        if not us.is_valid():
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=us.errors)
+        us.save()
+        return Response(us.data)
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def request_account(request):
-    serializer = UserSerializer(data=request.data)
-    if not serializer.is_valid():
-        return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
-    new_user = User.objects.create_user(**serializer.validated_data)
+    us = UserSerializer(data=request.data)
+    if not us.is_valid():
+        return Response(status=status.HTTP_400_BAD_REQUEST, data=us.errors)
+    new_user = User.objects.create_user(**us.validated_data)
     out = UserSerializer(new_user)  # serialize again to include id
     mail.send_mail("Account request on klima-dms",
                    "Your account was created successfully and is waiting for activation by an administrator.",
