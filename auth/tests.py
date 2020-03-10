@@ -84,7 +84,6 @@ class UserTest(APITestCase):
                                         'username': 'balu',
                                         'password': 'xxx',
                                         'email': 'balu@foo.de',
-                                        'is_active': True
                                     }),
                                     content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
