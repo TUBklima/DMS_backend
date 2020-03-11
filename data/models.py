@@ -1,5 +1,5 @@
 #  import datetime
-import uc2data as uc2
+import uc2data
 import pandas as pd
 import random
 import string
@@ -79,7 +79,7 @@ class UC2Observation(DataFile):
     feature_type = models.CharField(max_length=32, choices=FEATURE_TYPE, default=None)
     data_content = models.CharField(max_length=200)
     version = models.PositiveSmallIntegerField(default=1)
-    acronym = models.CharField(max_length=10, default="HUBgeo")
+    acronym = models.CharField(max_length=10, default=None)
     # spatial atts
     location = models.CharField(max_length=3, default="B")
     site = models.CharField(max_length=12, default=None)
@@ -97,26 +97,6 @@ class UC2Observation(DataFile):
         # TODO remove version from def __str__ as it will be part of filename_autogen
         return self.file_id + '_' + str(self.version)
 
-    def uc2_check(self):
-        ds = uc2data.Dataset(self.file_id)
-        ds.uc2_check()
-        if ds.check_result.errors:
-            print("File is not compatible with UC2 data standard.")
-            print(ds.check_result.errors)
-            return False
-
-    def get_file_info(self, new_filename):
-        base_dir = Path(settings.BASE_DIR)
-        to_open = base_dir / f.file_path.field.generate_filename(f.file_path.instance, new_filename)
-        with uc2.Dataset(to_open) as f:
-            f.ds.uc2_check()
-            if f.ds.check_result:
-                raise Exception
-            attrs = f.ds.attrs
-            data_vars = f.ds.data_vars
-        return var
-
-
 
 class Variable(models.Model):
     variable_name = models.CharField(max_length=32)
@@ -130,3 +110,18 @@ class Variable(models.Model):
 
 def make_path():
     return ''.join(random.choice(string.ascii_lowercase) for i in range(6))+'.nc'
+
+
+def get_file_info(new_filename):
+    base_dir = Path(settings.BASE_DIR)
+    to_open = base_dir / DataFile.file_path.field.generate_filename(DataFile.file_path.instance, new_filename)
+    with uc2data.Dataset(to_open) as f:
+        if "UC2" in DataFile.data_type:
+            f.uc2_check()
+            if len(f.check_result.warnings):
+                has_warning = True
+            if len(f.check_result.errors):
+                raise Exception(f.ds.check_result.errors)
+        return f.ds.attrs, f.ds.data_vars, has_warning
+
+

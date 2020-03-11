@@ -4,8 +4,11 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 
+app_name = 'data'
 urlpatterns = [
-    path("", views.index, name="index"),
+    path('', views.IndexView.as_view(), name='index'),
+    path('', views.upload, name='upload'),
+    path('<int:file_id>/detail/', views.detail, name='detail'),
 ]
 
 # for development: Access to files via URL
