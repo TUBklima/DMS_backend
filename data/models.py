@@ -8,7 +8,7 @@ from pathlib import Path
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 tab01 = pd.read_csv('http://www.uc2-program.org/uc2_table_A1.csv', sep="\t").reset_index()
 tab02 = pd.read_csv('http://www.uc2-program.org/uc2_table_A2.csv', sep="\t").reset_index()
@@ -29,16 +29,21 @@ DATA_TYPE = [
 ]
 
 
+def get_sentinel_user():
+    return get_user_model().objects.get_or_create(username='deleted')[0]
+
+
 class DataFile(models.Model):
-    data_type = models.CharField(max_length=200, choices=DATA_TYPE, default=None)
-    input_name = models.CharField(max_length=200)
-    file_id = models.CharField(max_length=200)
+    data_type = models.CharField(max_length=200, choices=DATA_TYPE, default="trajectory")
+    input_name = models.CharField(max_length=200, default="test")
+    file_id = models.CharField(max_length=200, default="0")
     file_path = models.FileField(max_length=200, null=False, unique=True, upload_to='files/', default=settings.BASE_DIR)
-    keywords = models.CharField(max_length=200)
-    uploader = models.ManyToManyField(User)
-    author = models.CharField(max_length=200)
-    source = models.CharField(max_length=200)
-    institution = models.CharField(max_length=200, choices=INSTITUTION, default=None)
+    keywords = models.CharField(max_length=200, default="None")
+    #  TODO: Will this work with the custom auth model?
+    uploader = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, default=None, null=True)
+    author = models.CharField(max_length=200, default="test")
+    source = models.CharField(max_length=200, default="test")
+    institution = models.CharField(max_length=200, default="Not specified")
     version = models.PositiveIntegerField(default=1)
     upload_date = models.DateTimeField('upload_date', default=timezone.now)
     download_count = models.PositiveIntegerField(default=0)
@@ -48,6 +53,9 @@ class DataFile(models.Model):
 
     def __str__(self):
         return self.input_name
+
+    def __file_path__(self):
+        return self.file_path.value_from_object(self)
 
     def cf_check(self):
         return {'ok': True}
@@ -76,18 +84,18 @@ class UC2Observation(DataFile):
         ("IOP04", "IOP04"),
         ("VALR01", "VALR01"),
     ]
-    feature_type = models.CharField(max_length=32, choices=FEATURE_TYPE, default=None)
-    data_content = models.CharField(max_length=200)
+    feature_type = models.CharField(max_length=32, default="Not set")
+    data_content = models.CharField(max_length=200, default="test")
     version = models.PositiveSmallIntegerField(default=1)
     acronym = models.CharField(max_length=10, default="Ups")
     # spatial atts
     location = models.CharField(max_length=3, default="B")
-    site = models.CharField(max_length=12, default=None)
+    site = models.CharField(max_length=12, default="Not set")
     #  origin_x = models.FloatField()
     #  origin_y = models.FloatField()
     #  origin_z = models.FloatField()
-    origin_lon = models.FloatField(default=None)
-    origin_lat = models.FloatField(default=None)
+    origin_lon = models.FloatField(default=0.)
+    origin_lat = models.FloatField(default=0.)
     # time atts
     campaign = models.CharField(max_length=6, choices=CAMPAIGN, default=CAMPAIGN[0])
     creation_time = models.CharField('creation_time', max_length=23, default=timezone.now)
@@ -116,12 +124,10 @@ def get_file_info(new_filename):
     f = DataFile()
     base_dir = Path(settings.BASE_DIR)
     to_open = base_dir / f.file_path.field.generate_filename(f.file_path.instance, new_filename)
-    var = {}
-    with to_open.open() as opened:
-        for line in opened:
-            key, val = line.partition("=")[::2]
-            var[key.strip()] = val.strip()
-    return var
+    opened = uc2data.Dataset(to_open)
+    attrs = opened.ds.attrs
+    variables = opened.ds.variables
+    return attrs, variables
 
 
 def make_path():
