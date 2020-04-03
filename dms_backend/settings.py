@@ -25,7 +25,7 @@ SECRET_KEY = "zpy%3y%d27c0@wg+b_7!6uvaf^t6zztt@fz!7euop1yz7ip0!4"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["testserver", "127.0.0.1"]
 AUTH_USER_MODEL = "custom_auth.User"
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",  # default
@@ -34,7 +34,7 @@ AUTHENTICATION_BACKENDS = (
 
 # Allow requests from localhost / frontend
 CORS_ORIGIN_ALLOW_ALL = False
-CORS_ORIGIN_WHITELIST = ["http://localhost:8080"]
+CORS_ORIGIN_WHITELIST = ["http://localhost:8080", "http://127.0.0.1:8000"]
 
 # Even without CSRF
 CSRF_TRUSTED_ORIGINS = [
@@ -70,6 +70,12 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.BasicAuthentication",
     ),
+    "TEST_REQUEST_DEFAULT_FORMAT": "multipart",
+    "TEST_REQUEST_RENDERER_CLASSES": [
+        "rest_framework.renderers.MultiPartRenderer",
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.TemplateHTMLRenderer",
+    ],
 }
 
 MIDDLEWARE = [
@@ -139,3 +145,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = "/static/"
+
+# FILE Folder
+
+MEDIA_URL = "/files/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "files")

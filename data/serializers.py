@@ -25,10 +25,15 @@ class BaseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DataFile
-        fields = "__all__"
+        fields = (
+            "data_type",
+            "file",
+            "version",
+        )
 
 
 class UC2Serializer(BaseSerializer):
     class Meta:
         model = UC2Observation
+        # fields = ("file", "campaign", "creation_time")
         fields = "__all__"
