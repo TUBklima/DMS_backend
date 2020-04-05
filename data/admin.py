@@ -1,6 +1,15 @@
 from django.contrib import admin
 from .models import UC2Observation
 
-admin.site.register(UC2Observation)
+from . import models
 
-# Register your models here.
+
+class UC2Admin(admin.ModelAdmin):
+    model = models.UC2Observation
+    list_display = ('file', )
+
+    def create(self, obj):
+        return obj.file
+
+
+admin.site.register(UC2Observation)
