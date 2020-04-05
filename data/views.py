@@ -1,23 +1,24 @@
-import uc2data
 import os
 
-from django.http import FileResponse, HttpResponse, JsonResponse
+import uc2data
 from django.core.files.storage import FileSystemStorage
-from django.utils import timezone, dateformat
-
+from django.http import FileResponse
+from django.utils import dateformat, timezone
 from rest_framework import renderers, status
+from rest_framework.decorators import action
 from rest_framework.exceptions import ParseError
+from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.permissions import IsAuthenticated  # , AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.decorators import action
-from rest_framework.parsers import FormParser, MultiPartParser, FileUploadParser
-from rest_framework.permissions import IsAuthenticated  # , AllowAny
 
-from .models import UC2Observation, make_path
-from .serializers import UC2Serializer, BaseSerializer
 from dms_backend.settings import MEDIA_ROOT
-import xarray as xr
-import netCDF4 as nc
+
+from .models import UC2Observation
+from .serializers import UC2Serializer
+
+
+#  import xarray as xr
 
 
 class PassthroughRenderer(renderers.BaseRenderer):
@@ -122,7 +123,7 @@ class FileView(APIView):
             return True
 
     def _toggle_old_entry(self, request):
-        """ Queries for previous entry with the same input (file) name and switches urns it, if found. 
+        """ Queries for previous entry with the same input (file) name and switches urns it, if found.
         Returns False if previous version of file is not in database"""
 
         version = int(request.data["version"])

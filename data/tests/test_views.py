@@ -1,15 +1,15 @@
 # test_views.py
 
-import pytest
 import os
-from auth.models import User
-from rest_framework.test import APITestCase
-from rest_framework import status
-from rest_framework.test import APIRequestFactory
 
-#  from mixer.backend.django import mixer
-from .. import views
+import pytest
+from rest_framework import status
+from rest_framework.test import APIRequestFactory, APITestCase
+
+from auth.models import User
 from dms_backend import settings
+
+from .. import views
 
 pytestmark = pytest.mark.django_db
 
