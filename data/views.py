@@ -1,24 +1,15 @@
-import os
-
 import uc2data
-from django.core.files.storage import FileSystemStorage
 from django.http import FileResponse
 from django.utils import dateformat, timezone
 from rest_framework import renderers, status
 from rest_framework.decorators import action
-from rest_framework.exceptions import ParseError
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from dms_backend.settings import MEDIA_ROOT
-
 from .models import UC2Observation
 from .serializers import UC2Serializer
-
-
-#  import xarray as xr
 
 
 class PassthroughRenderer(renderers.BaseRenderer):
