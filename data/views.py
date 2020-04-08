@@ -56,14 +56,45 @@ class ApiResult:
 class FileView(APIView):
     permission_classes = (IsAuthenticated,)
     parser_classes = (MultiPartParser, FormParser)
-    # model = UC2Observation
-    # queryset = UC2Observation.objects.all()
-    # serializer_class = BaseSerializer
 
-    def post(self, request, format=None, *args, **kwargs):
-        response_data = {}
-        if "file" not in request.data:
-            raise ParseError("Empty content")
+    def post(self, request):
+
+        required_tags = {"file", "file_type"}
+        possible_tags = {"ignore_errors", "ignore_warnings"}
+        allowed_file_types = {"UC2"}
+
+        user_input = request.data
+        result = ApiResult()
+
+        ####
+        # parse user request
+        ####
+
+        if not required_tags.issubset(user_input):
+            missing = ",".join(required_tags - set(user_input))
+            result.errors.append("Missing the required tags: " + missing)
+            return Response(data=result.to_dict(), status=status.HTTP_400_BAD_REQUEST)
+
+        if user_input['file_type'] not in allowed_file_types:
+            result.errors.append(user_input['file_type'] + " is not supported. Supported types are "
+                                 + ",".join(allowed_file_types))
+            return Response(data=result.to_dict(), status=status.HTTP_400_BAD_REQUEST)
+
+        ignore_errors = 'ignore_errors' in user_input and user_input['ignore_errors']
+        if ignore_errors and not request.user.is_superuser:
+            result.errors.append("Only a superuser can ignore errors.")
+            return Response(data=result.to_dict(), status=status.HTTP_400_BAD_REQUEST)
+
+        ignore_warnings = 'ignore_warnings' in user_input and user_input['ignore_warnings']
+
+        extra_tags = set(user_input) - (required_tags | possible_tags)
+        if extra_tags:
+            result.warnings.append("The request contains the following unrecognized tags: " + ",".extra_tags + "."
+                                   "This tags are ignored.")
+        ####
+        # check the file
+        ####
+
         f = request.data["file"]
         try:
             fs = FileSystemStorage()
