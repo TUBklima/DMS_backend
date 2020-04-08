@@ -37,6 +37,7 @@ class ApiResult:
     def __init__(self):
         self.errors = []
         self.warnings = []
+        self.result = []
 
     @property
     def status(self):
@@ -58,7 +59,8 @@ class ApiResult:
     def to_dict(self):
         return {'status': self.status,
                 "errors": self.errors,
-                "warnings": self.warnings}
+                "warnings": self.warnings,
+                "result": self.result}
 
 
 class FileView(APIView):
@@ -148,22 +150,19 @@ class FileView(APIView):
         new_entry["has_warnings"] = result.has_warnings
         new_entry['has_errors'] = result.has_errors
 
-            serializer = UC2Serializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                response_data["file_saved"] = 1
-                os.remove(tempfile_path)
-                response_data["tempfile_deleted"] = 1
-                response_data["serializer"] = serializer.data
-                if int(request.data["version"]) > 1:
-                    self._toggle_old_entry(request)
-                    response_data["marked_old_version"] = 1
-                return Response(response_data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=400)
-        except:
-            return Response(
-                {"Unknown Error": "Please contact administrator"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+        ####
+        # serialize and save
+        ####
+
+        serializer = UC2Serializer(data=new_entry)
+        if serializer.is_valid():
+            #  toggle old version before saving -> in case of error we don't pollute the db
+            if version > 1:
+                self._toggle_old_entry(standart_name, version)
+
+            serializer.save()
+            result.result = serializer.data
+            return Response(result.to_dict(), status=status.HTTP_201_CREATED)
 
         result.errors.extend(serializer.errors)
         return Response(result.to_dict(), status=status.HTTP_400_BAD_REQUEST)
@@ -189,17 +188,17 @@ class FileView(APIView):
             else:
                 return False, 1
 
-    def _toggle_old_entry(self, request):
+
+    def _toggle_old_entry(self, standart_name, version):
         """ Queries for previous entry with the same input (file) name and switches urns it, if found.
         Returns False if previous version of file is not in database"""
 
-        version = int(request.data["version"])
-        input_name = request.data["input_name"]
-        print("getting old version")
-        prev_entry = UC2Observation.objects.filter(input_name=input_name).filter(version=(version - 1)).get(is_old=0)
-        print("setting 'is_old' attribute")
-        prev_entry.is_old = 1  # switch "is_old" attribute in previous entry for file
-        prev_entry.save()
+        input_name = "".join(standart_name.split("-")[:-1]) #  ignore version in standart_name
+
+        prev_entry = UC2Observation.objects.filter(input_name__startswith=input_name, version=(version - 1))
+        if prev_entry:
+            prev_entry.is_old = 1  # switch "is_old" attribute in previous entry for file
+            prev_entry.save()
         return True
 
     @action(methods=["get"], detail=True, renderer_classes=(PassthroughRenderer,))
