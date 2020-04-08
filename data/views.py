@@ -96,6 +96,17 @@ class FileView(APIView):
         ####
 
         f = request.data["file"]
+        # This line works because FILE_UPLOAD_HANDLERS is set to TemporaryFileUploadHandler. However
+        # if the setting changes this line will break. It would be better to modify the request, but this is complicate
+        # with ApiView and post. See https://docs.djangoproject.com/en/3.0/topics/http/file-uploads/#modifying-upload-handlers-on-the-fly
+        # So we use this warning instead
+        uc2ds = uc2data.Dataset(f.temporary_file_path())
+        uc2ds.uc2_check()
+        check_result = uc2ds.check_result.to_dict(sort=True)
+        result.errors.extend(check_result['root']['ERROR'])
+        result.warnings.extend(check_result['root']['WARNING'])
+
+        standart_name = uc2ds.filename
         try:
             fs = FileSystemStorage()
             tempfile_path = os.path.join(MEDIA_ROOT, "temp", f.name)

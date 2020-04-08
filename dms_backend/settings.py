@@ -146,7 +146,11 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-# FILE Folder
+# always store files in TmpFolder. See data/views/FileView before changing. It might break !!!
+FILE_UPLOAD_HANDLERS = [
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler'
+]
 
+# FILE Folder
 MEDIA_URL = "/files/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "files")
