@@ -8,7 +8,7 @@ from rest_framework import renderers, status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ParseError
 from rest_framework.parsers import FormParser, MultiPartParser
-from rest_framework.permissions import IsAuthenticated  # , AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -31,6 +31,26 @@ class PassthroughRenderer(renderers.BaseRenderer):
 
     def render(self, data, accepted_media_type=None, renderer_context=None):
         return data
+
+
+class ApiResult:
+    def __init__(self):
+        self.errors = []
+        self.warnings = []
+
+    @property
+    def status(self):
+        if self.errors:
+            return uc2data.ResultCode.ERROR
+        elif self.warnings:
+            return uc2data.ResultCode.WARNING
+        else:
+            return uc2data.ResultCode.OK
+
+    def to_dict(self):
+        return {'status': self.status,
+                "errors": self.errors,
+                "warnings": self.warnings}
 
 
 class FileView(APIView):
