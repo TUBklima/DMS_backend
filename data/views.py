@@ -47,6 +47,14 @@ class ApiResult:
         else:
             return uc2data.ResultCode.OK
 
+    @property
+    def has_errors(self):
+        return self.status == uc2data.ResultCode.ERROR
+
+    @property
+    def has_warnings(self):
+        return self.status == uc2data.ResultCode.WARNING
+
     def to_dict(self):
         return {'status': self.status,
                 "errors": self.errors,
@@ -108,42 +116,37 @@ class FileView(APIView):
 
         standart_name = uc2ds.filename
         try:
-            fs = FileSystemStorage()
-            tempfile_path = os.path.join(MEDIA_ROOT, "temp", f.name)
-            fs.save(os.path.join("temp", f.name), f)
-            response_data["tempfile_saved"] = 1
-            data = uc2data.Dataset(tempfile_path)
-            data.uc2_check()
-            response_data["uc2check"] = 1
-            error_code = 0
-            for i in data.check_result:
-                for j in data.check_result[i]:
-                    if data.check_result[i][j].result[0].result == uc2data.ResultCode.ERROR:
-                        error_code = 1  # error code 1 for check error
-                    if data.check_result[i][j].result[0].result == uc2data.ResultCode.WARNING:
-                        error_code = 2  # error code 2 for check warnings
-            if error_code:
-                os.remove(tempfile_path)
-                response_data["tempfile_deleted"] = 1
-                response_data["uc2resultcode"] = 1
-                return Response(response_data, status=status.HTTP_406_NOT_ACCEPTABLE)
-            elif error_code == 2:
-                response_data["uc2resultcode"] = 2
-                return Response(response_data, status=status.HTTP_300_MULTIPLE_CHOICES)
-            response_data["uc2resultcode"] = 0
-            for key in data.ds.attrs:
-                if key in UC2Serializer().data.keys():
-                    request.data[key] = data.ds.attrs[key]
+            version = int(uc2ds.ds.attrs['version'])
+        except Exception:
+            result.errors.insert(0, "Can not access the required version attribute")
 
-            request.data["input_name"] = data.filename
-            request.data["upload_date"] = dateformat.format(timezone.now(), "Y-m-d H:i:s")
-            request.data["uploader"] = request.user.pk
-            request.data["is_old"] = 0
-            request.data["is_invalid"] = 0
+        version_ok, expected_version = self._is_version_valid(standart_name, version)
+        if not version_ok:
+            result.errors.insert(0, "The given version number does not match the accepted version number")
 
-            if not self._is_version_valid(request):
-                response_data["is_version_valid"] = 0
-                return Response(response_data, status=status.HTTP_406_NOT_ACCEPTABLE)
+        if result.status == uc2data.ResultCode.ERROR and not ignore_errors:
+            return Response(data=result.to_dict(), status=status.HTTP_406_NOT_ACCEPTABLE)
+        elif result.status == uc2data.ResultCode.WARNING and not ignore_warnings:
+            return Response(data=result.to_dict(), status=status.HTTP_300_MULTIPLE_CHOICES)
+
+        ####
+        # set attributes
+        ####
+
+        new_entry = {}
+        for key in uc2ds.ds.attrs:
+            if key in UC2Serializer().data.keys():
+                new_entry[key] = uc2ds.ds.attrs[key]
+
+        new_entry["input_name"] = standart_name
+        new_entry["version"] = version
+
+        new_entry["upload_date"] = dateformat.format(timezone.now(), "Y-m-d H:i:s")
+        new_entry["uploader"] = request.user.pk
+        new_entry["is_old"] = 0
+        new_entry["is_invalid"] = 0
+        new_entry["has_warnings"] = result.has_warnings
+        new_entry['has_errors'] = result.has_errors
 
             serializer = UC2Serializer(data=request.data)
             if serializer.is_valid():
@@ -162,27 +165,29 @@ class FileView(APIView):
                 {"Unknown Error": "Please contact administrator"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-    def _is_version_valid(self, request):
+        result.errors.extend(serializer.errors)
+        return Response(result.to_dict(), status=status.HTTP_400_BAD_REQUEST)
+
+    def _is_version_valid(self, standart_name, version):
         """
         check validity of request version by querying for database entries.
         Returns True/False
         """
 
-        print("querying versions")
-        version = int(request.data["version"])
-        input_name = request.data["input_name"]
-        if version != 1:
-            if UC2Observation.objects.filter(input_name=input_name).filter(
-                version=(version - 1)
-            ) and not UC2Observation.objects.filter(input_name=input_name).filter(version=version):
-                print("version seems to be valid")
-                return True
-        if UC2Observation.objects.filter(input_name=input_name).filter(version=version):
-            print("version already exists")
-            return False
+        input_name = "".join(standart_name.split("-")[:-1]) #  ignore version in standart_name
+
+        all_versions = UC2Observation.objects.filter(input_name__startswith=input_name).order_by('-version')
+        last_version = all_versions.first()  # find the maximum version
+        if last_version:
+            if last_version+1 == version:
+                return True, version
+            else:
+                return False, last_version+1
         else:
-            print("version seems to be valid")
-            return True
+            if version == 1:
+                return True, version
+            else:
+                return False, 1
 
     def _toggle_old_entry(self, request):
         """ Queries for previous entry with the same input (file) name and switches urns it, if found.
