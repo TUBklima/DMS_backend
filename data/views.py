@@ -54,6 +54,14 @@ class ApiResult:
                 "result": self.result}
 
 
+def to_bool(input):
+    if input.upper() in ["TRUE", "0"]:
+        return True
+    elif input.upper() in ['FALSE', "1"]:
+        return False
+    else:
+        raise ValueError
+
 class FileView(APIView):
     permission_classes = (IsAuthenticated,)
     parser_classes = (MultiPartParser, FormParser)
@@ -81,12 +89,27 @@ class FileView(APIView):
                                  + ",".join(allowed_file_types))
             return Response(data=result.to_dict(), status=status.HTTP_400_BAD_REQUEST)
 
-        ignore_errors = 'ignore_errors' in user_input and user_input['ignore_errors']
+        ignore_errors = False
+        if 'ignore_errors' in user_input:
+            # ignore errors is set and we can try to convert it to a bool
+            try:
+                ignore_errors = to_bool(user_input['ignore_errors'])
+            except ValueError:
+                result.warnings.append("Can not parse ignore_errors field. " + user_input['ignore_errors'] +
+                                       " is not recognized as bool. The field is ignored.")
+
         if ignore_errors and not request.user.is_superuser:
             result.errors.append("Only a superuser can ignore errors.")
             return Response(data=result.to_dict(), status=status.HTTP_400_BAD_REQUEST)
 
-        ignore_warnings = 'ignore_warnings' in user_input and user_input['ignore_warnings']
+        ignore_warnings = False
+        if 'ignore_warnings' in user_input:
+            # ignore warnings is set and we can try to convert it to a bool
+            try:
+                ignore_warnings = to_bool(user_input['ignore_warnings'])
+            except ValueError:
+                result.warnings.append("Can not parse ignore_warnings field. " + user_input['ignore_warnings'] +
+                                       " is not recognized as bool. The field is ignored")
 
         extra_tags = set(user_input) - (required_tags | possible_tags)
         if extra_tags:
@@ -107,15 +130,21 @@ class FileView(APIView):
         result.errors.extend(check_result['root']['ERROR'])
         result.warnings.extend(check_result['root']['WARNING'])
 
-        standart_name = uc2ds.filename
+        # We don't add errors here because it is already checked by th uc2checker
         try:
             version = int(uc2ds.ds.attrs['version'])
         except Exception:
-            result.errors.insert(0, "Can not access the required version attribute")
+            version = None
 
-        version_ok, expected_version = self._is_version_valid(standart_name, version)
-        if not version_ok:
-            result.errors.insert(0, "The given version number does not match the accepted version number")
+        try:
+            standart_name = uc2ds.filename
+        except Exception:
+            standart_name = None
+
+        if standart_name and version:
+            version_ok, expected_version = self._is_version_valid(standart_name, version)
+            if not version_ok:
+                result.errors.insert(0, "The given version number does not match the accepted version number")
 
         if result.status == uc2data.ResultCode.ERROR and not ignore_errors:
             return Response(data=result.to_dict(), status=status.HTTP_406_NOT_ACCEPTABLE)
