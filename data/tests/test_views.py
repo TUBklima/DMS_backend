@@ -2,21 +2,22 @@
 
 import os
 
-import pytest
 from rest_framework import status
 from rest_framework.test import APIRequestFactory, APITestCase
 
 from auth.models import User
 from dms_backend import settings
 
-from .. import views
+import uc2data
+from pathlib import Path
 
-pytestmark = pytest.mark.django_db
+from .. import views
 
 
 class TestFileView(APITestCase):
+    file_dir = Path(__file__).parent / "test_files"
+
     def setUp(self):
-        self.tearDown()
         self.user = User.objects.create_superuser(username="TestUser", email="test@user.com", password="test")
         self.view = views.FileView.as_view()
         self.factory = APIRequestFactory()
@@ -25,29 +26,37 @@ class TestFileView(APITestCase):
         assert self.client.post("/uc2upload/").status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_post_bad_file(self):
-        testfile = os.path.join(settings.MEDIA_ROOT, "bad_format_file.nc")
-        req = self.factory.post(
-            "/uc2upload/",
-            data={"file": open(testfile, "rb"), "version": 1, "data_type": "UC2Observation"},
-            # content_type="multipart/form-data",
-        )
+        testfile_path = self.file_dir / Path("bad_format_file.nc")
+        with open(testfile_path, "rb") as testfile:
+            req = self.factory.post(
+                "/uc2upload/",
+                data={"file": testfile,
+                      "file_type": "UC2",
+                      "ignore_warnings": False,
+                      "ignore_errors": False
+                      }
+            )
         req.user = self.user
         resp = self.view(req)
 
-        assert resp.data["uc2resultcode"] == 1, "error code should be 1, uc2check should have resulted in errors"
-        assert status.HTTP_406_NOT_ACCEPTABLE == resp.status_code, "Should reject because of bad uc2check!"
+        self.assertEqual(resp.data['status'], uc2data.ResultCode.ERROR, "uc2check should result in errors")
+        self.assertEqual(resp.status_code, status.HTTP_406_NOT_ACCEPTABLE)
 
     def test_post_good_file(self):
-        testfile = os.path.join(settings.MEDIA_ROOT, "good_format_file.nc")
-        req = self.factory.post(
-            "/uc2upload/",
-            data={"file": open(testfile, "rb"), "version": 1, "data_type": "UC2Observation"},
-            # content_type="multipart/form-data",
-        )
+
+        testfile_path = self.file_dir / Path("good_format_file.nc")
+
+        with open(testfile_path, "rb") as testfile:
+            req = self.factory.post(
+                "/uc2upload/",
+                data={"file": testfile,
+                      "file_type": "UC2"
+                      },
+            )
         req.user = self.user
         resp = self.view(req)
 
-        assert resp.data["uc2resultcode"] in [0, 2], "error code should be 0 or 2 (warnings)"
-        assert status.HTTP_201_CREATED == resp.status_code, "Should create a database entry!"
+        self.assertEqual(resp.data['status'], uc2data.ResultCode.OK)
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED, "Should create a database entry!")
         resp2 = self.view(req)
-        assert status.HTTP_406_NOT_ACCEPTABLE == resp2.status_code, "Entry should already exist"
+        self.assertEqual(resp2.status_code, status.HTTP_406_NOT_ACCEPTABLE, "Entry should already exist")
