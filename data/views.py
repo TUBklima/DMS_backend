@@ -160,13 +160,18 @@ class FileView(APIView):
             if key in UC2Serializer().data.keys():
                 new_entry[key] = uc2ds.ds.attrs[key]
 
+        new_entry['data_type'] = user_input['file_type']
+        new_entry['file'] = request.data['file']
+        if new_entry['keywords'] == '':
+            new_entry['keywords'] = None
+
         new_entry["input_name"] = standart_name
         new_entry["version"] = version
 
         new_entry["upload_date"] = dateformat.format(timezone.now(), "Y-m-d H:i:s")
         new_entry["uploader"] = request.user.pk
-        new_entry["is_old"] = 0
-        new_entry["is_invalid"] = 0
+        new_entry["is_old"] = False
+        new_entry["is_invalid"] = False
         new_entry["has_warnings"] = result.has_warnings
         new_entry['has_errors'] = result.has_errors
 
@@ -193,15 +198,15 @@ class FileView(APIView):
         Returns True/False
         """
 
-        input_name = "".join(standart_name.split("-")[:-1])  # ignore version in standart_name
+        input_name = "-".join(standart_name.split("-")[:-1])  # ignore version in standart_name
 
         max_version = UC2Observation.objects.filter(input_name__startswith=input_name).order_by('version').last()
 
         if max_version:
-            if max_version+1 == version:
+            if max_version.version+1 == version:
                 return True, version
             else:
-                return False, max_version+1
+                return False, max_version.version+1
         else:
             #  no matching input_name is found -> should be version one
             if version == 1:
