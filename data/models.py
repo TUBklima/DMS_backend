@@ -19,7 +19,7 @@ class DataFile(models.Model):
     data_type = models.CharField(max_length=200)
     input_name = models.CharField(max_length=200)
     file = models.FileField(null=False, blank=False)
-    keywords = models.CharField(max_length=200, default="None")
+    keywords = models.CharField(max_length=200, null=True, blank=False)
     #  TODO: Will this work with the custom auth model?
     uploader = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, default=None, null=True)
     author = models.CharField(max_length=200, default="test")
@@ -31,6 +31,8 @@ class DataFile(models.Model):
     licence = models.CharField(max_length=200, default="[UC]2 Open Licence")
     is_invalid = models.BooleanField(null=False, default=False)
     is_old = models.BooleanField(null=False, default=False)
+    has_warnings = models.BooleanField(null=False, default=False)
+    has_errors = models.BooleanField(null=False, default=False)
 
     def __str__(self):
         return self.input_name
