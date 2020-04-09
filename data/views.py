@@ -164,16 +164,17 @@ class FileView(APIView):
         Returns True/False
         """
 
-        input_name = "".join(standart_name.split("-")[:-1]) #  ignore version in standart_name
+        input_name = "".join(standart_name.split("-")[:-1])  # ignore version in standart_name
 
-        all_versions = UC2Observation.objects.filter(input_name__startswith=input_name).order_by('-version')
-        last_version = all_versions.first()  # find the maximum version
-        if last_version:
-            if last_version+1 == version:
+        max_version = UC2Observation.objects.filter(input_name__startswith=input_name).order_by('version').last()
+
+        if max_version:
+            if max_version+1 == version:
                 return True, version
             else:
-                return False, last_version+1
+                return False, max_version+1
         else:
+            #  no matching input_name is found -> should be version one
             if version == 1:
                 return True, version
             else:
@@ -184,7 +185,7 @@ class FileView(APIView):
         """ Queries for previous entry with the same input (file) name and switches urns it, if found.
         Returns False if previous version of file is not in database"""
 
-        input_name = "".join(standart_name.split("-")[:-1]) #  ignore version in standart_name
+        input_name = "".join(standart_name.split("-")[:-1])  #  ignore version in standart_name
 
         prev_entry = UC2Observation.objects.filter(input_name__startswith=input_name, version=(version - 1))
         if prev_entry:
