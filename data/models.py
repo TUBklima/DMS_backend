@@ -10,6 +10,8 @@ from django.utils import timezone, dateformat
 from django.conf import settings
 from django.contrib.auth import get_user_model
 
+tab01 = pd.read_csv('http://www.uc2-program.org/uc2_table_A1.csv', sep="\t").reset_index()
+
 
 def get_sentinel_user():
     return get_user_model().objects.get_or_create(username="deleted")[0]
@@ -42,6 +44,15 @@ class DataFile(models.Model):
         abstract = True
 
 
+class Variable(models.Model):
+    variable = models.CharField(max_length=32, unique=True)
+    long_name = models.CharField(max_length=200)
+    standard_name = models.CharField(max_length=200, blank=True)
+
+    def __str__(self):
+        return self.variable_name
+
+
 class UC2Observation(DataFile):
     featureType = models.CharField(max_length=32)
     data_content = models.CharField(max_length=200)
@@ -50,25 +61,17 @@ class UC2Observation(DataFile):
     # spatial atts
     location = models.CharField(max_length=3)
     site = models.CharField(max_length=12)
-    #  origin_x = models.FloatField()
-    #  origin_y = models.FloatField()
-    #  origin_z = models.FloatField()
     origin_lon = models.FloatField(default=0.0)
     origin_lat = models.FloatField(default=0.0)
     # time atts
     campaign = models.CharField(max_length=6)
     creation_time = models.CharField(max_length=23)
     origin_time = models.CharField(max_length=23)
+    # variables
+    variables = models.ManyToManyField(Variable)
 
-
-class Variable(models.Model):
-    variable_name = models.CharField(max_length=32)
-    long_name = models.CharField(max_length=200)
-    standard_name = models.CharField(max_length=200)
-    data_file = models.ForeignKey(UC2Observation, on_delete=models.SET_NULL, null=True)
-
-    def __str__(self):
-        return self.variable_name
+    class Meta:
+        ordering = ['featureType', ]
 
 
 def get_file_info(new_filename):
