@@ -18,11 +18,11 @@ class TestFileView(APITestCase):
     def setUp(self):
         self.tearDown()
         self.user = User.objects.create_superuser(username="TestUser", email="test@user.com", password="test")
-        self.view = views.FileView.as_view()
+        self.view = views.FileView.as_view({"post": "create"})
         self.factory = APIRequestFactory()
 
     def test_that_authentication_is_required(self):
-        assert self.client.post("/uc2upload/").status_code == status.HTTP_401_UNAUTHORIZED
+        self.assertEqual(self.client.post("/uc2upload/").status_code, status.HTTP_401_UNAUTHORIZED, "Should require Authentication")
 
     def test_post_bad_file(self):
         testfile = os.path.join(settings.MEDIA_ROOT, "bad_format_file.nc")
@@ -34,8 +34,8 @@ class TestFileView(APITestCase):
         req.user = self.user
         resp = self.view(req)
 
-        assert resp.data["uc2resultcode"] == 1, "error code should be 1, uc2check should have resulted in errors"
-        assert status.HTTP_406_NOT_ACCEPTABLE == resp.status_code, "Should reject because of bad uc2check!"
+        self.assertEqual(resp.data["uc2resultcode"], 1, "error code should be 1, uc2check should have resulted in errors")
+        self.assertEqual(status.HTTP_406_NOT_ACCEPTABLE, resp.status_code, "Should reject because of bad uc2check!")
 
     def test_post_good_file(self):
         testfile = os.path.join(settings.MEDIA_ROOT, "good_format_file.nc")
