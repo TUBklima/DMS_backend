@@ -1,5 +1,8 @@
+import ipdb
+
 import os
 import uc2data
+import pandas as pd
 
 from django.core.files.storage import FileSystemStorage
 from django.http import FileResponse
@@ -14,8 +17,8 @@ from rest_framework import viewsets
 
 from dms_backend.settings import MEDIA_ROOT
 
-from .models import UC2Observation
-from .serializers import UC2Serializer
+from .models import UC2Observation, Variable
+from .serializers import UC2Serializer, VariableSerializer
 
 
 #  import xarray as xr
@@ -48,12 +51,10 @@ class ApiResult:
             return uc2data.ResultCode.OK
 
     def to_dict(self):
-        return {'status': self.status,
-                "errors": self.errors,
-                "warnings": self.warnings}
+        return {"status": self.status, "errors": self.errors, "warnings": self.warnings}
 
 
-class FileView(APIView):
+class FileView(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     parser_classes = (MultiPartParser, FormParser)
     # model = UC2Observation
@@ -61,9 +62,10 @@ class FileView(APIView):
     serializer_class = UC2Serializer
 
     def create(self, request, format=None, *args, **kwargs):
-        response_data = {"status": True,
-                         "msg": {},
-                         }
+        response_data = {
+            "status": True,
+            "msg": {},
+        }
         if "file" not in request.data:
             raise ParseError("Empty content")
         f = request.data["file"]
@@ -93,8 +95,20 @@ class FileView(APIView):
             return Response(response_data, status=status.HTTP_300_MULTIPLE_CHOICES)
         response_data["uc2resultcode"] = 0
 
+        for var in data.data_vars:
+            if not Variable.objects.filter(variable=var).exists():
+                new_var = {
+                    "variable": data.data_vars[var].__str__(),
+                    "long_name": data.data_vars[var].long_name,
+                    "standard_name": data.data_vars[var].standard_name,
+                }
+                serializer = VariableSerializer(data=new_var)
+                if serializer.is_valid():
+                    serializer.save()
+        request.data["variables"] = Variable.objects.filter(variable=data.data_vars).values_list('pk', flat=True)
+
         for key in data.ds.attrs:
-            if key in UC2Serializer().data.keys():
+            if key in UC2Serializer().data.keys() and not "variables":
                 request.data[key] = data.ds.attrs[key]
 
         request.data["input_name"] = data.filename
