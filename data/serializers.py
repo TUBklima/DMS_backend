@@ -2,7 +2,7 @@
 
 from rest_framework import serializers
 
-from data.models import DataFile, UC2Observation
+from data.models import DataFile, UC2Observation, Variable
 
 
 class BaseSerializer(serializers.ModelSerializer):
@@ -35,5 +35,11 @@ class BaseSerializer(serializers.ModelSerializer):
 class UC2Serializer(BaseSerializer):
     class Meta:
         model = UC2Observation
+        # fields = ("file", "campaign", "creation_time")
+        fields = "__all__"
+
+class VariableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Variable
         # fields = ("file", "campaign", "creation_time")
         fields = "__all__"

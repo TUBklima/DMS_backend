@@ -44,6 +44,15 @@ class DataFile(models.Model):
         abstract = True
 
 
+class Variable(models.Model):
+    variable = models.CharField(max_length=32)
+    long_name = models.CharField(max_length=200)
+    standard_name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.variable
+
+
 class UC2Observation(DataFile):
     featureType = models.CharField(max_length=32)
     data_content = models.CharField(max_length=200)
@@ -61,16 +70,8 @@ class UC2Observation(DataFile):
     campaign = models.CharField(max_length=6)
     creation_time = models.CharField(max_length=23)
     origin_time = models.CharField(max_length=23)
-
-
-class Variable(models.Model):
-    variable_name = models.CharField(max_length=32)
-    long_name = models.CharField(max_length=200)
-    standard_name = models.CharField(max_length=200)
-    data_file = models.ForeignKey(UC2Observation, on_delete=models.SET_NULL, null=True)
-
-    def __str__(self):
-        return self.variable_name
+    # variables
+    variables = models.ManyToManyField(Variable, null=True)
 
 
 def get_file_info(new_filename):
