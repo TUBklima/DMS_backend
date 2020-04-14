@@ -11,6 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from .filters import UC2Filter
 from .models import UC2Observation, Variable
 from .serializers import UC2Serializer, VariableSerializer
 
@@ -217,12 +218,17 @@ class FileView(APIView):
             return resp
         return Response("Patch method not available for" + json.dumps(request.data), status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    def get(self, request):
-        kwargs = dict(request.GET)
-        entries = UC2Observation.objects.filter(**kwargs)
-        serializer = UC2Serializer(entries, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    @staticmethod
+    def get(request):
+        '''
+        :param request:
+        :return: A json representation of search query
+        '''
 
+        uc2_entries = UC2Observation.objects.all()
+        f = UC2Filter(request.GET, queryset=uc2_entries)
+        serializer = UC2Serializer(f.qs, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @staticmethod
     def _set_invalid(request):
@@ -280,11 +286,11 @@ class FileView(APIView):
             prev_entry.save()
         return True
 
-    @action(methods=["get"], detail=True, renderer_classes=(PassthroughRenderer,))
-    def download(self, *args, **kwargs):
-        instance = self.get_object()
-        file_handle = instance.file_path.open()
-
-        response = FileResponse(file_handle)
-
-        return response
+    #@action(methods=["get"], detail=True, renderer_classes=(PassthroughRenderer,))
+    #def download(self, *args, **kwargs):
+    #    instance = self.get_object()
+    #    file_handle = instance.file_path.open()
+#
+     #   response = FileResponse(file_handle)
+#
+    #    return response

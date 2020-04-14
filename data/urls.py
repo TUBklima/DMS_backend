@@ -11,7 +11,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     # path('', include(router.urls)),
     #  path('', views.FileView.as_view(), name='uc2upload'),
-    path('uc2upload/', views.FileView.as_view(), name='uc2upload')
+    path('uc2upload/', views.FileView.as_view(), name='uc2upload'),
+    path('uc2list/', views.FileView.as_view(), name='uc2list'),
 ]
 
 # for development: Access to files via URL

@@ -68,6 +68,7 @@ class UC2Observation(DataFile):
     origin_lat = models.FloatField(default=0.0)
     # time atts
     campaign = models.CharField(max_length=6)
+    # FIXME: These should be to datetime fields
     creation_time = models.CharField(max_length=23)
     origin_time = models.CharField(max_length=23)
     # variables

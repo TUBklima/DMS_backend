@@ -54,6 +54,14 @@ class TestFileView(APITestCase):
             req.user = self.user
         return req
 
+    def _search_request(self, data, user=None):
+        req = self.factory.get("/uc2upload/", data=data)
+        if user:
+            req.user = user
+        else:
+            req.user = self.user
+        return req
+
     def test_that_authentication_is_required(self):
         assert self.client.post("/uc2upload/").status_code == status.HTTP_401_UNAUTHORIZED
 
@@ -149,3 +157,25 @@ class TestFileView(APITestCase):
         req = self._patch_request(data)
         resp = self.view(req)
         self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED, 'Method should only is_invalid should be patchable')
+
+    def test_search_query(self):
+        #  check if data base has entries
+        if not UC2Observation.objects.all().exists():
+            self.test_post_good_file()
+        p = self.file_dir / "good_format_file.nc"
+        uc2ds = uc2data.Dataset(p)
+        fname = uc2ds.filename
+        entry = UC2Observation.objects.get(file_standard_name=fname)
+
+        # query one field
+        data = {'acronym': uc2ds.ds.acronym}
+        req = self._search_request(data)
+        resp = self.view(req)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK, 'Search query should succeed')
+
+        # query one field
+        data = {'acronym': "not_in_db"}
+        req = self._search_request(data)
+        resp = self.view(req)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK, 'Search query should succeed')
+        #  FIXME: Search query should be empty, but it isnt
