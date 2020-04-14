@@ -231,11 +231,11 @@ class FileView(APIView):
         """ Queries for previous entry with the same input (file) name and switches urns it, if found.
         Returns False if previous version of file is not in database"""
 
-        input_name = "".join(standart_name.split("-")[:-1])  #  ignore version in standart_name
+        input_name = "-".join(standart_name.split("-")[:-1])  #  ignore version in standart_name
 
-        prev_entry = UC2Observation.objects.filter(input_name__startswith=input_name, version=(version - 1))
-        if prev_entry:
-            prev_entry.is_old = 1  # switch "is_old" attribute in previous entry for file
+        prev_entries = UC2Observation.objects.filter(input_name__startswith=input_name, version=(version - 1))
+        for prev_entry in prev_entries:
+            prev_entry.is_old = True  # switch "is_old" attribute in previous entries for file
             prev_entry.save()
         return True
 
