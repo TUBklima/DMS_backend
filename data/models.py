@@ -70,7 +70,7 @@ class UC2Observation(DataFile):
     creation_time = models.CharField(max_length=23)
     origin_time = models.CharField(max_length=23)
     # variables
-    variables = models.ManyToManyField(Variable)
+    variables = models.ManyToManyField(Variable, related_name='data_files', blank=True)
 
     class Meta:
         ordering = ['featureType', ]

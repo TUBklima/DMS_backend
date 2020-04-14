@@ -62,7 +62,7 @@ def to_bool(input):
         raise ValueError
 
 
-class FileView(viewsets.ModelViewSet):
+class FileView(APIView):
     permission_classes = (IsAuthenticated,)
     parser_classes = (MultiPartParser, FormParser)
 
