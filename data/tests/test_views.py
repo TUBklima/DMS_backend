@@ -5,7 +5,7 @@ import os
 from django.core.handlers.wsgi import WSGIRequest
 from rest_framework import status
 from rest_framework.test import APIRequestFactory, APITestCase
-
+from data.models import UC2Observation
 from auth.models import User
 from dms_backend import settings
 
@@ -61,7 +61,31 @@ class TestFileView(APITestCase):
         self.assertEqual(resp.data['status'], uc2data.ResultCode.OK)
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED, "Should create a database entry!")
 
+    def test_version(self):
+        req = self._get_request("good_format_file_v2.nc")
+        resp = self.view(req)
+
+        self.assertEqual(resp.data['status'], uc2data.ResultCode.ERROR)
+        self.assertEqual(resp.status_code, status.HTTP_406_NOT_ACCEPTABLE, "Version 2 with no version 1 should be an error")
+
+        req = self._get_request("good_format_file.nc")
+        resp = self.view(req)
+        self.assertEqual(resp.data['status'], uc2data.ResultCode.OK)
+
         req2 = self._get_request("good_format_file.nc")
         resp2 = self.view(req2)
-        self.assertEqual(resp2.status_code, status.HTTP_406_NOT_ACCEPTABLE, "Entry should already exist")
+        self.assertEqual(resp2.status_code, status.HTTP_406_NOT_ACCEPTABLE, "Posting the same version again is an error")
+
+        req = self._get_request("good_format_file_v2.nc")
+        resp = self.view(req)
+
+        self.assertEqual(resp.data['status'], uc2data.ResultCode.OK)
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED, "V1 exist so we can upload v2")
+
+        p = self.file_dir / "good_format_file.nc"
+        uc2ds = uc2data.Dataset(p)
+        fname = uc2ds.filename
+
+        old_version = UC2Observation.objects.get(input_name=fname)
+        self.assertTrue(old_version.is_old)
 
