@@ -1,4 +1,5 @@
 import uc2data
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import FileResponse
 from django.utils import dateformat, timezone
 from rest_framework import renderers, status
@@ -205,6 +206,25 @@ class FileView(APIView):
 
         result.errors.extend(serializer.errors)
         return Response(result.to_dict(), status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request):
+        if int(request.data['is_invalid']):
+            resp = self._set_invalid(request)
+            return resp
+        return Response("Patch for not available", status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    @staticmethod
+    def _set_invalid(request):
+        try:
+            entry = UC2Observation.objects.get(file_standard_name=request.data['file_standard_name'])
+        except ObjectDoesNotExist:
+            return Response("Object does not exist in data base.", status=status.HTTP_404_NOT_FOUND)
+
+        data = {'is_invalid': int(request.data['is_invalid'])}
+        serializer = UC2Serializer(entry, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+        return Response(entry.file_standard_name + "set as invalid.", status=status.HTTP_205_RESET_CONTENT)
 
     def _is_version_valid(self, standart_name, version):
         """

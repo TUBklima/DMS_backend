@@ -89,3 +89,24 @@ class TestFileView(APITestCase):
         old_version = UC2Observation.objects.get(file_standard_name=fname)
         self.assertTrue(old_version.is_old)
 
+    def test_set_invalid(self, user=None):
+        #  check if data base has entries
+        if not UC2Observation.objects.all().exists():
+            self.test_post_good_file()
+        p = self.file_dir / "good_format_file.nc"
+        uc2ds = uc2data.Dataset(p)
+        fname = uc2ds.filename
+        entry = UC2Observation.objects.get(file_standard_name=fname)
+        self.assertFalse(entry.is_invalid, "Entry should not be invalid before update")
+
+        data = {'is_invalid': 1, 'file_standard_name': fname}
+        req = self.factory.patch("/uc2upload/", data=data)
+        if user:
+            req.user = user
+        else:
+            req.user = self.user
+        resp = self.view(req)
+        self.assertEqual(resp.status_code, status.HTTP_205_RESET_CONTENT, 'Should update content')
+
+        entry = UC2Observation.objects.get(file_standard_name=fname)
+        self.assertTrue(entry.is_invalid, "Entry should be invalid")

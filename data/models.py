@@ -71,7 +71,7 @@ class UC2Observation(DataFile):
     creation_time = models.CharField(max_length=23)
     origin_time = models.CharField(max_length=23)
     # variables
-    variables = models.ManyToManyField(Variable, null=True)
+    variables = models.ManyToManyField(Variable, related_name='datasets')
 
 
 def get_file_info(new_filename):
