@@ -38,6 +38,7 @@ class UC2Serializer(BaseSerializer):
         # fields = ("file", "campaign", "creation_time")
         fields = "__all__"
 
+
 class VariableSerializer(serializers.ModelSerializer):
     class Meta:
         model = Variable

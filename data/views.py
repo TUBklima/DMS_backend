@@ -175,6 +175,8 @@ class FileView(APIView):
         new_entry["has_warnings"] = result.has_warnings
         new_entry['has_errors'] = result.has_errors
 
+        new_entry["variables"] = []
+
         for var in uc2ds.data_vars:
             if not Variable.objects.filter(variable=var).exists():
                 new_var = {
@@ -185,7 +187,7 @@ class FileView(APIView):
                 serializer = VariableSerializer(data=new_var)
                 if serializer.is_valid():
                     serializer.save()
-            new_entry["variables"] = Variable.objects.get(variable=var).id
+            new_entry["variables"].append(Variable.objects.get(variable=var).id)
 
         ####
         # serialize and save
