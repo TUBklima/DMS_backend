@@ -165,7 +165,7 @@ class FileView(APIView):
         if new_entry['keywords'] == '':
             new_entry['keywords'] = None
 
-        new_entry["input_name"] = standart_name
+        new_entry["file_standard_name"] = standart_name
         new_entry["version"] = version
 
         new_entry["upload_date"] = dateformat.format(timezone.now(), "Y-m-d H:i:s")
@@ -214,7 +214,7 @@ class FileView(APIView):
 
         input_name = "-".join(standart_name.split("-")[:-1])  # ignore version in standart_name
 
-        max_version = UC2Observation.objects.filter(input_name__startswith=input_name).order_by('version').last()
+        max_version = UC2Observation.objects.filter(file_standard_name__startswith=input_name).order_by('version').last()
 
         if max_version:
             if max_version.version+1 == version:
@@ -222,7 +222,7 @@ class FileView(APIView):
             else:
                 return False, max_version.version+1
         else:
-            #  no matching input_name is found -> should be version one
+            #  no matching file_standard_name is found -> should be version one
             if version == 1:
                 return True, version
             else:
@@ -235,7 +235,7 @@ class FileView(APIView):
 
         input_name = "-".join(standart_name.split("-")[:-1])  #  ignore version in standart_name
 
-        prev_entries = UC2Observation.objects.filter(input_name__startswith=input_name, version=(version - 1))
+        prev_entries = UC2Observation.objects.filter(file_standard_name__startswith=input_name, version=(version - 1))
         for prev_entry in prev_entries:
             prev_entry.is_old = True  # switch "is_old" attribute in previous entries for file
             prev_entry.save()

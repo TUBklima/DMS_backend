@@ -86,6 +86,6 @@ class TestFileView(APITestCase):
         uc2ds = uc2data.Dataset(p)
         fname = uc2ds.filename
 
-        old_version = UC2Observation.objects.get(input_name=fname)
+        old_version = UC2Observation.objects.get(file_standard_name=fname)
         self.assertTrue(old_version.is_old)
 

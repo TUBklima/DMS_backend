@@ -17,7 +17,7 @@ def get_sentinel_user():
 
 class DataFile(models.Model):
     data_type = models.CharField(max_length=200)
-    input_name = models.CharField(max_length=200)
+    file_standard_name = models.CharField(max_length=200, unique=True)
     file = models.FileField(null=False, blank=False)
     keywords = models.CharField(max_length=200, null=True, blank=False)
     #  TODO: Will this work with the custom auth model?
@@ -35,7 +35,7 @@ class DataFile(models.Model):
     has_errors = models.BooleanField(null=False, default=False)
 
     def __str__(self):
-        return self.input_name
+        return self.file_standard_name
 
     def __file_path__(self):
         return self.file_path.value_from_object(self)
