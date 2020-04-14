@@ -1,3 +1,5 @@
+import json
+
 import uc2data
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import FileResponse
@@ -56,9 +58,9 @@ class ApiResult:
 
 
 def to_bool(input):
-    if input.upper() in ["TRUE", "0"]:
+    if input.upper() in ["TRUE", "1", "YES"]:
         return True
-    elif input.upper() in ['FALSE', "1"]:
+    elif input.upper() in ['FALSE', "0", "NO"]:
         return False
     else:
         raise ValueError
@@ -210,10 +212,10 @@ class FileView(APIView):
         return Response(result.to_dict(), status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request):
-        if int(request.data['is_invalid']):
+        if 'is_invalid' in request.data and to_bool(request.data['is_invalid']):
             resp = self._set_invalid(request)
             return resp
-        return Response("Patch for not available", status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response("Patch method not available for" + json.dumps(request.data), status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def get(self, request):
         kwargs = dict(request.GET)
@@ -226,14 +228,22 @@ class FileView(APIView):
     def _set_invalid(request):
         try:
             entry = UC2Observation.objects.get(file_standard_name=request.data['file_standard_name'])
+            if request.user == entry.uploader or request.user.is_superuser:
+                result = ApiResult()
+                data = {'is_invalid': to_bool(request.data['is_invalid'])}
+                serializer = UC2Serializer(entry, data=data, partial=True)
+                if serializer.is_valid():
+                    serializer.save()
+                    result.result = serializer.data
+                    return Response(data=result.to_dict(), status=status.HTTP_205_RESET_CONTENT)
+                else:
+                    result.errors.extend(serializer.errors)
+                    return Response(result.to_dict(), status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(status=status.HTTP_401_UNAUTHORIZED)
         except ObjectDoesNotExist:
             return Response("Object does not exist in data base.", status=status.HTTP_404_NOT_FOUND)
 
-        data = {'is_invalid': int(request.data['is_invalid'])}
-        serializer = UC2Serializer(entry, data=data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-        return Response(entry.file_standard_name + "set as invalid.", status=status.HTTP_205_RESET_CONTENT)
 
     def _is_version_valid(self, standart_name, version):
         """
