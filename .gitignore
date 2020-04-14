@@ -1,5 +1,5 @@
 .idea
 venv
 tags
-.ctags
-db.sqlite3
+*.pyc
+__pycache__/
