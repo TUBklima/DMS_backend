@@ -2,7 +2,7 @@ import uc2data
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import FileResponse
 from django.utils import dateformat, timezone
-from rest_framework import renderers, status
+from rest_framework import filters, renderers, status
 from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
@@ -34,11 +34,11 @@ class ApiResult:
     @property
     def status(self):
         if self.errors:
-            return uc2data.ResultCode.ERROR
+            return uc2data.ResultCode['ERROR'].value
         elif self.warnings:
-            return uc2data.ResultCode.WARNING
+            return uc2data.ResultCode['WARNING'].value
         else:
-            return uc2data.ResultCode.OK
+            return uc2data.ResultCode['OK'].value
 
     @property
     def has_errors(self):
@@ -66,6 +66,8 @@ def to_bool(input):
 class FileView(APIView):
     permission_classes = (IsAuthenticated,)
     parser_classes = (MultiPartParser, FormParser)
+    search_fields = ['file_standard_name']
+    filter_backends = (filters.SearchFilter,)
 
     def post(self, request):
 
@@ -212,6 +214,13 @@ class FileView(APIView):
             resp = self._set_invalid(request)
             return resp
         return Response("Patch for not available", status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def get(self, request):
+        kwargs = dict(request.GET)
+        entries = UC2Observation.objects.filter(**kwargs)
+        serializer = UC2Serializer(entries, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
     @staticmethod
     def _set_invalid(request):
