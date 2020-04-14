@@ -6,9 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import viewsets
-
-from dms_backend.settings import MEDIA_ROOT
+from rest_framework.views import APIView
 
 from .models import UC2Observation, Variable
 from .serializers import UC2Serializer, VariableSerializer
@@ -176,6 +174,18 @@ class FileView(viewsets.ModelViewSet):
         new_entry["is_invalid"] = False
         new_entry["has_warnings"] = result.has_warnings
         new_entry['has_errors'] = result.has_errors
+
+        for var in uc2ds.data_vars:
+            if not Variable.objects.filter(variable=var).exists():
+                new_var = {
+                    "variable": var,
+                    "long_name": uc2ds.ds.data_vars[var].long_name,
+                    "standard_name": uc2ds.ds.data_vars[var].standard_name,
+                }
+                serializer = VariableSerializer(data=new_var)
+                if serializer.is_valid():
+                    serializer.save()
+            new_entry["variables"] = Variable.objects.get(variable=var).id
 
         ####
         # serialize and save

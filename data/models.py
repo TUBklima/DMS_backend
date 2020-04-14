@@ -52,7 +52,7 @@ class Variable(models.Model):
     standard_name = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
-        return self.variable_name
+        return self.variable
 
 
 class UC2Observation(DataFile):
