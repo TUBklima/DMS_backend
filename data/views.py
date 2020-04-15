@@ -144,7 +144,8 @@ class FileView(APIView):
         if standart_name and version:
             version_ok, expected_version = self._is_version_valid(standart_name, version)
             if not version_ok:
-                result.errors.insert(0, "The given version number does not match the accepted version number")
+                result.errors.insert(0, "The given version number does not match the accepted version number. "
+                                        "The expected version number is "+str(expected_version) + ".")
 
         if result.status == uc2data.ResultCode.ERROR and not ignore_errors:
             return Response(data=result.to_dict(), status=status.HTTP_406_NOT_ACCEPTABLE)
