@@ -13,6 +13,7 @@ urlpatterns = [
     #  path('', views.FileView.as_view(), name='uc2upload'),
     path('uc2upload/', views.FileView.as_view(), name='uc2upload'),
     path('uc2list/', views.FileView.as_view(), name='uc2list'),
+    path('download/', views.download, name='download')
 ]
 
 # for development: Access to files via URL

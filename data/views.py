@@ -277,6 +277,7 @@ class FileView(APIView):
     def _toggle_old_entry(self, standart_name, version):
         """ Queries for previous entry with the same input (file) name and switches urns it, if found.
         Returns False if previous version of file is not in database"""
+        # FIXME: Only allow if uploaders are the same one?
 
         input_name = "-".join(standart_name.split("-")[:-1])  #  ignore version in standart_name
 
@@ -286,11 +287,11 @@ class FileView(APIView):
             prev_entry.save()
         return True
 
-    #@action(methods=["get"], detail=True, renderer_classes=(PassthroughRenderer,))
-    #def download(self, *args, **kwargs):
-    #    instance = self.get_object()
-    #    file_handle = instance.file_path.open()
-#
-     #   response = FileResponse(file_handle)
-#
-    #    return response
+@action(methods=["get"], detail=True, renderer_classes=(PassthroughRenderer,))
+def download(self, *args, **kwargs):
+    instance = self.get_object()
+    file_handle = instance.file_path.open()
+
+    response = FileResponse(file_handle)
+
+    return response
