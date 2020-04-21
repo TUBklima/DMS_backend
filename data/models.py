@@ -1,18 +1,7 @@
-#  import datetime
-import uc2data
-import pandas as pd
-import random
-import string
-from pathlib import Path
-
+# models.py django python file
 from django.db import models
 from django.utils import timezone, dateformat
 from django.conf import settings
-from django.contrib.auth import get_user_model
-
-
-def get_sentinel_user():
-    return get_user_model().objects.get_or_create(username="deleted")[0]
 
 
 class DataFile(models.Model):
@@ -20,7 +9,6 @@ class DataFile(models.Model):
     file_standard_name = models.CharField(max_length=200, unique=True)
     file = models.FileField(null=False, blank=False)
     keywords = models.CharField(max_length=200, null=True, blank=False)
-    #  TODO: Will this work with the custom auth model?
     uploader = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, default=None, null=True)
     author = models.CharField(max_length=200, default="test")
     source = models.CharField(max_length=200, default="test")
@@ -61,9 +49,6 @@ class UC2Observation(DataFile):
     # spatial atts
     location = models.CharField(max_length=3)
     site = models.CharField(max_length=12)
-    #  origin_x = models.FloatField()
-    #  origin_y = models.FloatField()
-    #  origin_z = models.FloatField()
     origin_lon = models.FloatField(default=0.0)
     origin_lat = models.FloatField(default=0.0)
     # time atts
@@ -73,17 +58,3 @@ class UC2Observation(DataFile):
     origin_time = models.CharField(max_length=23)
     # variables
     variables = models.ManyToManyField(Variable, related_name='datasets')
-
-
-def get_file_info(new_filename):
-    f = DataFile()
-    base_dir = Path(settings.BASE_DIR)
-    to_open = base_dir / f.file_path.field.generate_filename(f.file_path.instance, new_filename)
-    opened = uc2data.Dataset(to_open)
-    attrs = opened.ds.attrs
-    variables = opened.ds.variables
-    return attrs, variables
-
-
-def make_path():
-    return "".join(random.choice(string.ascii_lowercase) for i in range(6)) + ".nc"
