@@ -20,7 +20,6 @@ class DataFile(models.Model):
     file_standard_name = models.CharField(max_length=200, unique=True)
     file = models.FileField(null=False, blank=False)
     keywords = models.CharField(max_length=200, null=True, blank=False)
-    #  TODO: Will this work with the custom auth model?
     uploader = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, default=None, null=True)
     author = models.CharField(max_length=200, default="test")
     source = models.CharField(max_length=200, default="test")
@@ -70,6 +69,18 @@ class UC2Observation(DataFile):
     campaign = models.CharField(max_length=6)
     creation_time = models.CharField(max_length=23)
     origin_time = models.CharField(max_length=23)
+
+    ll_lon = models.FloatField(null=False, help_text="longitude of lower left corner of bounding rectangle")
+    ll_lat = models.FloatField(null=False, help_text="latitude of lower left corner of bounding rectangle")
+    ur_lon = models.FloatField(null=False, help_text="longitude of upper right corner of bounding rectangle")
+    ur_lat = models.FloatField(null=False, help_text="latitude of upper right corner of bounding rectangle")
+    lat_lon_epsg = models.CharField(max_length=16, help_text="epsg code for lon / lat coordinates")
+    ll_n_utm = models.FloatField(null=False, help_text="north utm of lower left corner of bounding rectangle")
+    ll_e_utm = models.FloatField(null=False, help_text="eastern utm of lower left corner of bounding rectangle")
+    ur_n_utm = models.FloatField(null=False, help_text="north utm of upper right corner of bounding rectangle")
+    ur_e_utm = models.FloatField(null=False, help_text="eastern utm of upper right corner of bounding rectangle")
+    utm_epsg = models.CharField(max_length=16, help_text="epsg code for utm coordinates")
+
     # variables
     variables = models.ManyToManyField(Variable, null=True)
 
