@@ -1,18 +1,7 @@
-#  import datetime
-import uc2data
-import pandas as pd
-import random
-import string
-from pathlib import Path
-
+# models.py django python file
 from django.db import models
 from django.utils import timezone, dateformat
 from django.conf import settings
-from django.contrib.auth import get_user_model
-
-
-def get_sentinel_user():
-    return get_user_model().objects.get_or_create(username="deleted")[0]
 
 
 class DataFile(models.Model):
@@ -60,13 +49,11 @@ class UC2Observation(DataFile):
     # spatial atts
     location = models.CharField(max_length=3)
     site = models.CharField(max_length=12)
-    #  origin_x = models.FloatField()
-    #  origin_y = models.FloatField()
-    #  origin_z = models.FloatField()
     origin_lon = models.FloatField(default=0.0)
     origin_lat = models.FloatField(default=0.0)
     # time atts
     campaign = models.CharField(max_length=6)
+    # FIXME: These should be to datetime fields
     creation_time = models.CharField(max_length=23)
     origin_time = models.CharField(max_length=23)
 
@@ -82,18 +69,4 @@ class UC2Observation(DataFile):
     utm_epsg = models.CharField(max_length=16, help_text="epsg code for utm coordinates")
 
     # variables
-    variables = models.ManyToManyField(Variable, null=True)
-
-
-def get_file_info(new_filename):
-    f = DataFile()
-    base_dir = Path(settings.BASE_DIR)
-    to_open = base_dir / f.file_path.field.generate_filename(f.file_path.instance, new_filename)
-    opened = uc2data.Dataset(to_open)
-    attrs = opened.ds.attrs
-    variables = opened.ds.variables
-    return attrs, variables
-
-
-def make_path():
-    return "".join(random.choice(string.ascii_lowercase) for i in range(6)) + ".nc"
+    variables = models.ManyToManyField(Variable, related_name='datasets')

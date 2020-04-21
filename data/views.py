@@ -1,13 +1,17 @@
+import json
+
 import uc2data
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import FileResponse
 from django.utils import dateformat, timezone
-from rest_framework import renderers, status
+from rest_framework import filters, renderers, status
 from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from .filters import UC2Filter
 from .models import UC2Observation, Variable
 from .serializers import UC2Serializer, VariableSerializer
 
@@ -33,11 +37,11 @@ class ApiResult:
     @property
     def status(self):
         if self.errors:
-            return uc2data.ResultCode.ERROR
+            return uc2data.ResultCode['ERROR'].value
         elif self.warnings:
-            return uc2data.ResultCode.WARNING
+            return uc2data.ResultCode['WARNING'].value
         else:
-            return uc2data.ResultCode.OK
+            return uc2data.ResultCode['OK'].value
 
     @property
     def has_errors(self):
@@ -55,9 +59,9 @@ class ApiResult:
 
 
 def to_bool(input):
-    if input.upper() in ["TRUE", "0"]:
+    if input.upper() in ["TRUE", "1", "YES"]:
         return True
-    elif input.upper() in ['FALSE', "1"]:
+    elif input.upper() in ['FALSE', "0", "NO"]:
         return False
     else:
         raise ValueError
@@ -65,6 +69,8 @@ def to_bool(input):
 class FileView(APIView):
     permission_classes = (IsAuthenticated,)
     parser_classes = (MultiPartParser, FormParser)
+    search_fields = ['file_standard_name']
+    filter_backends = (filters.SearchFilter,)
 
     def post(self, request):
 
@@ -222,6 +228,45 @@ class FileView(APIView):
         result.errors.extend(serializer.errors)
         return Response(result.to_dict(), status=status.HTTP_400_BAD_REQUEST)
 
+    def patch(self, request):
+        if 'is_invalid' in request.data and to_bool(request.data['is_invalid']):
+            resp = self._set_invalid(request)
+            return resp
+        return Response("Patch method not available for" + json.dumps(request.data), status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    @staticmethod
+    def get(request):
+        '''
+        :param request:
+        :return: A json representation of search query
+        '''
+
+        uc2_entries = UC2Observation.objects.all()
+        f = UC2Filter(request.GET, queryset=uc2_entries)
+        serializer = UC2Serializer(f.qs, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @staticmethod
+    def _set_invalid(request):
+        try:
+            entry = UC2Observation.objects.get(file_standard_name=request.data['file_standard_name'])
+            if request.user == entry.uploader or request.user.is_superuser:
+                result = ApiResult()
+                data = {'is_invalid': to_bool(request.data['is_invalid'])}
+                serializer = UC2Serializer(entry, data=data, partial=True)
+                if serializer.is_valid():
+                    serializer.save()
+                    result.result = serializer.data
+                    return Response(data=result.to_dict(), status=status.HTTP_205_RESET_CONTENT)
+                else:
+                    result.errors.extend(serializer.errors)
+                    return Response(result.to_dict(), status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(status=status.HTTP_401_UNAUTHORIZED)
+        except ObjectDoesNotExist:
+            return Response("Object does not exist in data base.", status=status.HTTP_404_NOT_FOUND)
+
+
     def _is_version_valid(self, standart_name, version):
         """
         check validity of request version by querying for database entries.
@@ -248,6 +293,7 @@ class FileView(APIView):
     def _toggle_old_entry(self, standart_name, version):
         """ Queries for previous entry with the same input (file) name and switches urns it, if found.
         Returns False if previous version of file is not in database"""
+        # FIXME: Only allow if uploaders are the same one?
 
         input_name = "-".join(standart_name.split("-")[:-1])  #  ignore version in standart_name
 
@@ -257,11 +303,11 @@ class FileView(APIView):
             prev_entry.save()
         return True
 
-    @action(methods=["get"], detail=True, renderer_classes=(PassthroughRenderer,))
-    def download(self, *args, **kwargs):
-        instance = self.get_object()
-        file_handle = instance.file_path.open()
+@action(methods=["get"], detail=True, renderer_classes=(PassthroughRenderer,))
+def download(self, *args, **kwargs):
+    instance = self.get_object()
+    file_handle = instance.file_path.open()
 
-        response = FileResponse(file_handle)
+    response = FileResponse(file_handle)
 
-        return response
+    return response

@@ -12,6 +12,8 @@ class UserManager(DefaultUserManager):
         '''
         New users are by default not active
         '''
+        # TODO: Lizenzspezifische Rechte beantragen lassen?!
+        # TODO: KB ACCOUNT verbinden (import?)
         # we have to check this here since _create_user uses self.model which refers to the original user model
         # a least thats what I think is happening
         if not email:
@@ -22,6 +24,7 @@ class UserManager(DefaultUserManager):
 
 class User(AbstractUser):
     # TODO: add institution foreign key
+    # TODO: Lizenzspezifische Rechte?!
     objects = UserManager()
     email = models.EmailField(blank=False, null=False)
 
