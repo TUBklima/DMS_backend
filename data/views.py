@@ -176,6 +176,21 @@ class FileView(APIView):
         new_entry["has_warnings"] = result.has_warnings
         new_entry['has_errors'] = result.has_errors
 
+        # Add coordinates
+        ll_lat, ll_lon, ur_lat, ur_lon, lat_lon_epsg = uc2ds.get_bounds()
+        new_entry['ll_lat'] = ll_lat
+        new_entry['ll_lon'] = ll_lon
+        new_entry['ur_lat'] = ur_lat
+        new_entry['ur_lon'] = ur_lon
+        new_entry['lat_lon_epsg'] = lat_lon_epsg
+
+        ll_n_utm, ll_e_utm, ur_n_utm, ur_e_utm, utm_epsg = uc2ds.get_bounds(utm=True)
+        new_entry['ll_n_utm'] = ll_n_utm
+        new_entry['ll_e_utm'] = ll_e_utm
+        new_entry['ur_n_utm'] = ur_n_utm
+        new_entry['ur_e_utm'] = ur_e_utm
+        new_entry['utm_epsg'] = utm_epsg
+
         new_entry["variables"] = []
 
         for var in uc2ds.data_vars:
