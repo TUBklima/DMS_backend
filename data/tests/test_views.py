@@ -70,7 +70,7 @@ class TestFileView(APITestCase):
         req = self._get_request("bad_format_file.nc", ignore_errors=False, ignore_warnings=False)
         resp = self.view(req)
 
-        self.assertEqual(resp.data['status'], uc2data.ResultCode.ERROR.value, "uc2check should result in errors")
+        self.assertEqual(resp.data['status'], uc2data.ResultCode.FATAL.value, "uc2check should result in errors")
         self.assertEqual(resp.status_code, status.HTTP_406_NOT_ACCEPTABLE)
 
     def test_post_good_file(self):
@@ -113,6 +113,7 @@ class TestFileView(APITestCase):
         #  check if data base has entries
         if not UC2Observation.objects.all().exists():
             self.test_post_good_file()
+
         p = self.file_dir / "good_format_file.nc"
         uc2ds = uc2data.Dataset(p)
         fname = uc2ds.filename

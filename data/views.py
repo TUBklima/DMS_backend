@@ -33,10 +33,12 @@ class ApiResult:
         self.errors = []
         self.warnings = []
         self.result = []
-
+        self.fatal = []
     @property
     def status(self):
-        if self.errors:
+        if self.fatal:
+            return uc2data.ResultCode['FATAL'].value
+        elif self.errors:
             return uc2data.ResultCode['ERROR'].value
         elif self.warnings:
             return uc2data.ResultCode['WARNING'].value
@@ -44,15 +46,20 @@ class ApiResult:
             return uc2data.ResultCode['OK'].value
 
     @property
+    def has_fatal(self):
+        return self.status == uc2data.ResultCode.FATAL.value
+
+    @property
     def has_errors(self):
-        return self.status == uc2data.ResultCode.ERROR
+        return self.status == uc2data.ResultCode.ERROR.value
 
     @property
     def has_warnings(self):
-        return self.status == uc2data.ResultCode.WARNING
+        return self.status == uc2data.ResultCode.WARNING.value
 
     def to_dict(self):
         return {'status': self.status,
+                "fatal": self.fatal,
                 "errors": self.errors,
                 "warnings": self.warnings,
                 "result": self.result}
@@ -137,15 +144,17 @@ class FileView(APIView):
         result.warnings.extend(check_result['root']['WARNING'])
 
         # We don't add errors here because it is already checked by th uc2checker
+        version = None
         try:
             version = int(uc2ds.ds.attrs['version'])
         except Exception:
-            version = None
+            result.fatal.append("Can not access the version attribute.")
 
+        standart_name = None
         try:
             standart_name = uc2ds.filename
         except Exception:
-            standart_name = None
+            result.fatal.append("Can not build a standart name.")
 
         if standart_name and version:
             version_ok, expected_version = self._is_version_valid(standart_name, version)
@@ -153,9 +162,10 @@ class FileView(APIView):
                 result.errors.insert(0, "The given version number does not match the accepted version number. "
                                         "The expected version number is "+str(expected_version) + ".")
 
-        if result.status == uc2data.ResultCode.ERROR and not ignore_errors:
+        if result.has_errors and not ignore_errors:
             return Response(data=result.to_dict(), status=status.HTTP_406_NOT_ACCEPTABLE)
-        elif result.status == uc2data.ResultCode.WARNING and not ignore_warnings:
+
+        if result.has_warnings and not ignore_warnings:
             return Response(data=result.to_dict(), status=status.HTTP_300_MULTIPLE_CHOICES)
 
         ####
@@ -183,33 +193,70 @@ class FileView(APIView):
         new_entry['has_errors'] = result.has_errors
 
         # Add coordinates
-        ll_lat, ll_lon, ur_lat, ur_lon, lat_lon_epsg = uc2ds.get_bounds()
-        new_entry['ll_lat'] = ll_lat
-        new_entry['ll_lon'] = ll_lon
-        new_entry['ur_lat'] = ur_lat
-        new_entry['ur_lon'] = ur_lon
-        new_entry['lat_lon_epsg'] = lat_lon_epsg
+        lat_lon_ok = True
+        try:
+            ll_lat, ll_lon, ur_lat, ur_lon, lat_lon_epsg = uc2ds.get_bounds()
+        except Exception:
+            result.fatal.append("Can not access the coordinates of the bounding rectangle (lat / lon )")
+            lat_lon_ok = False
 
-        ll_n_utm, ll_e_utm, ur_n_utm, ur_e_utm, utm_epsg = uc2ds.get_bounds(utm=True)
-        new_entry['ll_n_utm'] = ll_n_utm
-        new_entry['ll_e_utm'] = ll_e_utm
-        new_entry['ur_n_utm'] = ur_n_utm
-        new_entry['ur_e_utm'] = ur_e_utm
-        new_entry['utm_epsg'] = utm_epsg
+        if lat_lon_ok:
+            new_entry['ll_lat'] = ll_lat
+            new_entry['ll_lon'] = ll_lon
+            new_entry['ur_lat'] = ur_lat
+            new_entry['ur_lon'] = ur_lon
+            new_entry['lat_lon_epsg'] = lat_lon_epsg
+
+        utm_ok = True
+        try:
+            ll_n_utm, ll_e_utm, ur_n_utm, ur_e_utm, utm_epsg = uc2ds.get_bounds(utm=True)
+        except Exception:
+            result.fatal.append("Can not access the coordinates of the bounding rectangle (utm)")
+
+        if utm_ok:
+            new_entry['ll_n_utm'] = ll_n_utm
+            new_entry['ll_e_utm'] = ll_e_utm
+            new_entry['ur_n_utm'] = ur_n_utm
+            new_entry['ur_e_utm'] = ur_e_utm
+            new_entry['utm_epsg'] = utm_epsg
 
         new_entry["variables"] = []
+        new_variables = []
 
-        for var in uc2ds.data_vars:
-            if not Variable.objects.filter(variable=var).exists():
+        # read variables from fiel and create if they not already exist
+        for uc2var in uc2ds.data_vars:
+            try:
+                var_id = Variable.objects.get(variable=uc2var).id
+                new_entry["variables"].append(var_id)
+            except ObjectDoesNotExist:
+                long_name = None
+                try:
+                    long_name = uc2ds.ds.data_vars[uc2var].long_name
+                except AttributeError:
+                    result.fatal.append("Can not access long_name for variable "+str(uc2var))
+                standart_name = None
+                try:
+                    standart_name = uc2ds.ds.data_vars[uc2var].standard_name
+                except AttributeError:
+                    result.fatal.append("Can not access standard_name for variable "+str(uc2var))
+
                 new_var = {
-                    "variable": var,
-                    "long_name": uc2ds.ds.data_vars[var].long_name,
-                    "standard_name": uc2ds.ds.data_vars[var].standard_name,
+                    "variable": uc2var,
+                    "long_name": long_name,
+                    "standard_name": standart_name,
                 }
-                serializer = VariableSerializer(data=new_var)
-                if serializer.is_valid():
-                    serializer.save()
-            new_entry["variables"].append(Variable.objects.get(variable=var).id)
+                new_variables.append(new_var)
+
+        if not result.has_fatal:
+            # we do this in an extra step so we can avoid creating
+            # variables if a fatal error exist. A unsuccessful request should not mutate
+            # the db state
+            serializer = VariableSerializer(data=new_variables, many=True)
+            if serializer.is_valid():
+                serializer.save()
+                new_entry["variables"].extend([var['id'] for var in serializer.data])
+            else:
+                result.fatal.extend(serializer.errors)
 
         ####
         # serialize and save
@@ -224,9 +271,9 @@ class FileView(APIView):
             serializer.save()
             result.result = serializer.data
             return Response(result.to_dict(), status=status.HTTP_201_CREATED)
-
-        result.errors.extend(serializer.errors)
-        return Response(result.to_dict(), status=status.HTTP_400_BAD_REQUEST)
+        else:
+            result.fatal.extend(serializer.errors)
+            return Response(result.to_dict(), status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request):
         if 'is_invalid' in request.data and to_bool(request.data['is_invalid']):
