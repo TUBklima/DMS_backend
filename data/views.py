@@ -66,6 +66,7 @@ def to_bool(input):
     else:
         raise ValueError
 
+
 class FileView(APIView):
     permission_classes = (IsAuthenticated,)
     parser_classes = (MultiPartParser, FormParser)
@@ -266,7 +267,6 @@ class FileView(APIView):
         except ObjectDoesNotExist:
             return Response("Object does not exist in data base.", status=status.HTTP_404_NOT_FOUND)
 
-
     def _is_version_valid(self, standart_name, version):
         """
         check validity of request version by querying for database entries.
@@ -289,19 +289,19 @@ class FileView(APIView):
             else:
                 return False, 1
 
-
     def _toggle_old_entry(self, standart_name, version):
         """ Queries for previous entry with the same input (file) name and switches urns it, if found.
         Returns False if previous version of file is not in database"""
         # FIXME: Only allow if uploaders are the same one?
 
-        input_name = "-".join(standart_name.split("-")[:-1])  #  ignore version in standart_name
+        input_name = "-".join(standart_name.split("-")[:-1])  # ignore version in standart_name
 
         prev_entries = UC2Observation.objects.filter(file_standard_name__startswith=input_name, version=(version - 1))
         for prev_entry in prev_entries:
             prev_entry.is_old = True  # switch "is_old" attribute in previous entries for file
             prev_entry.save()
         return True
+
 
 @action(methods=["get"], detail=True, renderer_classes=(PassthroughRenderer,))
 def download(self, *args, **kwargs):
