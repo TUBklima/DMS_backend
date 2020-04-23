@@ -25,7 +25,7 @@ SECRET_KEY = "zpy%3y%d27c0@wg+b_7!6uvaf^t6zztt@fz!7euop1yz7ip0!4"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["testserver", "127.0.0.1"]
+ALLOWED_HOSTS = ["testserver", "127.0.0.1", "localhost"]
 AUTH_USER_MODEL = "custom_auth.User"
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",  # default
