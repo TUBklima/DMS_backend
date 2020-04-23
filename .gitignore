@@ -3,3 +3,4 @@ venv
 tags
 *.pyc
 __pycache__/
+**/migrations/
