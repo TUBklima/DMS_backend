@@ -7,18 +7,21 @@ from auth.models import *
 import json
 import re
 from django.core import mail
-
-
+from django.contrib.auth.models import Group
+from auth.views import GroupView
 class UserTest(APITestCase):
     """
     Test user interactions
     """
 
     def setUp(self):
-        self.active_user = User.objects.create_superuser(username='foo', email='foo@baa.de', first_name="foo",
+        test_group = Group.objects.create(name="test")
+
+        User.objects.create_superuser(username='foo', email='foo@baa.de', first_name="foo",
                                                          last_name="baa", password="xxx")
         self.in_active_user = User.objects.create_user(username="Bob", password="Bob", email="bob@baa.de")
         self.active_user = User.objects.create_user(username="eve", password="eve", email="eve@baa.de", is_active=True)
+        test_group.user_set.add(self.active_user)
 
     def test_login(self):
         """
@@ -84,6 +87,7 @@ class UserTest(APITestCase):
                                         'username': 'balu',
                                         'password': 'xxx',
                                         'email': 'balu@foo.de',
+                                        'groups': [{'name': "test"}]
                                     }),
                                     content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -116,4 +120,49 @@ class UserTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertGreater(len(mail.outbox), 2)  # mail was send
         self.assertTrue('Account request declined' in mail.outbox[2].subject)
+
+
+class GroupTest(APITestCase):
+
+    def setUp(self):
+        test_group = Group.objects.create(name="test")
+
+        self.super_user = User.objects.create_superuser(username='foo', email='foo@baa.de', first_name="foo",
+                                                         last_name="baa", password="xxx")
+        self.in_active_user = User.objects.create_user(username="Bob", password="Bob", email="bob@baa.de")
+        self.active_user = User.objects.create_user(username="eve", password="eve", email="eve@baa.de", is_active=True)
+        test_group.user_set.add(self.active_user)
+
+    def test_user_create_group(self):
+        self.client.force_login(self.active_user)
+        url = reverse("requestAccount")
+        response = self.client.post(url,
+                                    data=json.dumps({
+                                        'username': 'balu',
+                                        'password': 'xxx',
+                                        'email': 'balu@foo.de',
+                                        'groups': [{'name': "test3"}, {'name': "test"}]
+                                    }),
+                                    content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, "Can't assign an not existing group to a user.")
+
+        response = self.client.post(url,
+                                    data=json.dumps({
+                                        'username': 'balu',
+                                        'password': 'xxx',
+                                        'email': 'balu@foo.de',
+                                        'groups': [{'name': "test"}]
+                                    }),
+                                    content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        eve = User.objects.get(username='eve')
+        self.assertEqual(list(eve.groups.values_list('name', flat=True)), ['test'])
+
+
+
+    def test_group_get(self):
+        self.client.force_login(self.active_user)
+        url = reverse('group-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 

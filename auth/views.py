@@ -1,4 +1,5 @@
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
@@ -44,8 +45,7 @@ class UserApi(APIView):
         us = UserSerializer(data=request.data)
         if not us.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST, data=us.errors)
-        new_user = User.objects.create_user(**us.validated_data)
-        out = UserSerializer(new_user)  # serialize again to include id
+        new_user = us.save()
         mail.send_mail("Account request on klima-dms",
                        "Your account was created successfully and is waiting for activation by an administrator.",
                        "dms@klima.tu-berlin.de",
@@ -62,7 +62,7 @@ class UserApi(APIView):
 
         # generate user info
         user_info = ''
-        for key, value in out.data.items():
+        for key, value in us.data.items():
             user_info += "\t" + str(key) + ":" + str(value) + "\n"
 
         bp = request.build_absolute_uri('/')
@@ -76,7 +76,7 @@ class UserApi(APIView):
                        "dms@klima.tu-berlin.de",
                        admin_mails
                        )
-        return Response(status=status.HTTP_201_CREATED, data=out.data)
+        return Response(status=status.HTTP_201_CREATED, data=us.data)
 
     def patch(self, request):
         if 'id' in request.data:
@@ -89,6 +89,13 @@ class UserApi(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST, data=us.errors)
         us.save()
         return Response(us.data)
+
+class GroupView(ModelViewSet):
+    serializer_class = GroupSerializer
+    queryset = Group.objects.all()
+
+
+
 
 @api_view(['POST', 'GET'])
 @permission_classes([AllowAny])
