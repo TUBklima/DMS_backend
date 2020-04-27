@@ -42,7 +42,7 @@ class UserApi(APIView):
         return Response(serializer.data)
 
     def post(self, request):
-        us = UserSerializer(data=request.data)
+        us = UserSerializer(data=request.data, context={'request': request})
         if not us.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST, data=us.errors)
         new_user = us.save()
@@ -80,11 +80,14 @@ class UserApi(APIView):
 
     def patch(self, request):
         if 'id' in request.data:
-            user = User.objects.filter(id=id)
+            try:
+                user = User.objects.get(id=request.data['id'])
+            except ObjectDoesNotExist:
+                return Response(status=status.HTTP_404_NOT_FOUND, data={"Requested id not found"})
         else:
             user = request.user
 
-        us = UserSerializer(user, data=request.data, partial=True)
+        us = UserSerializer(user, data=request.data, partial=True, context={'request': request})
         if not us.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST, data=us.errors)
         us.save()

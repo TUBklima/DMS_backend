@@ -105,16 +105,28 @@ class UserTest(APITestCase):
         test_user = User.objects.get(pk=response.data['id'])
         self.assertTrue(test_user.is_active)
 
+        #test without groups
+        response = self.client.post(url,
+                                    data=json.dumps({
+                                        'username': 'balu2',
+                                        'password': 'xxx',
+                                        'email': 'balu2@foo.de',
+                                    }),
+                                    content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+
     def test_account_decline(self):
 
         url = reverse("requestAccount")
-        self.client.post(url,
+        response = self.client.post(url,
                         data=json.dumps({
                             'username': 'evil',
                             'password': 'xxx',
                             'email': 'evil@foo.de'
                         }),
                         content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         decline_link = re.search('(http://testserver/)(.*?)( .*decline)', mail.outbox[1].body).group(2)
         response = self.client.get(decline_link)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -125,21 +137,44 @@ class UserTest(APITestCase):
 class GroupTest(APITestCase):
 
     def setUp(self):
-        test_group = Group.objects.create(name="test")
+        self.test_group = Group.objects.create(name="test")
+        self.test_group2 = Group.objects.create(name="test2")
 
         self.super_user = User.objects.create_superuser(username='foo', email='foo@baa.de', first_name="foo",
                                                          last_name="baa", password="xxx")
         self.in_active_user = User.objects.create_user(username="Bob", password="Bob", email="bob@baa.de")
         self.active_user = User.objects.create_user(username="eve", password="eve", email="eve@baa.de", is_active=True)
-        test_group.user_set.add(self.active_user)
+        self.test_group.user_set.add(self.active_user)
 
     def test_group_create(self):
         self.client.force_login(self.active_user)
         url = reverse('group-list')
         response = self.client.post(url, data=json.dumps({
-            'name': 'test2'
-        }),content_type='application/json')
+            'name': 'new_group'
+        }), content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_user_update_group(self):
+        self.client.force_login(self.super_user)
+        url = reverse('users')
+        id = self.active_user.id
+        response = self.client.patch(url, data=json.dumps({
+            'id': id,
+            'groups': [{'name': 'test'}, {'name': 'test2'}]
+        }), content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        user = User.objects.get(id=self.active_user.id)
+        names = list(user.groups.values_list("name", flat=True))
+        self.assertEqual(names, ["test", "test2"])
+
+        response = self.client.patch(url, data=json.dumps({
+            'id': id,
+            'groups': [{'name': 'test'}]
+        }), content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        user = User.objects.get(id=self.active_user.id)
+        names = list(user.groups.values_list("name", flat=True))
+        self.assertEqual(names, ["test"], "Overwrite did not work")
 
     def test_group_get(self):
         self.client.force_login(self.active_user)
