@@ -12,4 +12,3 @@ urlpatterns = [
 router = DefaultRouter()
 router.register(r'group', auth_views.GroupView, basename='group')
 urlpatterns.extend(router.urls)
-

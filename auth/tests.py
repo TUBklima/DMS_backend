@@ -133,6 +133,20 @@ class GroupTest(APITestCase):
         self.active_user = User.objects.create_user(username="eve", password="eve", email="eve@baa.de", is_active=True)
         test_group.user_set.add(self.active_user)
 
+    def test_group_create(self):
+        self.client.force_login(self.active_user)
+        url = reverse('group-list')
+        response = self.client.post(url, data=json.dumps({
+            'name': 'test2'
+        }),content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_group_get(self):
+        self.client.force_login(self.active_user)
+        url = reverse('group-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     def test_user_create_group(self):
         self.client.force_login(self.active_user)
         url = reverse("requestAccount")
@@ -158,11 +172,4 @@ class GroupTest(APITestCase):
         eve = User.objects.get(username='eve')
         self.assertEqual(list(eve.groups.values_list('name', flat=True)), ['test'])
 
-
-
-    def test_group_get(self):
-        self.client.force_login(self.active_user)
-        url = reverse('group-list')
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
 

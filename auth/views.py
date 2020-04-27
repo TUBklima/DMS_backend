@@ -12,15 +12,15 @@ from auth.tokens import Actions, ActivateUserTokenGenerator
 from django.urls import reverse
 
 
-SAFE_METHODS = ['POST']
 
 class IsAuthenticatedOrReadOnly(BasePermission):
     """
     The request is authenticated as a user, or is a read-only request.
     """
+    SAFE_METHODS = ['POST']
 
     def has_permission(self, request, view):
-        if (request.method in SAFE_METHODS or
+        if (request.method in IsAuthenticatedOrReadOnly.SAFE_METHODS or
             request.user and
             request.user.is_authenticated):
             return True
