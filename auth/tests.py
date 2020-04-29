@@ -154,6 +154,79 @@ class GroupTest(APITestCase):
         }), content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
+    def test_set_users(self):
+        url = reverse('group-set-users', args=["test"])
+        self.client.force_login(self.super_user)
+
+        ids = set(self.test_group.user_set.values_list('id', flat=True))
+        self.assertEqual(ids, {self.active_user.id}, 'Test assumption broken in setUp?')
+        response = self.client.post(url, data=json.dumps([
+            {
+                'id': self.super_user.id
+            }
+        ]), content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        ids = set(self.test_group.user_set.values_list('id', flat=True))
+        self.assertEqual(ids, {self.super_user.id})
+
+    def test_remove_users(self):
+        url = reverse('group-remove-users', args=["test"])
+        self.client.force_login(self.super_user)
+
+        ids = set(self.test_group.user_set.values_list('id', flat=True))
+        self.assertEqual(ids, {self.active_user.id}, 'Test assumption broken in setUp?')
+        response = self.client.post(url, data=json.dumps([
+            {
+                'id': self.active_user.id
+            }
+        ]), content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        ids = set(self.test_group.user_set.values_list('id', flat=True))
+        self.assertEqual(len(ids), 0)
+
+    def test_add_users(self):
+        url = reverse('group-add-users', args=["test2"])
+
+        # Test that only super users can add users to groups
+        self.client.force_login(self.active_user)
+        response = self.client.post(url, data=json.dumps([
+            {
+                'id': self.active_user.id
+            },
+            {
+                'id': self.super_user.id
+            }
+        ]), content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        self.client.force_login(self.super_user)
+        # Adding a user which is already there
+        already = reverse('group-add-users', args=["test"])
+        response = self.client.post(already, json.dumps([
+            {
+                'id': self.active_user.id
+            }
+        ]), content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_208_ALREADY_REPORTED)
+        # Test user add
+
+        response = self.client.post(url, data=json.dumps([
+            {
+                'id': self.active_user.id,
+                'username': self.active_user.username
+
+            },
+            {
+                'id': self.super_user.id
+            },
+            {
+                'id': self.super_user.id  # same id multiple times is ignored
+            }
+        ]), content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        test2_users = Group.objects.get(name='test2').user_set.values_list('id', flat=True)
+        self.assertEqual(set(test2_users), {self.active_user.id, self.super_user.id} )
+
     def test_user_update_group(self):
         self.client.force_login(self.super_user)
         url = reverse('users')

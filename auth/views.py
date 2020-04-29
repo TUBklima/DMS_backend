@@ -1,9 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, action, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny, BasePermission
 from auth.serializers import *
 from auth.models import User
 from auth.filters import UserFilter
@@ -93,12 +93,104 @@ class UserApi(APIView):
         us.save()
         return Response(us.data)
 
+class ActionBasedPermission(AllowAny):
+    """
+    Grant or deny access to a view, based on a mapping in view.action_permissions
+    """
+    def has_permission(self, request, view):
+        for klass, actions in getattr(view, 'action_permissions', {}).items():
+            if view.action in actions:
+                return klass().has_permission(request, view)
+        return False
+
+
 class GroupView(ModelViewSet):
     serializer_class = GroupSerializer
     queryset = Group.objects.all()
+    permission_classes = (ActionBasedPermission,)
+    action_permissions = {
+        IsAdminUser: ['update', 'partial_update', 'destroy', 'create', 'add_users', 'set_users', 'remove_users'],
+        IsAuthenticated: ['list', 'retrieve']
+    }
+
+    def _get_user_by_request(self, data):
+
+        request_ids = IdSerializer(data=data, many=True)
+        if not request_ids.is_valid():
+            raise ValidationError(request_ids.errors)
+
+        request_ids = set([o['id'] for o in request_ids.validated_data])
+        users = User.objects.filter(pk__in=request_ids)
+        user_ids = set(users.values_list('id', flat=True))
+        if request_ids != user_ids:
+            missing_ids = request_ids - user_ids
+            raise ValidationError("invalid user ids: "+",".join(missing_ids))
+
+        return user_ids
 
 
+    @action(detail=True, methods=['post'])
+    def add_users(self, request, pk=None):
+        try:
+            gr = Group.objects.get(name=pk)
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND, data="requested group does not exist")
 
+        try:
+            user_ids = self._get_user_by_request(request.data)
+        except ValidationError as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=e.detail)
+
+        users_in_group = set(gr.user_set.values_list('id', flat=True))
+        add_user_ids = user_ids - users_in_group
+
+        if len(add_user_ids) == 0:
+            return Response(status=status.HTTP_208_ALREADY_REPORTED)
+
+        for user_id in add_user_ids:
+            gr.user_set.add(user_id)
+
+        return Response(status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def set_users(self, request, pk=None):
+        try:
+            gr = Group.objects.get(name=pk)
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND, data="requested group does not exist")
+
+        try:
+            user_ids = self._get_user_by_request(request.data)
+        except ValidationError as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=e.detail)
+
+        users_in_group = set(gr.user_set.values_list('id', flat=True))
+        if user_ids == users_in_group:
+            return Response(status=status.HTTP_208_ALREADY_REPORTED)
+
+        gr.user_set.set(user_ids)
+        return Response(status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def remove_users(self, request, pk=None):
+        try:
+            gr = Group.objects.get(name=pk)
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND, data="requested group does not exist")
+
+        try:
+            user_ids = self._get_user_by_request(request.data)
+        except ValidationError as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=e.detail)
+
+        users_in_group = set(gr.user_set.values_list('id', flat=True))
+        remove_users = user_ids.intersection(users_in_group)
+        if len(remove_users) == 0:
+            return Response(status=status.HTTP_208_ALREADY_REPORTED)
+
+        for user_id in remove_users:
+            gr.user_set.remove(user_id)
+        return Response(status=status.HTTP_200_OK)
 
 @api_view(['POST', 'GET'])
 @permission_classes([AllowAny])
