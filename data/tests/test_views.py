@@ -196,7 +196,6 @@ class TestFileView(APITestCase):
         self.assertEqual(resp.status_code, status.HTTP_200_OK, 'Search query should succeed')
         self.assertEqual(len(resp.data), 1, "3DO user should see the object")
 
-        # query one field
         data = {'acronym': "not_in_db"}
         req = self._build_get_request(data)
         resp = self.view(req)

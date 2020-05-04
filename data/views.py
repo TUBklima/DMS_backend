@@ -283,7 +283,7 @@ class FileView(APIView):
         serializer = UC2Serializer(data=new_entry)
         if not serializer.is_valid():
             result.fatal.append(serializer.errors)
-            return Response(result.to_dict(), status=status.HTTP_400_BAD_REQUEST)
+            return Response(result.to_dict(), status=status.HTTP_406_NOT_ACCEPTABLE)
 
         #  toggle old version before saving -> in case of error we don't pollute the db
         if version > 1:
@@ -292,7 +292,7 @@ class FileView(APIView):
         serializer.save()
         # assign view permissions
         if licence.public:
-            assign_perm(licence.view_permission, AnonymousUser, serializer.instance)
+            assign_perm(licence.view_permission, AnonymousUser(), serializer.instance)
             default_gr = Group.objects.get(name='users')
             assign_perm(licence.view_permission, default_gr, serializer.instance)
         else:
