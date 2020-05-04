@@ -1,13 +1,24 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group
 from django.contrib.auth.models import UserManager as DefaultUserManager
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 
 
 class UserManager(DefaultUserManager):
+
+    @staticmethod
+    def _add_default_group(user):
+        default_gr, created = Group.objects.get_or_create(name='users')
+        user.groups.add(default_gr)
+
+    def create_superuser(self, username, email=None, password=None, **extra_fields):
+        user = super().create_superuser(username, email=email, password=password, **extra_fields)
+        UserManager._add_default_group(user)
+        return user
+
     def create_user(self, username, email=None, password=None, **extra_fields):
         '''
         New users are by default not active
@@ -19,7 +30,9 @@ class UserManager(DefaultUserManager):
         if not email:
             raise ValidationError(message="An empty email field is not allowed")
         extra_fields.setdefault("is_active", False)
-        return super().create_user(username, email, password=None, **extra_fields)
+        user = super().create_user(username, email=email, password=password, **extra_fields)
+        UserManager._add_default_group(user)
+        return user
 
 
 class User(AbstractUser):
