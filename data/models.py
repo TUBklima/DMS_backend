@@ -2,6 +2,18 @@
 from django.db import models
 from django.utils import timezone, dateformat
 from django.conf import settings
+from django.contrib.auth.models import Group, Permission
+
+
+class License(models.Model):
+    short_name = models.CharField(max_length=128, unique=True, blank=False, null=False)
+    full_text = models.CharField(max_length=256, unique=True, null=False)
+    public = models.BooleanField(null=False, default=False)
+    view_groups = models.ManyToManyField(Group)  # groups that get the view permission aka groups that are allowed to downlaod / view the file
+    view_permission = models.ForeignKey(Permission, on_delete=models.PROTECT, null=False)
+
+    def __str__(self):
+        return self.short_name
 
 
 class DataFile(models.Model):
@@ -13,10 +25,10 @@ class DataFile(models.Model):
     author = models.CharField(max_length=200, default="test")
     source = models.CharField(max_length=200, default="test")
     institution = models.CharField(max_length=200, default="Not specified")
+    licence = models.ForeignKey(License, null=False, on_delete=models.PROTECT)
     version = models.PositiveIntegerField(default=1)
     upload_date = models.DateTimeField(default=dateformat.format(timezone.now(), "Y-m-d H:i:s"))
     download_count = models.PositiveIntegerField(default=0)
-    licence = models.CharField(max_length=200, default="[UC]2 Open Licence")
     is_invalid = models.BooleanField(null=False, default=False)
     is_old = models.BooleanField(null=False, default=False)
     has_warnings = models.BooleanField(null=False, default=False)

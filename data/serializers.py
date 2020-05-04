@@ -2,7 +2,7 @@
 
 from rest_framework import serializers
 
-from data.models import DataFile, UC2Observation, Variable
+from data.models import *
 
 
 class BaseSerializer(serializers.ModelSerializer):
@@ -31,6 +31,12 @@ class BaseSerializer(serializers.ModelSerializer):
             "version",
         )
 
+
+class LicenceSerializer(serializers.ModelSerializer):
+    # TODO nicer serialisation of groups
+    class Meta:
+        model = License
+        fields = "__all__"
 
 class UC2Serializer(BaseSerializer):
     class Meta:

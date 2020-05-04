@@ -4,17 +4,24 @@ import uc2data
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import FileResponse
 from django.utils import dateformat, timezone
+from django.contrib.auth.models import Group, AnonymousUser
+
 from rest_framework import filters, renderers, status
 from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, MultiPartParser
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
+
+
+from guardian.shortcuts import assign_perm
 
 from .filters import UC2Filter
-from .models import UC2Observation, Variable
-from .serializers import UC2Serializer, VariableSerializer
+from .models import *
+from .serializers import *
 
+from auth.views import ActionBasedPermission
 
 class PassthroughRenderer(renderers.BaseRenderer):
     """
@@ -193,6 +200,13 @@ class FileView(APIView):
         new_entry["has_warnings"] = result.has_warnings
         new_entry['has_errors'] = result.has_errors
 
+        try:
+            licence = License.objects.get(full_text=new_entry['licence'])
+            new_entry['licence'] = licence.id
+        except ObjectDoesNotExist:
+            licence = None
+            result.fatal.append("No matching licence found")
+
         # Add coordinates
         lat_lon_ok = True
         try:
@@ -257,24 +271,35 @@ class FileView(APIView):
                 serializer.save()
                 new_entry["variables"].extend([var['id'] for var in serializer.data])
             else:
-                result.fatal.extend(serializer.errors)
+                result.fatal.append(serializer.errors)
 
         ####
         # serialize and save
         ####
 
         serializer = UC2Serializer(data=new_entry)
-        if serializer.is_valid():
-            #  toggle old version before saving -> in case of error we don't pollute the db
-            if version > 1:
-                self._toggle_old_entry(standart_name, version)
-
-            serializer.save()
-            result.result = serializer.data
-            return Response(result.to_dict(), status=status.HTTP_201_CREATED)
-        else:
-            result.fatal.extend(serializer.errors)
+        if not serializer.is_valid():
+            result.fatal.append(serializer.errors)
             return Response(result.to_dict(), status=status.HTTP_400_BAD_REQUEST)
+
+        #  toggle old version before saving -> in case of error we don't pollute the db
+        if version > 1:
+            self._toggle_old_entry(standart_name, version)
+
+        serializer.save()
+        # assign view permissions
+        if licence.public:
+            assign_perm(licence.view_permission, AnonymousUser, serializer.instance)
+            default_gr = Group.objects.get(name='users')
+            assign_perm(licence.view_permission, default_gr, serializer.instance)
+        else:
+            for gr in licence.view_groups.all():
+                assign_perm(licence.view_permission, gr, serializer.instance)
+
+        result.result = serializer.data
+        return Response(result.to_dict(), status=status.HTTP_201_CREATED)
+
+
 
     def patch(self, request):
         if 'is_invalid' in request.data and to_bool(request.data['is_invalid']):
@@ -348,6 +373,16 @@ class FileView(APIView):
             prev_entry.is_old = True  # switch "is_old" attribute in previous entries for file
             prev_entry.save()
         return True
+
+
+class LicenseView(ModelViewSet):
+    serializer_class = LicenceSerializer
+    queryset = License.objects.all()
+    permission_classes = (ActionBasedPermission,)
+    action_permissions = {
+        IsAdminUser: ['update', 'partial_update', 'destroy', 'create'],
+        AllowAny: ['list', 'retrieve']
+    }
 
 
 @action(methods=["get"], detail=True, renderer_classes=(PassthroughRenderer,))
