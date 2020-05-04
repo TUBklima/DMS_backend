@@ -15,7 +15,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 
-from guardian.shortcuts import assign_perm
+from guardian.shortcuts import assign_perm, get_objects_for_user
 
 from .filters import UC2Filter
 from .models import *
@@ -299,8 +299,6 @@ class FileView(APIView):
         result.result = serializer.data
         return Response(result.to_dict(), status=status.HTTP_201_CREATED)
 
-
-
     def patch(self, request):
         if 'is_invalid' in request.data and to_bool(request.data['is_invalid']):
             resp = self._set_invalid(request)
@@ -314,7 +312,13 @@ class FileView(APIView):
         :return: A json representation of search query
         '''
 
-        uc2_entries = UC2Observation.objects.all()
+        license_perms = License.objects.all().select_related('view_permission')
+        license_set = set()
+        for license_perm in license_perms:
+            perm_string = license_perm.view_permission.codename
+            license_set.add(perm_string)
+
+        uc2_entries = get_objects_for_user(request.user, license_set, klass=UC2Observation, any_perm=True)
         f = UC2Filter(request.GET, queryset=uc2_entries)
         serializer = UC2Serializer(f.qs, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
