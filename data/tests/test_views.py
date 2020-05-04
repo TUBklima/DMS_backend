@@ -3,10 +3,16 @@
 import os
 
 from django.core.handlers.wsgi import WSGIRequest
+from django.contrib.auth.models import Group
+
 from rest_framework import status
 from rest_framework.test import APIRequestFactory, APITestCase
+
 from data.models import UC2Observation
 from auth.models import User
+from guardian.shortcuts import get_objects_for_user
+
+
 from dms_backend import settings
 
 import uc2data
@@ -17,10 +23,11 @@ from .. import views
 
 class TestFileView(APITestCase):
     file_dir = Path(__file__).parent / "test_files"
+    fixtures = ['groups_and_licenses.json']
 
     def setUp(self):
         self.user = User.objects.create_superuser(username="TestUser", email="test@user.com", password="test")
-        self.user2 = User.objects.create_user(username="TestUser2", email="test@user2.com", password="test",)
+        self.user2 = User.objects.create_user(username="TestUser2", email="test@user2.com", password="test")
         self.view = views.FileView.as_view()
         self.factory = APIRequestFactory()
 
@@ -74,12 +81,19 @@ class TestFileView(APITestCase):
         self.assertEqual(resp.status_code, status.HTTP_406_NOT_ACCEPTABLE)
 
     def test_post_good_file(self):
-
-        req = self._get_request("good_format_file.nc")
+        user_3do = User.objects.create_user("test3",email="foo@baa.de", password="xxx", is_active=True)
+        user = User.objects.create_user("test4", email="foosdf@baa.de", password="xxx", is_active=True)
+        gr = Group.objects.get(name="3DO")
+        user_3do.groups.add(gr)
+        req = self._get_request("good_format_file.nc", user=user_3do)
         resp = self.view(req)
 
         self.assertEqual(resp.data['status'], uc2data.ResultCode.OK.value)
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED, "Should create a database entry!")
+        obj = get_objects_for_user(user_3do, 'view_uc2observation', klass=UC2Observation)
+        self.assertEqual(obj[0].file_standard_name, 'LTO-B-bamberger-TUBklima-plev-20150401-001.nc')
+        obj = get_objects_for_user(user, 'view_uc2observation', klass=UC2Observation)
+        self.assertFalse(obj.exists())
 
     def test_version(self):
         req = self._get_request("good_format_file_v2.nc")
@@ -109,7 +123,7 @@ class TestFileView(APITestCase):
         old_version = UC2Observation.objects.get(file_standard_name=fname)
         self.assertTrue(old_version.is_old)
 
-    def test_set_invalid(self, user=None):
+    def test_set_invalid(self):
         #  check if data base has entries
         if not UC2Observation.objects.all().exists():
             self.test_post_good_file()
