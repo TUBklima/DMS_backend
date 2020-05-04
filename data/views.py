@@ -88,7 +88,6 @@ class IsAuthenticatedOrGet(IsAuthenticatedOrPost):
 class FileView(APIView):
     permission_classes = (IsAuthenticatedOrGet,)
     parser_classes = (MultiPartParser, FormParser)
-    search_fields = ['file_standard_name']
     filter_backends = (filters.SearchFilter,)
 
     def post(self, request):
