@@ -21,7 +21,7 @@ from .filters import UC2Filter
 from .models import *
 from .serializers import *
 
-from auth.views import ActionBasedPermission
+from auth.views import ActionBasedPermission, IsAuthenticatedOrPost
 
 class PassthroughRenderer(renderers.BaseRenderer):
     """
@@ -81,8 +81,12 @@ def to_bool(input):
         raise ValueError
 
 
+class IsAuthenticatedOrGet(IsAuthenticatedOrPost):
+    SAFE_METHODS = ['GET']
+
+
 class FileView(APIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticatedOrGet,)
     parser_classes = (MultiPartParser, FormParser)
     search_fields = ['file_standard_name']
     filter_backends = (filters.SearchFilter,)
@@ -305,8 +309,7 @@ class FileView(APIView):
             return resp
         return Response("Patch method not available for" + json.dumps(request.data), status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    @staticmethod
-    def get(request):
+    def get(self, request):
         '''
         :param request:
         :return: A json representation of search query

@@ -3,7 +3,8 @@
 import os
 
 from django.core.handlers.wsgi import WSGIRequest
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, AnonymousUser
+
 
 from rest_framework import status
 from rest_framework.test import APIRequestFactory, APITestCase
@@ -26,8 +27,13 @@ class TestFileView(APITestCase):
     fixtures = ['groups_and_licenses.json']
 
     def setUp(self):
-        self.user = User.objects.create_superuser(username="TestUser", email="test@user.com", password="test")
-        self.user2 = User.objects.create_user(username="TestUser2", email="test@user2.com", password="test")
+        self.super_user = User.objects.create_superuser(username="TestUser", email="test@user.com", password="test")
+        self.user = User.objects.create_user(username="TestUser2", email="test@user2.com", password="test")
+        self.user_3do = User.objects.create_user("test3",email="foo@baa.de", password="xxx", is_active=True)
+
+        gr = Group.objects.get(name="3DO")
+        self.user_3do.groups.add(gr)
+
         self.view = views.FileView.as_view()
         self.factory = APIRequestFactory()
 
@@ -47,7 +53,7 @@ class TestFileView(APITestCase):
         if user:
             req.user = user
         else:
-            req.user = self.user
+            req.user = self.super_user
         return req
 
     def _build_patch_request(self, data, user=None):
@@ -58,7 +64,7 @@ class TestFileView(APITestCase):
         if user:
             req.user = user
         else:
-            req.user = self.user
+            req.user = self.super_user
         return req
 
     def _build_get_request(self, data, user=None):
@@ -66,7 +72,7 @@ class TestFileView(APITestCase):
         if user:
             req.user = user
         else:
-            req.user = self.user
+            req.user = self.super_user
         return req
 
     def test_that_authentication_is_required(self):
@@ -81,18 +87,14 @@ class TestFileView(APITestCase):
         self.assertEqual(resp.status_code, status.HTTP_406_NOT_ACCEPTABLE)
 
     def test_post_good_file(self):
-        user_3do = User.objects.create_user("test3",email="foo@baa.de", password="xxx", is_active=True)
-        user = User.objects.create_user("test4", email="foosdf@baa.de", password="xxx", is_active=True)
-        gr = Group.objects.get(name="3DO")
-        user_3do.groups.add(gr)
-        req = self._build_post_request("good_format_file.nc", user=user_3do)
+        req = self._build_post_request("good_format_file.nc", user=self.user_3do)
         resp = self.view(req)
 
         self.assertEqual(resp.data['status'], uc2data.ResultCode.OK.value)
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED, "Should create a database entry!")
-        obj = get_objects_for_user(user_3do, 'view_uc2observation', klass=UC2Observation)
+        obj = get_objects_for_user(self.user_3do, 'view_uc2observation', klass=UC2Observation)
         self.assertEqual(obj[0].file_standard_name, 'LTO-B-bamberger-TUBklima-plev-20150401-001.nc')
-        obj = get_objects_for_user(user, 'view_uc2observation', klass=UC2Observation)
+        obj = get_objects_for_user(self.user, 'view_uc2observation', klass=UC2Observation)
         self.assertFalse(obj.exists())
 
     def test_version(self):
@@ -162,7 +164,7 @@ class TestFileView(APITestCase):
 
         # unauthorized user requests
         data = {'is_invalid': val, 'file_standard_name': fname}
-        req = self._build_patch_request(data, user=self.user2)
+        req = self._build_patch_request(data, user=self.user)
         resp = self.view(req)
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED, 'User is neither uploader nor superuser')
 
@@ -173,7 +175,7 @@ class TestFileView(APITestCase):
         resp = self.view(req)
         self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED, 'Method should only is_invalid should be patchable')
 
-    def test_search_query(self):
+    def test_get(self):
         #  check if data base has entries
         if not UC2Observation.objects.all().exists():
             self.test_post_good_file()
@@ -184,9 +186,15 @@ class TestFileView(APITestCase):
 
         # query one field
         data = {'acronym': uc2ds.ds.acronym}
-        req = self._build_get_request(data)
+        req = self._build_get_request(data, user=AnonymousUser)
         resp = self.view(req)
         self.assertEqual(resp.status_code, status.HTTP_200_OK, 'Search query should succeed')
+        self.assertEqual(resp.data, [], "Anonymous user should not see a file licensed to 3DO")
+
+        req = self._build_get_request(data, user=self.user_3do)
+        resp = self.view(req)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK, 'Search query should succeed')
+        self.assertEqual(len(resp.data), 1, "3DO user should see the object")
 
         # query one field
         data = {'acronym': "not_in_db"}

@@ -13,14 +13,14 @@ from django.urls import reverse
 
 
 
-class IsAuthenticatedOrReadOnly(BasePermission):
+class IsAuthenticatedOrPost(BasePermission):
     """
     The request is authenticated as a user, or is a read-only request.
     """
     SAFE_METHODS = ['POST']
 
     def has_permission(self, request, view):
-        if (request.method in IsAuthenticatedOrReadOnly.SAFE_METHODS or
+        if (request.method in self.SAFE_METHODS or
             request.user and
             request.user.is_authenticated):
             return True
@@ -28,7 +28,7 @@ class IsAuthenticatedOrReadOnly(BasePermission):
 
 
 class UserApi(APIView):
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsAuthenticatedOrPost,)
 
     def get(self, request):
         '''
