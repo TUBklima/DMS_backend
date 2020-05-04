@@ -11,6 +11,7 @@ class UserManager(DefaultUserManager):
 
     @staticmethod
     def _add_default_group(user):
+        # The default group 'users' ensures that logged in users can view public files.
         default_gr, created = Group.objects.get_or_create(name='users')
         user.groups.add(default_gr)
 
@@ -23,7 +24,7 @@ class UserManager(DefaultUserManager):
         '''
         New users are by default not active
         '''
-        # TODO: Lizenzspezifische Rechte beantragen lassen?!
+        # Licence handling goes over the requested group -> 3DO can read Files licenced for 3DO
         # TODO: KB ACCOUNT verbinden (import?)
         # we have to check this here since _create_user uses self.model which refers to the original user model
         # a least thats what I think is happening
