@@ -147,7 +147,7 @@ class GroupTest(APITestCase):
         self.test_group.user_set.add(self.active_user)
 
     def test_group_create(self):
-        self.client.force_login(self.active_user)
+        self.client.force_login(self.super_user)
         url = reverse('group-list')
         response = self.client.post(url, data=json.dumps({
             'name': 'new_group'
@@ -278,6 +278,6 @@ class GroupTest(APITestCase):
                                     content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         eve = User.objects.get(username='eve')
-        self.assertEqual(list(eve.groups.values_list('name', flat=True)), ['test'])
+        self.assertEqual(list(eve.groups.values_list('name', flat=True)), ['test', 'users'])
 
 
