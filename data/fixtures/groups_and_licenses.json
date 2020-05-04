@@ -1,0 +1,157 @@
+[
+  {
+    "model": "auth.group",
+    "fields": {
+      "name": "MOSAIK"
+    }
+  },
+  {
+    "model": "auth.group",
+    "fields": {
+      "name": "MOSAIK-2"
+    }
+  },
+  {
+    "model": "auth.group",
+    "fields": {
+      "name": "3DO"
+    }
+  },
+  {
+    "model": "auth.group",
+    "fields": {
+      "name": "3DO+M"
+    }
+  },
+  {
+    "model": "auth.group",
+    "fields": {
+      "name": "KliMoPrax"
+    }
+  },
+  {
+    "model": "auth.group",
+    "fields": {
+      "name": "UseUClim"
+    }
+  },
+  {
+    "model": "auth.group",
+    "fields": {
+      "name": "ProPolis"
+    }
+  },
+  {
+    "model": "auth.group",
+    "fields": {
+      "name": "uc2"
+    }
+  },
+  {
+    "model": "data.License",
+    "fields": {
+      "short_name": "MOSAIK",
+      "full_text": "[UC]2 MOSAIK Licence; see [UC]2 data policy available at www.uc2-program.org/uc2_data_policy.pdf",
+      "public": "False",
+      "view_groups": [["MOSAIK"]],
+      "view_permission": ["view_uc2observation", "data", "uc2observation"]
+    }
+  },
+  {
+    "model": "data.License",
+    "fields": {
+      "short_name": "MOSAIK-2",
+      "full_text": "[UC]2 MOSAIK-2 Licence; see [UC]2 data policy available at www.uc2-program.org/uc2_data_policy.pdf",
+      "public": "False",
+      "view_groups": [["MOSAIK-2"]],
+      "view_permission": ["view_uc2observation", "data", "uc2observation"]
+    }
+  },
+  {
+    "model": "data.License",
+    "fields": {
+      "short_name": "3DO",
+      "full_text": "[UC]2 3DO Licence; see [UC]2 data policy available at www.uc2-program.org/uc2_data_policy.pdf",
+      "public": "False",
+      "view_groups": [["3DO"]],
+      "view_permission": ["view_uc2observation", "data", "uc2observation"]
+    }
+  },
+  {
+    "model": "data.License",
+    "fields": {
+      "short_name": "3DO+M",
+      "full_text": "[UC]2 3DO+M Licence; see [UC]2 data policy available at www.uc2-program.org/uc2_data_policy.pdf",
+      "public": "False",
+      "view_groups": [["3DO+M"]],
+      "view_permission": ["view_uc2observation", "data", "uc2observation"]
+    }
+  },
+  {
+    "model": "data.License",
+    "fields": {
+      "short_name": "UseUClim",
+      "full_text": "[UC]2 UseUClim Licence; see [UC]2 data policy available at www.uc2-program.org/uc2_data_policy.pdf",
+      "public": "False",
+      "view_groups": [["UseUClim"]],
+      "view_permission": ["view_uc2observation", "data", "uc2observation"]
+    }
+  },
+  {
+    "model": "data.License",
+    "fields": {
+      "short_name": "KliMoPrax",
+      "full_text": "[UC]2 KliMoPrax Licence; see [UC]2 data policy available at www.uc2-program.org/uc2_data_policy.pdf",
+      "public": "False",
+      "view_groups": [["KliMoPrax"]],
+      "view_permission": ["view_uc2observation", "data", "uc2observation"]
+    }
+  },
+  {
+    "model": "data.License",
+    "fields": {
+      "short_name": "ProPolis",
+      "full_text": "[UC]2 ProPolis Licence; see [UC]2 data policy available at www.uc2-program.org/uc2_data_policy.pdf",
+      "public": "False",
+      "view_groups": [["ProPolis"]],
+      "view_permission": ["view_uc2observation", "data", "uc2observation"]
+    }
+  },
+  {
+    "model": "data.License",
+    "fields": {
+      "short_name": "uc2 restricted",
+      "full_text": "[UC]2 Restricted Licence; see [UC]2 data policy available at www.uc2-program.org/uc2_data_policy.pdf",
+      "public": "False",
+      "view_groups": [["uc2"]],
+      "view_permission": ["view_uc2observation", "data", "uc2observation"]
+    }
+  },
+  {
+    "model": "data.License",
+    "fields": {
+      "short_name": "uc2 research",
+      "full_text": "[UC]2 Research Licence; see [UC]2 data policy available at www.uc2-program.org/uc2_data_policy.pdf",
+      "public": "True",
+      "view_permission": ["view_uc2observation", "data", "uc2observation"]
+    }
+  },
+    {
+    "model": "data.License",
+    "fields": {
+      "short_name": "uc2 open",
+      "full_text": "[UC]2 Open Licence; see [UC]2 data policy available at www.uc2-program.org/uc2_data_policy.pdf",
+      "public": "True",
+      "view_permission": ["view_uc2observation", "data", "uc2observation"]
+    }
+  },
+  {
+    "model": "data.License",
+    "fields": {
+      "short_name": "empty",
+      "full_text": "",
+      "public": "True",
+      "view_permission": ["view_uc2observation", "data", "uc2observation"]
+    }
+  }
+]
