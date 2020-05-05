@@ -11,6 +11,7 @@ class UC2Filter(django_filters.FilterSet):
     class Meta:
         model = UC2Observation
         fields = {
+            'acronym': ['exact'],
             'data_type': ['exact'],
             'file_standard_name': ['icontains'],
             'keywords': ['icontains'],
