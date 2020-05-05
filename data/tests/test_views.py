@@ -197,7 +197,7 @@ class TestFileView(APITestCase):
         self.assertEqual(len(resp.data), 1, "3DO user should see the object")
 
         data = {'acronym': "not_in_db"}
-        req = self._build_get_request(data)
+        req = self._build_get_request(data, user=self.user_3do)
         resp = self.view(req)
         self.assertEqual(resp.status_code, status.HTTP_200_OK, 'Search query should succeed')
-        #  FIXME: Search query should be empty, but it isnt
+        self.assertEqual(resp.data, [])
