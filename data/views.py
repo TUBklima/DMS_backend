@@ -12,10 +12,12 @@ from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet
-
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework import mixins
 
 from guardian.shortcuts import assign_perm, get_objects_for_user
+
+import csv
 
 from .filters import UC2Filter
 from .models import *
@@ -352,7 +354,6 @@ class FileView(APIView):
         """
 
         input_name = "-".join(standart_name.split("-")[:-1])  # ignore version in standart_name
-
         max_version = UC2Observation.objects.filter(file_standard_name__startswith=input_name).order_by('version').last()
 
         if max_version:
@@ -389,6 +390,30 @@ class LicenseView(ModelViewSet):
         IsAdminUser: ['update', 'partial_update', 'destroy', 'create'],
         AllowAny: ['list', 'retrieve']
     }
+
+
+class CsvViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, GenericViewSet):
+    """
+    A class representing data read from a CSV file
+    """
+    permission_classes = (ActionBasedPermission,)
+    action_permissions = {
+        IsAdminUser: ['create'],
+        AllowAny: ['list']
+    }
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data, many=True)
+        if not serializer.is_valid():
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class InstitutionView(CsvViewSet):
+    serializer_class = InstitutionSerializer
+    queryset = Institution.objects.all()
 
 
 @action(methods=["get"], detail=True, renderer_classes=(PassthroughRenderer,))

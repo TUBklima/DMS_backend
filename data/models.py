@@ -16,6 +16,12 @@ class License(models.Model):
         return self.short_name
 
 
+class Institution(models.Model):
+    ge_title = models.CharField(max_length=256, null=False, blank=False, unique=True)
+    en_title = models.CharField(max_length=256, null=False, blank=False, unique=True)
+    acronym = models.CharField(max_length=64, null=False, blank=False, unique=True)
+
+
 class DataFile(models.Model):
     data_type = models.CharField(max_length=200)
     file_standard_name = models.CharField(max_length=200, unique=True)

@@ -9,10 +9,11 @@ from django.contrib.auth.models import Group, AnonymousUser
 from rest_framework import status
 from rest_framework.test import APIRequestFactory, APITestCase
 
-from data.models import UC2Observation
+from data.models import *
 from auth.models import User
 from guardian.shortcuts import get_objects_for_user
 
+from django.urls import reverse
 
 from dms_backend import settings
 
@@ -201,3 +202,40 @@ class TestFileView(APITestCase):
         resp = self.view(req)
         self.assertEqual(resp.status_code, status.HTTP_200_OK, 'Search query should succeed')
         self.assertEqual(resp.data, [])
+
+class TestInstitutionView(APITestCase):
+    file_dir = Path(__file__).parent / "test_files" / "tables"
+    fixtures = ['groups_and_licenses.json']
+
+    def setUp(self):
+        self.super_user = User.objects.create_superuser(username="TestUser", email="test@user.com", password="test")
+        self.user = User.objects.create_user(username="TestUser2", email="test@user2.com", password="test")
+        self.user_3do = User.objects.create_user("test3",email="foo@baa.de", password="xxx", is_active=True)
+
+        self.view = views.FileView.as_view()
+        self.factory = APIRequestFactory()
+
+    def test_create(self):
+        self.client.force_login(self.super_user)
+        testfile_path = self.file_dir / "institutions.csv"
+        url = reverse('institution-list')
+        with open(testfile_path, 'rb') as f:
+            resp = self.client.post(
+                url,
+                data={
+                    'file': f
+                }
+            )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(Institution.objects.filter(acronym='TUBklima').exists())
+
+        new_institution_file = self.file_dir / 'with_new_inst.csv'
+        with open(new_institution_file, 'rb') as f:
+            resp = self.client.post(
+                url,
+                data={
+                    'file': f
+                }
+            )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(Institution.objects.filter(acronym='NoSe').exists())
