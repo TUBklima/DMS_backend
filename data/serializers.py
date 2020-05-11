@@ -3,6 +3,7 @@ from collections import OrderedDict
 import csv
 
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 from rest_framework.exceptions import ValidationError
 
 from data.models import *
@@ -54,7 +55,6 @@ class VariableSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-
 class BaseListCsvSerializer(serializers.ListSerializer):
 
     def _raise_exception(self, raise_exception):
@@ -80,6 +80,13 @@ class BaseListCsvSerializer(serializers.ListSerializer):
         # find new lines from csv
         new_objs = []
         c = 0
+        # find fields with a unique validator
+        unique_keys = set()
+        for key, field in self.child.fields.items():
+            if hasattr(field, 'validators'):
+                if any([isinstance(x, UniqueValidator) for x in field.validators]):
+                    unique_keys.add(key)
+
         for elm in initial_data:
             obj = self.child.__class__(data=elm)
             try:
@@ -87,27 +94,26 @@ class BaseListCsvSerializer(serializers.ListSerializer):
                 obj.is_valid(raise_exception=True)
                 new_objs.append(elm)
             except ValidationError as exc:
-                # it is not an error when the only occurring errors are unique errors for all mapping keys
+                # it is not an error when the only occurring errors are unique errors for ALL unique validators
                 # this just means the object is already there
-                needed_keys = set(self.child.Meta.mapping.keys())
-                all_new = True
-                some_seen = False
-                for key in self.child.Meta.mapping:
-                    if key in exc.detail:
-                        key_errors = exc.detail[key]
-                        for e in key_errors:
-                            if e.code == 'unique':
-                                all_new = False
-                                some_seen = True
-                                exc.detail[key].remove(e)
-                                needed_keys.remove(key)
-                        if not exc.detail[key]:
-                            exc.detail.pop(key)
-                if not all_new and some_seen and needed_keys:
-                    exc.detail['wrong_csv_entry'+str(c)] = \
+                unique_errors = set()
+                other_errors = False
+                entry_exist_error = False
+                for key in exc.detail:
+                    key_errors = exc.detail[key]
+                    for e in key_errors:
+                        if e.code == 'unique':
+                            unique_errors.add(key)
+                        else:
+                            other_errors = True
+
+                if unique_errors and not unique_keys == unique_errors:
+                    entry_exist_error = True
+                    exc.detail['wrong_csv_entry_'+str(c)] = \
                         "A entry matches partly an existing entry " \
                         "but differs in some fields the offending entry is in line " + str(c)
-                if exc.detail:
+
+                if other_errors or entry_exist_error:
                     for key, item in exc.detail.items():
                         self._errors[key] = item
             c += 1
@@ -116,6 +122,10 @@ class BaseListCsvSerializer(serializers.ListSerializer):
             return False
 
         self.initial_data = new_objs
+
+        if not self._errors:
+            delattr(self, '_errors')
+
         return super().is_valid(raise_exception=raise_exception)
 
     def to_initial_data(self):
