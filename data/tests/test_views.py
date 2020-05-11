@@ -203,6 +203,7 @@ class TestFileView(APITestCase):
         self.assertEqual(resp.status_code, status.HTTP_200_OK, 'Search query should succeed')
         self.assertEqual(resp.data, [])
 
+
 class TestInstitutionView(APITestCase):
     file_dir = Path(__file__).parent / "test_files" / "tables"
     fixtures = ['groups_and_licenses.json']
@@ -237,5 +238,23 @@ class TestInstitutionView(APITestCase):
                     'file': f
                 }
             )
-        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED, "Reposting existing data fails")
         self.assertTrue(Institution.objects.filter(acronym='NoSe').exists())
+
+    def test_list(self):
+        self.client.force_login(self.super_user)
+        testfile_path = self.file_dir / "institutions.csv"
+        url = reverse('institution-list')
+        with open(testfile_path, 'rb') as f:
+            resp = self.client.post(
+                url,
+                data={
+                    'file': f
+                }
+            )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(Institution.objects.filter(acronym='TUBklima').exists())
+
+        url = reverse('institution-list')
+        resp = self.client.get(url)
+        self.assertGreater(len(resp.data), 0)
