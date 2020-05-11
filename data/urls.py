@@ -20,6 +20,8 @@ urlpatterns = [
 
 router = DefaultRouter()
 router.register(r'institution', views.InstitutionView, basename='institution')
+router.register(r'site', views.SiteView, basename='site')
+
 urlpatterns.extend(router.urls)
 
 # for development: Access to files via URL

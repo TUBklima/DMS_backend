@@ -8,6 +8,7 @@ from rest_framework.exceptions import ValidationError
 
 from data.models import *
 
+from django.core.exceptions import ObjectDoesNotExist
 
 class BaseSerializer(serializers.ModelSerializer):
     #  @classmethod
@@ -175,7 +176,10 @@ class BaseCsvSerializer(serializers.ModelSerializer):
         encoding = 'utf-8'
         header = None
         reader_args = []
-        reader_kwargs = {}
+        reader_kwargs = {
+            'delimiter': '\t',
+            'quotechar': '"'
+        }
         mapping = None
 
 
@@ -184,13 +188,51 @@ class InstitutionSerializer(BaseCsvSerializer):
         model = Institution
         fields = '__all__'
         header = 'institution	acronym	offical English title'
-        reader_kwargs = {
-            'delimiter': '\t',
-            'quotechar': '"'
-        }
         mapping = {
             'ge_title': 0,
             'en_title': 2,
             'acronym': 1
         }
+
+
+
+class SiteSerializer(BaseCsvSerializer):
+
+    class Meta(BaseCsvSerializer.Meta):
+        model = Site
+        fields = '__all__'
+        header = "location	site	description	address	acronym	campaign	remarks"
+        mapping = {
+            'location': 0,
+            'site': 1,
+            'description': 2,
+            'address': 3,
+            'institution': 4,
+            'campaign': 5,
+            'remarks': 6
+        }
+
+    def is_valid(self, raise_exception=False):
+        if 'institution' not in self.initial_data:
+            raise ValidationError('institution field can not be empty', 'required')
+        if not isinstance(self.initial_data['institution'], str):
+            raise ValidationError('institutions must be given as string', 'type')
+
+        institution_acronym = self.initial_data.pop('institution')
+        self.initial_data['institution'] = []
+
+        missing_institutions = []
+        for acronym in institution_acronym.split(','):
+            try:
+                institution = Institution.objects.get(acronym=acronym.strip())
+                self.initial_data['institution'].append(institution.pk)
+            except ObjectDoesNotExist:
+                missing_institutions.append(acronym)
+
+        if missing_institutions:
+            raise ValidationError("The following acronyms have no matching institution: "+", ".join(missing_institutions))
+
+        return super().is_valid(raise_exception=raise_exception)
+
+
 

@@ -11,6 +11,8 @@ from rest_framework.test import APIRequestFactory, APITestCase
 
 from data.models import *
 from auth.models import User
+
+from data.serializers import *
 from guardian.shortcuts import get_objects_for_user
 
 from django.urls import reverse
@@ -216,7 +218,7 @@ class TestInstitutionView(APITestCase):
         self.view = views.FileView.as_view()
         self.factory = APIRequestFactory()
 
-    def test_create(self):
+    def test_create_institution(self):
         self.client.force_login(self.super_user)
         testfile_path = self.file_dir / "institutions.csv"
         url = reverse('institution-list')
@@ -241,7 +243,7 @@ class TestInstitutionView(APITestCase):
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED, "Reposting existing data fails")
         self.assertTrue(Institution.objects.filter(acronym='NoSe').exists())
 
-    def test_list(self):
+    def test_list_institution(self):
         self.client.force_login(self.super_user)
         testfile_path = self.file_dir / "institutions.csv"
         url = reverse('institution-list')
@@ -258,3 +260,44 @@ class TestInstitutionView(APITestCase):
         url = reverse('institution-list')
         resp = self.client.get(url)
         self.assertGreater(len(resp.data), 0)
+
+
+    def test_sites(self):
+
+        self.client.force_login(self.super_user)
+
+        # setup institution
+        testfile_path = self.file_dir / "institutions.csv"
+        url = reverse('institution-list')
+        with open(testfile_path, 'rb') as f:
+            resp = self.client.post(
+                url,
+                data={
+                    'file': f
+                }
+            )
+
+        test_site = {
+            'location': 'S',
+            'site': 'marienpl',
+            'description': 'Marienplatz',
+            'address': 'Marienplatz, Süd, 70178 Stuttgart',
+            'institution': 'FZJiek8, LUHimuk, USifk, DWDku1',
+            'campaign': 'LTO, IOP'
+        }
+        se = SiteSerializer(data=test_site)
+        self.assertTrue(se.is_valid())
+        site = se.save()
+        inst = list(site.institution.all().values_list('acronym', flat=True))
+        self.assertCountEqual(inst, ['FZJiek8', 'LUHimuk', 'USifk', 'DWDku1'])  # compares elements ignoring the order
+
+        testfile_path = self.file_dir / "sites.csv"
+        url = reverse('site-list')
+        with open(testfile_path, 'rb') as f:
+            resp = self.client.post(
+                url,
+                data={
+                    'file': f
+                }
+            )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)

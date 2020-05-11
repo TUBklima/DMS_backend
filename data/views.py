@@ -405,6 +405,7 @@ class CsvViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, GenericViewSet)
     def create(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data, many=True)
         if not serializer.is_valid():
+#            errors = [x for x in serializer.errors if x]
             return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
         serializer.save()
 
@@ -414,6 +415,11 @@ class CsvViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, GenericViewSet)
 class InstitutionView(CsvViewSet):
     serializer_class = InstitutionSerializer
     queryset = Institution.objects.all()
+
+
+class SiteView(CsvViewSet):
+    serializer_class = SiteSerializer
+    queryset = Site.objects.all()
 
 
 @action(methods=["get"], detail=True, renderer_classes=(PassthroughRenderer,))

@@ -51,12 +51,36 @@ class DataFile(models.Model):
 
 
 class Variable(models.Model):
-    variable = models.CharField(max_length=32)
-    long_name = models.CharField(max_length=200)
-    standard_name = models.CharField(max_length=200)
+    variable = models.CharField(max_length=32, null=False, blank=False, unique=True)
+    institution = models.ForeignKey(Institution, to_field='acronym', on_delete=models.PROTECT)
+    long_name = models.CharField(max_length=200, null=False, blank=False, unique=True)
+    standard_name = models.CharField(max_length=200, null=False, blank=False, unique=True)
+    units = models.CharField(max_length=32)
+    AMIP = models.BooleanField(null=False)
+    remarks = models.CharField(max_length=200)
 
     def __str__(self):
         return self.variable
+
+
+class Site(models.Model):
+    IOP = "IOP"
+    LTO = "LTO"
+    WT = 'WT'
+    IOP_LTO = "LTO, IOP"
+
+    location = models.CharField(max_length=32, null=False, blank=False)
+    site = models.CharField(max_length=64, null=False, blank=False, unique=True)
+    description = models.CharField(max_length=200, null=False, blank=False)
+    address = models.CharField(max_length=200, null=False, blank=False)
+    institution = models.ManyToManyField(Institution)
+    campaign = models.CharField(max_length=10, null=False, choices=[
+        (IOP, "intensive observation period"),
+        (LTO, "long term observation"),
+        (WT, 'wind'),
+        (IOP_LTO, "intensive observation period, long term observation")
+    ])
+    remarks = models.CharField(max_length=200, null=True, blank=True)
 
 
 class UC2Observation(DataFile):
