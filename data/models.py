@@ -24,7 +24,14 @@ class License(models.Model):
 pre_save.connect(License.pre_create, sender=License)
 
 
+class InstitutionManager(models.Manager):
+    def get_by_natural_key(self, acronym=None):
+        return self.get(acronym=acronym)
+
+
 class Institution(models.Model):
+
+    objects = InstitutionManager()
 
     @staticmethod
     def post_create(sender, instance, created, *args, **kwargs):
@@ -35,6 +42,9 @@ class Institution(models.Model):
     ge_title = models.CharField(max_length=256, null=False, blank=False, unique=True)
     en_title = models.CharField(max_length=256, null=False, blank=False, unique=True)
     acronym = models.CharField(max_length=64, null=False, blank=False, unique=True)
+
+    def natural_key(self):
+        return [self.acronym]
 
 
 post_save.connect(Institution.post_create, sender=Institution)
@@ -68,7 +78,16 @@ class DataFile(models.Model):
         abstract = True
 
 
+class VariableManger(models.Manager):
+
+    def get_by_natural_key(self, long_name):
+        return self.get(long_name=long_name)
+
+
 class Variable(models.Model):
+
+    objects = VariableManger()
+
     class Meta:
         unique_together = ('long_name', 'variable',)
     variable = models.CharField(max_length=32, null=False)  # Is not unique because deprecate var can exist
@@ -78,6 +97,9 @@ class Variable(models.Model):
     units = models.CharField(max_length=32)
     AMIP = models.BooleanField(null=False)
     remarks = models.CharField(max_length=200,  null=True, blank=True)
+
+    def natural_key(self):
+        return [self.long_name]
 
     def __str__(self):
         return self.variable
