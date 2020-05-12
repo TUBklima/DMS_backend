@@ -3,9 +3,14 @@ from django.db import models
 from django.utils import timezone, dateformat
 from django.conf import settings
 from django.contrib.auth.models import Group, Permission
-
+from django.db.models.signals import post_save, pre_save
 
 class License(models.Model):
+
+    @staticmethod
+    def pre_create(sender, instance, *args, **kwargs):
+        Group.objects.get_or_create(name=instance.short_name)
+
     short_name = models.CharField(max_length=128, unique=True, blank=False, null=False)
     full_text = models.CharField(max_length=256, unique=True, null=False)
     public = models.BooleanField(null=False, default=False)
@@ -16,10 +21,23 @@ class License(models.Model):
         return self.short_name
 
 
+pre_save.connect(License.pre_create, sender=License)
+
+
 class Institution(models.Model):
+
+    @staticmethod
+    def post_create(sender, instance, created, *args, **kwargs):
+        if not created:
+            return
+        Group.objects.get_or_create(name=instance.acronym)
+
     ge_title = models.CharField(max_length=256, null=False, blank=False, unique=True)
     en_title = models.CharField(max_length=256, null=False, blank=False, unique=True)
     acronym = models.CharField(max_length=64, null=False, blank=False, unique=True)
+
+
+post_save.connect(Institution.post_create, sender=Institution)
 
 
 class DataFile(models.Model):
