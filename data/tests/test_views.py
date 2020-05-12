@@ -48,7 +48,7 @@ def make_fixture(path, data, model_str, ignore_fields=None, append=False):
 
 class TestFileView(APITestCase):
     file_dir = Path(__file__).parent / "test_files"
-    fixtures = ['groups_and_licenses.json']
+    fixtures = ['groups_and_licenses.json', 'data/tests/fixtures/institutions.json', 'data/tests/fixtures/variables.json']
 
     def setUp(self):
         self.super_user = User.objects.create_superuser(username="TestUser", email="test@user.com", password="test")
