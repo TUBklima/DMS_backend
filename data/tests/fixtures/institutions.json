@@ -390,5 +390,13 @@
             "en_title": "University of Stuttgart, Institute of Combustion and Power Plant Technology",
             "acronym": "USifk"
         }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "hdcp2",
+            "en_title": "hdcp2",
+            "acronym": "hdcp2"
+        }
     }
 ]
