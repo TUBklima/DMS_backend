@@ -21,6 +21,7 @@ urlpatterns = [
 router = DefaultRouter()
 router.register(r'institution', views.InstitutionView, basename='institution')
 router.register(r'site', views.SiteView, basename='site')
+router.register(r'variable', views.VariableView, basename='variable')
 
 urlpatterns.extend(router.urls)
 

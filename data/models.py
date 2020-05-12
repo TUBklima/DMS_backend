@@ -69,13 +69,15 @@ class DataFile(models.Model):
 
 
 class Variable(models.Model):
-    variable = models.CharField(max_length=32, null=False, blank=False, unique=True)
-    institution = models.ForeignKey(Institution, to_field='acronym', on_delete=models.PROTECT)
+    class Meta:
+        unique_together = ('long_name', 'variable',)
+    variable = models.CharField(max_length=32, null=False)  # Is not unique because deprecate var can exist
+    institution = models.ManyToManyField(Institution, blank=True)  # The institutions for which this was introduced
     long_name = models.CharField(max_length=200, null=False, blank=False, unique=True)
-    standard_name = models.CharField(max_length=200, null=False, blank=False, unique=True)
+    standard_name = models.CharField(max_length=200, null=True, blank=True)
     units = models.CharField(max_length=32)
     AMIP = models.BooleanField(null=False)
-    remarks = models.CharField(max_length=200)
+    remarks = models.CharField(max_length=200,  null=True, blank=True)
 
     def __str__(self):
         return self.variable

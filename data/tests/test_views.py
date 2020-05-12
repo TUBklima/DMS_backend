@@ -292,18 +292,6 @@ class TestSiteView(APITestCase):
     def test_sites(self):
 
         self.client.force_login(self.super_user)
-
-        # setup institution
-        testfile_path = self.file_dir / "institutions.csv"
-        url = reverse('institution-list')
-        with open(testfile_path, 'rb') as f:
-            resp = self.client.post(
-                url,
-                data={
-                    'file': f
-                }
-            )
-
         test_site = {
             'location': 'S',
             'site': 'marienpl',
@@ -328,3 +316,25 @@ class TestSiteView(APITestCase):
                 }
             )
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+
+class TestVariableView(APITestCase):
+    file_dir = Path(__file__).parent / 'test_files' / 'tables'
+    fixtures = ['groups_and_licenses.json', 'data/tests/fixtures/institutions.json']
+
+    def setUp(self):
+        self.super_user = User.objects.create_superuser(username='TestUser', email='test@user.com', password='test')
+
+    def test_variable(self):
+        self.client.force_login(self.super_user)
+        testfile_path = self.file_dir / 'variables.csv'
+        url = reverse('variable-list')
+        with open(testfile_path, 'rb') as f:
+            resp = self.client.post(
+                url,
+                data={
+                    'file': f
+                }
+            )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+

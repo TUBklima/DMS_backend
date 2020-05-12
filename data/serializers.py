@@ -101,6 +101,9 @@ class BaseListCsvSerializer(serializers.ListSerializer):
                 other_errors = False
                 entry_exist_error = False
                 for key in exc.detail:
+                    if not type(key) == str:
+                        other_errors = True
+                        continue
                     key_errors = exc.detail[key]
                     for e in key_errors:
                         if e.code == 'unique':
@@ -115,8 +118,13 @@ class BaseListCsvSerializer(serializers.ListSerializer):
                         "but differs in some fields the offending entry is in line " + str(c)
 
                 if other_errors or entry_exist_error:
-                    for key, item in exc.detail.items():
-                        self._errors[key] = item
+                    if type(exc.detail) == list:
+                        if 'list' not in self._errors:
+                            self._errors['list'] = []
+                        self._errors['list'].extend(exc.detail)
+                    else:
+                        for key, item in exc.detail.items():
+                            self._errors[key] = item
             c += 1
 
         if self._raise_exception(raise_exception):
@@ -203,6 +211,8 @@ class BaseCsvSerializer(serializers.ModelSerializer):
             field = self.Meta.many_to_many[key]['field']
 
             for elm in orig_str.split(sep):
+                if elm == '':
+                    continue
                 try:
                     query = {field: elm.strip()}
                     obj = model.objects.get(**query)  # use dict + splash separator to dynamically query the model
@@ -213,8 +223,9 @@ class BaseCsvSerializer(serializers.ModelSerializer):
 
             if missing_elms:
                 raise ValidationError(
-                    'The following ' + field + ' has the following missing elements : ' + ", ".join(missing_elms))
-            return super().is_valid(raise_exception=raise_exception)
+                    'The field "' + field + '" has the following missing elements : ' + ", ".join(missing_elms))
+
+        return super().is_valid(raise_exception=raise_exception)
 
 
 class InstitutionSerializer(BaseCsvSerializer):
@@ -252,5 +263,23 @@ class SiteSerializer(BaseCsvSerializer):
         }
 
 
-
-
+class VariableCsvSerializer(BaseCsvSerializer):
+    class Meta(BaseCsvSerializer.Meta):
+        model = Variable
+        fields = '__all__'
+        header = "long_name	standard_name	units	variable	acronym	AMIP	remarks"
+        mapping = {
+            'long_name': 0,
+            'standard_name': 1,
+            'units': 2,
+            'variable': 3,
+            'institution': 4,
+            'AMIP': 5,
+            'remarks': 6
+        }
+        many_to_many = {
+            'institution': {
+                'model': Institution,
+                'field': 'acronym'
+            }
+        }
