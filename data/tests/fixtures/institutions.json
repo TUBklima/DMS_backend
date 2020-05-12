@@ -1,0 +1,394 @@
+[
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Amt für Umweltschutz Stuttgart, Abteilung Stadtklimatologie",
+            "en_title": "Amt für Umweltschutz Stuttgart, Department for Urban Climatology",
+            "acronym": "AfUSklima"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Climate Service Center Germany GERICS am Helmholtz-Zentrum Geesthacht",
+            "en_title": "Climate Service Center Germany GERICS",
+            "acronym": "GERICS"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "BKR Aachen Noky & Simon",
+            "en_title": "BKR Aachen Noky & Simon",
+            "acronym": "BKR"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Deutscher Wetterdienst",
+            "en_title": "German Meteorological Service",
+            "acronym": "DWD"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Deutscher Wetterdienst, Geschäftsbereich Klima und Umwelt, Abteilung Klima- und Umweltberatung",
+            "en_title": "German Meteorological Service, Business Area Climate and Environment, Climate and Environment Consultancy",
+            "acronym": "DWDku1"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Deutscher Wetterdienst, Geschäftsbereich Klima und Umwelt, Abteilung Klima- und Umweltberatung, Regionales Klimabüro Essen",
+            "en_title": "German Meteorological Service, Business Area Climate and Environment, Climate and Environment Consultancy, Regional Climate Office Essen",
+            "acronym": "DWDku1em"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Deutscher Wetterdienst, Geschäftsbereich Klima und Umwelt, Abteilung Klima- und Umweltberatung, Zentrum für Medizin-Meteorologische Forschung",
+            "en_title": "German Meteorological Service, Business Area Climate and Environment, Climate and Environment Consultancy, Centre for Human Biometeorological Research (ZMMF)",
+            "acronym": "DWDku1zmmf"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Deutscher Wetterdienst, Geschäftsbereich Klima und Umwelt, Abteilung Klima- und Umweltberatung, Zentrales Klimabüro",
+            "en_title": "German Meteorological Service, Business Area Climate and Environment, Climate and Environment Consultancy, Central Climate Office",
+            "acronym": "DWDku11zkb"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Deutscher Wetterdienst, Geschäftsbereich Forschung und Entwicklung, Meteorologisches Observatorium Lindenberg",
+            "en_title": "German Meteorological Service, Business Area Research and Development, Lindenberg Meteorological Observatory",
+            "acronym": "DWDfelg"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Deutsches Institut für Urbanistik Köln",
+            "en_title": "German Institute of Urban Affairs Cologne",
+            "acronym": "DifuK"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Deutsches Zentrum für Luft- und Raumfahrt",
+            "en_title": "German Aerospace Center",
+            "acronym": "DLR"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Deutsches Zentrum für Luft- und Raumfahrt, Deutsches Fernerkundungsdatenzentrum",
+            "en_title": "German Aerospace Center, German Remote Sensing Data Center",
+            "acronym": "DLRdfd"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Deutsches Zentrum für Luft- und Raumfahrt, Institut für Physik der Atmosphäre",
+            "en_title": "German Aerospace Center, Institute of Atmospheric Physics",
+            "acronym": "DLRpa"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Forschungsinstitut für Wasser- und Abfallwirtschaft an der RWTH Aachen",
+            "en_title": "Research Institute for Water and Waste Management at RWTH Aachen",
+            "acronym": "FiW"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Forschungszentrum Jülich GmbH",
+            "en_title": "Forschungszentrum Jülich GmbH",
+            "acronym": "FZJ"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Forschungszentrum Jülich GmbH, Institut für Energie- und Klimaforschung, IEK-8: Troposphäre",
+            "en_title": "Forschungszentrum Jülich GmbH, Institute of Energy and Climate Research, IEK-8: Troposphere",
+            "acronym": "FZJiek8"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Fraunhofer-Institut für Bauphysik",
+            "en_title": "Fraunhofer Institute for Building Physics",
+            "acronym": "FIBP"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Fraunhofer-Institut für Bauphysik, Hygrothermik",
+            "en_title": "Fraunhofer Institute for Building Physics, Hygrothermics",
+            "acronym": "FIBPhygro"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Freie Universität Berlin",
+            "en_title": "Freie Universität Berlin",
+            "acronym": "FUB"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Freie Universität Berlin, Institut für Meteorologie",
+            "en_title": "Freie Universität Berlin, Institute of Meteorology",
+            "acronym": "FUBmeteo"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "GEO-NET Umweltconsulting GmbH",
+            "en_title": "GEO-NET Environmental Consulting",
+            "acronym": "GEONET"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Hochschule Offenburg",
+            "en_title": "Offenburg University of Applied Sciences",
+            "acronym": "HSOG"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Humboldt-Universität zu Berlin",
+            "en_title": "Humboldt-Universität zu Berlin",
+            "acronym": "HUB"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Humboldt-Universität zu Berlin, Geographisches Institut",
+            "en_title": "Humboldt-Universität zu Berlin, Geography Department",
+            "acronym": "HUBgeo"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Ingenieursgesellschaft Prof. Sieker mbH",
+            "en_title": "Engineering bureau Prof. Sieker",
+            "acronym": "IPS"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Institut für transformative Nachhaltigkeitsforschung",
+            "en_title": "Institute for Advanced Sustainability Studies Potsdam",
+            "acronym": "IASS"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Karlsruher Institut für Technologie",
+            "en_title": "Karlsruhe Institute of Technology",
+            "acronym": "KIT"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Karlsruher Institut für Technologie, Institut für Meteorologie und Klimaforschung",
+            "en_title": "Karlsruhe Institute of Technology, Institute of Meteorology and Climate Research",
+            "acronym": "KITimk"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Karlsruher Institut für Technologie, Institut für Meteorologie und Klimaforschung, Atmosphärische Aerosolforschung",
+            "en_title": "Karlsruhe Institute of Technology, Institute of Meteorology and Climate Research, Atmospheric Aerosol Research",
+            "acronym": "KITimkaaf"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Karlsruher Institut für Technologie, Institut für Meteorologie und Klimaforschung, Institut für Atmosphärische Umweltforschung",
+            "en_title": "Karlsruhe Institute of Technology, Institute of Meteorology and Climate Research, Atmospheric Environmental Research",
+            "acronym": "KITimkifu"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Karlsruher Institut für Technologie, Institut für Meteorologie und Klimaforschung, Troposphärenforschung",
+            "en_title": "Karlsruhe Institute of Technology, Institute of Meteorology and Climate Research, Troposphere Research",
+            "acronym": "KITimktro"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Leibniz Universität Hannover",
+            "en_title": "Leibniz Universität Hannover",
+            "acronym": "LUH"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Leibniz Universität Hannover, Institut für Meteorologie und Klimatologie",
+            "en_title": "Leibniz Universität Hannover, Institute of Meteorology and Climatology",
+            "acronym": "LUHimuk"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Senatsverwaltung für Stadtentwicklung und Wohnen Berlin",
+            "en_title": "Senate Departments for Urban Development and Housing Berlin",
+            "acronym": "SenSWB"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Senatsverwaltung für Umwelt, Verkehr und Klimaschutz Berlin",
+            "en_title": "Senate Departments for the Environment, Transport and Climate Protection Berlin",
+            "acronym": "SenUVKB"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Technische Universität Berlin",
+            "en_title": "Technische Universität Berlin",
+            "acronym": "TUB"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Technische Universität Berlin, Fachgebiet Klimatologie",
+            "en_title": "Technische Universität Berlin, Chair of Climatology",
+            "acronym": "TUBklima"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Technische Universität Braunschweig",
+            "en_title": "Technische Universität Braunschweig",
+            "acronym": "TUBS"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Technische Universität Braunschweig, Institut für Geoökologie, Klimatologie und Umweltmeteorologie",
+            "en_title": "Technische Universität Braunschweig, Institute of Geoecology, Climatology and Environmental Meteorology",
+            "acronym": "TUBSgeo"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Technische Universität Dortmund",
+            "en_title": "TU Dortmund University",
+            "acronym": "TUDO"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Technische Universität Dortmund, Sozialforschungsstelle",
+            "en_title": "TU Dortmund University, Sozialforschungsstelle",
+            "acronym": "TUDOsfs"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Technische Universität Dresden",
+            "en_title": "Technische Universität Dresden",
+            "acronym": "TUDD"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Technische Universität Dresden, Professur für Meteorologie",
+            "en_title": "Technische Universität Dresden, Chair of Meteorology",
+            "acronym": "TUDDmeteo"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Universität Augsburg",
+            "en_title": "University of Augsburg",
+            "acronym": "UA"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Universität Augsburg, Institut für Geographie",
+            "en_title": "University of Augsburg, Institute of Geography",
+            "acronym": "UAgeo"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Universität Hamburg",
+            "en_title": "University of Hamburg",
+            "acronym": "UHH"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Universität Hamburg, Meteorologisches Institut",
+            "en_title": "University of Hamburg, Meteorological Institute",
+            "acronym": "UHHmeteo"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Universität Stuttgart",
+            "en_title": "University of Stuttgart",
+            "acronym": "US"
+        }
+    },
+    {
+        "model": "data.Institution",
+        "fields": {
+            "ge_title": "Universität Stuttgart, Institut für Feuerungs- und Kraftwerkstechnik",
+            "en_title": "University of Stuttgart, Institute of Combustion and Power Plant Technology",
+            "acronym": "USifk"
+        }
+    }
+]

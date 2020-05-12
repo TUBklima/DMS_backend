@@ -21,8 +21,29 @@ from dms_backend import settings
 
 import uc2data
 from pathlib import Path
+import json
 
 from .. import views
+
+
+def make_fixture(path, data, model_str, ignore_fields=None, append=False):
+    mode = 'w'
+    if append:
+        mode = 'a'
+
+    write_data = []
+    for elm in data:
+        write_elm = {
+            'model': model_str,
+            'fields': {}
+        }
+        for key, item in elm.items():
+            if key not in ignore_fields:
+                write_elm['fields'][key] = item
+        write_data.append(write_elm)
+
+    with open(path, mode, encoding='utf-8') as f:
+        json.dump(write_data, f, indent=4, ensure_ascii=False)
 
 
 class TestFileView(APITestCase):
@@ -215,9 +236,6 @@ class TestInstitutionView(APITestCase):
         self.user = User.objects.create_user(username="TestUser2", email="test@user2.com", password="test")
         self.user_3do = User.objects.create_user("test3",email="foo@baa.de", password="xxx", is_active=True)
 
-        self.view = views.FileView.as_view()
-        self.factory = APIRequestFactory()
-
     def test_create_institution(self):
         self.client.force_login(self.super_user)
         testfile_path = self.file_dir / "institutions.csv"
@@ -231,6 +249,8 @@ class TestInstitutionView(APITestCase):
             )
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
         self.assertTrue(Institution.objects.filter(acronym='TUBklima').exists())
+
+        self.assertTrue(Group.objects.filter(name='TUBklima').exists())
 
         new_institution_file = self.file_dir / 'with_new_inst.csv'
         with open(new_institution_file, 'rb') as f:
@@ -261,6 +281,13 @@ class TestInstitutionView(APITestCase):
         resp = self.client.get(url)
         self.assertGreater(len(resp.data), 0)
 
+
+class TestSiteView(APITestCase):
+    file_dir = Path(__file__).parent / "test_files" / "tables"
+    fixtures = ['groups_and_licenses.json', 'data/tests/fixtures/institutions.json']
+
+    def setUp(self):
+        self.super_user = User.objects.create_superuser(username="TestUser", email="test@user.com", password="test")
 
     def test_sites(self):
 
