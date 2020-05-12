@@ -181,6 +181,40 @@ class BaseCsvSerializer(serializers.ModelSerializer):
             'quotechar': '"'
         }
         mapping = None
+        many_to_many = []
+
+    def is_valid(self, raise_exception=False):
+        for key in self.Meta.many_to_many:
+            if key not in self.initial_data:
+                raise ValidationError(key + ' field can not be empty', 'required')
+            if not isinstance(self.initial_data[key], str):
+                raise ValidationError(key + ' must be given as string', 'type')
+
+            # Handle many to many relationship
+            orig_str = self.initial_data.pop(key)
+            self.initial_data[key] = []
+            if 'separator' in self.Meta.many_to_many[key]:
+                sep = self.Meta.many_to_many[key]['separator']
+            else:
+                sep = ','
+
+            missing_elms = []
+            model = self.Meta.many_to_many[key]['model']
+            field = self.Meta.many_to_many[key]['field']
+
+            for elm in orig_str.split(sep):
+                try:
+                    query = {field: elm.strip()}
+                    obj = model.objects.get(**query)  # use dict + splash separator to dynamically query the model
+
+                    self.initial_data[key].append(obj.pk)
+                except ObjectDoesNotExist:
+                    missing_elms.append(elm)
+
+            if missing_elms:
+                raise ValidationError(
+                    'The following ' + field + ' has the following missing elements : ' + ", ".join(missing_elms))
+            return super().is_valid(raise_exception=raise_exception)
 
 
 class InstitutionSerializer(BaseCsvSerializer):
@@ -193,7 +227,6 @@ class InstitutionSerializer(BaseCsvSerializer):
             'en_title': 2,
             'acronym': 1
         }
-
 
 
 class SiteSerializer(BaseCsvSerializer):
@@ -211,28 +244,13 @@ class SiteSerializer(BaseCsvSerializer):
             'campaign': 5,
             'remarks': 6
         }
+        many_to_many = {
+            'institution': {
+                'model': Institution,
+                'field': 'acronym'
+            }
+        }
 
-    def is_valid(self, raise_exception=False):
-        if 'institution' not in self.initial_data:
-            raise ValidationError('institution field can not be empty', 'required')
-        if not isinstance(self.initial_data['institution'], str):
-            raise ValidationError('institutions must be given as string', 'type')
-
-        institution_acronym = self.initial_data.pop('institution')
-        self.initial_data['institution'] = []
-
-        missing_institutions = []
-        for acronym in institution_acronym.split(','):
-            try:
-                institution = Institution.objects.get(acronym=acronym.strip())
-                self.initial_data['institution'].append(institution.pk)
-            except ObjectDoesNotExist:
-                missing_institutions.append(acronym)
-
-        if missing_institutions:
-            raise ValidationError("The following acronyms have no matching institution: "+", ".join(missing_institutions))
-
-        return super().is_valid(raise_exception=raise_exception)
 
 
 
