@@ -241,7 +241,6 @@ class FileView(APIView):
             new_entry['utm_epsg'] = utm_epsg
 
         new_entry["variables"] = []
-        new_variables = []
 
         # read variables from fiel and create if they not already exist
         for uc2var in uc2ds.data_vars:
@@ -249,34 +248,7 @@ class FileView(APIView):
                 var_id = Variable.objects.get(variable=uc2var).id
                 new_entry["variables"].append(var_id)
             except ObjectDoesNotExist:
-                long_name = None
-                try:
-                    long_name = uc2ds.ds.data_vars[uc2var].long_name
-                except AttributeError:
-                    result.fatal.append("Can not access long_name for variable "+str(uc2var))
-                standart_name = None
-                try:
-                    standart_name = uc2ds.ds.data_vars[uc2var].standard_name
-                except AttributeError:
-                    result.fatal.append("Can not access standard_name for variable "+str(uc2var))
-
-                new_var = {
-                    "variable": uc2var,
-                    "long_name": long_name,
-                    "standard_name": standart_name,
-                }
-                new_variables.append(new_var)
-
-        if not result.has_fatal:
-            # we do this in an extra step so we can avoid creating
-            # variables if a fatal error exist. A unsuccessful request should not mutate
-            # the db state
-            serializer = VariableSerializer(data=new_variables, many=True)
-            if serializer.is_valid():
-                serializer.save()
-                new_entry["variables"].extend([var['id'] for var in serializer.data])
-            else:
-                result.fatal.append(serializer.errors)
+                result.fatal.append("Variable " + str(uc2var) + " not present in DMS database")
 
         ####
         # serialize and save
