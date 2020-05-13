@@ -3,15 +3,10 @@ from data.models import UC2Observation, Variable
 
 
 class UC2Filter(django_filters.FilterSet):
-    # upload_year = django_filters.NumberFilter(field_name='upload_date', lookup_expr='year')
-    # upload_year__gt = django_filters.NumberFilter(field_name='upload_date', lookup_expr='year__gt')
-    # upload_year__lt = django_filters.NumberFilter(field_name='upload_date', lookup_expr='year__lt')
-    #
-    # manufacturer__name = django_filters.CharFilter(lookup_expr='icontains')
+    acronym = django_filters.CharFilter(field_name="acronym__acronym")
     class Meta:
         model = UC2Observation
         fields = {
-            'acronym': ['exact'],
             'data_type': ['exact'],
             'file_standard_name': ['icontains'],
             'keywords': ['icontains'],
@@ -26,7 +21,7 @@ class UC2Filter(django_filters.FilterSet):
             'featureType': ['exact'],
             'data_content': ['exact'],
             'location': ['icontains'],
-            'site': ['icontains'],
+            #'site': ['icontains'],
             'origin_lon': ['exact'],
             'origin_lat': ['exact'],
             'campaign': ['exact'],

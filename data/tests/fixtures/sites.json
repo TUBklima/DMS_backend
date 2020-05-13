@@ -1,0 +1,4370 @@
+[
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "marienpl",
+            "description": "Marienplatz",
+            "address": "Marienplatz, Süd, 70178 Stuttgart",
+            "campaign": "LTO, IOP",
+            "remarks": null,
+            "institution": [
+                [
+                    "DWDku1"
+                ],
+                [
+                    "FZJiek8"
+                ],
+                [
+                    "LUHimuk"
+                ],
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "adlershof",
+            "description": "Area of Berlin-Adlerhof",
+            "address": "Adlershof, Treptow-Köpenick, Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "HUBgeo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "adlershofgeo",
+            "description": "HUB Department of Geography",
+            "address": "Rudower Chaussee 16, Treptow-Köpenick, 12489 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "HUBgeo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "adlershofger",
+            "description": "HUB Department of Geography roof",
+            "address": "Rudower Chaussee 16, Treptow-Köpenick, 12489 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "HUBgeo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "airportber",
+            "description": "green roof, parking deck P7 at the Berlin Brandenburg Airport (BER)",
+            "address": "Hugo-Junkers-Ring, 12529 Schönefeld",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBSgeo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "airportsfx",
+            "description": "Flugwetterwarte Berlin-Schoenefeld",
+            "address": "Flughafen Schönefeld, 12521 Berlin",
+            "campaign": "LTO",
+            "remarks": "FLUGWEWA; DWD STAT_ID: 427",
+            "institution": [
+                [
+                    "DWD"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "airportthf",
+            "description": "former Tempelhof Airport",
+            "address": "Tempelhofer Damm, 12101 Berlin",
+            "campaign": "LTO, IOP",
+            "remarks": "FLUGWEWA; DWD STAT_ID: 433 and other measuring points",
+            "institution": [
+                [
+                    "DWD"
+                ],
+                [
+                    "DWDku1"
+                ],
+                [
+                    "UAgeo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "airporttxl",
+            "description": "Flugwetterwarte Berlin-Tegel",
+            "address": "Flughafen Tegel, Reinickendorf, 13405 Berlin",
+            "campaign": "LTO",
+            "remarks": "FLUGWEWA; DWD STAT_ID: 430",
+            "institution": [
+                [
+                    "DWD"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "albrecht",
+            "description": "garden plot Karl-Lange-Brücke North",
+            "address": "Albrechtstr. 61, Steglitz-Zehlendorf, 12167 Berlin",
+            "campaign": "LTO",
+            "remarks": "UCON identifier: ALBR",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "alexanderpl",
+            "description": "in the city center, about 250m away from the TV Tower",
+            "address": "Spandauer Str./Karl-Liebknecht-Str., Mitte, 10178 Berlin",
+            "campaign": "LTO",
+            "remarks": "AWST; DWD STAT_ID: 399",
+            "institution": [
+                [
+                    "DWD"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "amselgrund",
+            "description": "Hermsdorf between two buildings",
+            "address": "Amselgrund 12, Reinickendorf, 13467 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "amselne",
+            "description": "Hermsdorf next to the forest, northeast direction",
+            "address": "Amselgrund 11, Reinickendorf, 13467 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ],
+                [
+                    "HUBgeo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "amselsw",
+            "description": "Hermsdorf next to the forest, southwestdirection",
+            "address": "Amselgrund 11, Reinickendorf, 13467 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "bamberger",
+            "description": "on balcony, ground floor",
+            "address": "Bamberger Str. 56, Tempelhof-Schöneberg, 10777 Berlin",
+            "campaign": "LTO",
+            "remarks": "UCON identifier: BAMB",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "berlincity",
+            "description": "site covering whole city",
+            "address": "Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FZJiek8"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "berlineast",
+            "description": "East of Berlin",
+            "address": "Treptow-Köpenick, Neukölln, Friedrichshain-Kreuzberg, Pankow",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "HUBgeo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "berlinse",
+            "description": "Southeast of Berlin",
+            "address": "Treptow-Köpenick, Neukölln, Friedrichshain-Kreuzberg, Tempelhof-Schöneberg",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "HUBgeo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "biesdorf",
+            "description": "private garden",
+            "address": "Prignitzstr. 54, Marzahn-Hellersdorf, 12683 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "botangarden",
+            "description": "botanic garden Steglitz-Zehlendorf",
+            "address": "Königin-Luise-Str. 6-8, Steglitz-Zehlendorf, 14195 Berlin",
+            "campaign": "LTO",
+            "remarks": "Same site like dahlem (DWD). If station ID is 10381 it refers to FUBmeteo.",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "brentano",
+            "description": "under tree",
+            "address": "Brentanostr. 72, Steglitz-Zehlendorf, 12163 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "buch",
+            "description": "Hydrometeorological Branch Office Berlin-Buch",
+            "address": "Lindenberger Weg 24, Pankow, 13125 Berlin",
+            "campaign": "LTO",
+            "remarks": "AWST; DWD STAT_ID: 400",
+            "institution": [
+                [
+                    "DWD"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "buchholzer",
+            "description": "Elisabeth-Aue, north site",
+            "address": "Buchholzer Str. 50, Pankow, 13159 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "buckower",
+            "description": "Industry area",
+            "address": "Buckower Chaussee 116, Tempelhof-Schöneberg, 12277 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "canalcorner",
+            "description": "Englische Str. corner Salzufer, station 11",
+            "address": "Englische Str. 30, Charlottenburg-Wilmersdorf, 10587 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "canalenglkpm",
+            "description": "Englische Str. opposite KPM, station 12",
+            "address": "Englische Str. 29, Charlottenburg-Wilmersdorf, 10587 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "canalnegreen",
+            "description": "Salzufer, northeast of Landwehr canal ,green plants, station 13",
+            "address": "Salzufer 1, Charlottenburg-Wilmersdorf, 10587 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "canalnemable",
+            "description": "Salzufer, northeast of Landwehr canal, mable, station 15",
+            "address": "Salzufer 1, Charlottenburg-Wilmersdorf, 10587 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "canalnewalk",
+            "description": "Salzufer, northeast of Landwehr canal, walkway, station 14",
+            "address": "Salzufer 1, Charlottenburg-Wilmersdorf, 10587 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "canalngreen",
+            "description": "Salzufer, northside of Landwehr canal green plants, station 9",
+            "address": "Englische Str. 1, Charlottenburg-Wilmersdorf, 10587 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "canalnwalk",
+            "description": "Salzufer, northside of Landwehr canal walkway, station 10",
+            "address": "Englische Str. 1, Charlottenburg-Wilmersdorf, 10587 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "canalscor",
+            "description": "Einsteinufer, south corner Str. 17. Juni, station 3",
+            "address": "Einsteinufer 5, Charlottenburg-Wilmersdorf, 10587 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "canalsstr",
+            "description": "Einsteinufer, south of Landwehr canal, on the street, station 4",
+            "address": "Einsteinufer 5, Charlottenburg-Wilmersdorf, 10587 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "canalsw",
+            "description": "Einsteinufer, south of Landwehr canal waterstation, station 5",
+            "address": "Einsteinufer 5, Charlottenburg-Wilmersdorf, 10587 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "canalswstr",
+            "description": "Einsteinufer11, southwest of Landwehr canal, on the street,station 7",
+            "address": "Einsteinufer 11, Charlottenburg-Wilmersdorf, 10587 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "canalswwalk",
+            "description": "Einsteinufer 11, southwest of Landwehr canal, walkway, station 8",
+            "address": "Einsteinufer 11, Charlottenburg-Wilmersdorf, 10587 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "canalswwater",
+            "description": "Einsteinufer 11, southwest of Landwehr canal waterstation, station 6",
+            "address": "Einsteinufer 11, Charlottenburg-Wilmersdorf, 10587 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "carlhein1",
+            "description": "Carl-Heinrich-Becker Weg 6, street in front of FUB",
+            "address": "Carl-Heinrich-Becker Weg 6-10, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "carlhein2",
+            "description": "Carl-Heinrich-Becker Weg 6, walkway in front of FUB",
+            "address": "Schmidt-Ott-Str. 14, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "carlhein3",
+            "description": "Carl-Heinrich-Becker Weg 6, corner to Schmitt-Ott-Str.",
+            "address": "Schmidt-Ott-Str. 14, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "charlottenb",
+            "description": "District Charlottenburg",
+            "address": "Charlottenburg-Wilmersdorf",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBSgeo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "chartorstr",
+            "description": "Charlottenburger Tor bridge, next to street, station 2",
+            "address": "Str. des 17. Juni 115,  Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "chartorw",
+            "description": "Charlottenburger Tor bridge, next to water, station 1",
+            "address": "Str. des 17. Juni 115,  Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "chartransect",
+            "description": "transects in district Charlottenburg",
+            "address": "Pestalozzistraße, Knesebeckstraße, Fasanenstraße, Charlottenburg-Wilmersdorf",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBSgeo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "dahlem",
+            "description": "FUB Institute of Meteorology, Botanic Garden Steglitz-Zehlendorf",
+            "address": "Königin-Luise-Str. 6-8, Steglitz-Zehlendorf, 14195 Berlin",
+            "campaign": "LTO",
+            "remarks": "DWD STAT_ID: 403",
+            "institution": [
+                [
+                    "DWD"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "dahlemerfeld",
+            "description": "heathlands in the urban forest Grunewald",
+            "address": "Dahlemer Wiese, Charlottenburg-Wilmersdorf, 14193 Berlin",
+            "campaign": "LTO, IOP",
+            "remarks": "UCON identifier: DAHF",
+            "institution": [
+                [
+                    "LUHimuk"
+                ],
+                [
+                    "TUBklima"
+                ],
+                [
+                    "UAgeo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "dessauer",
+            "description": "on building facade",
+            "address": "Dessauer Str. 11, Friedrichshain-Kreuzberg, 10963 Berlin",
+            "campaign": "LTO",
+            "remarks": "UCON identifier: DESS",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "ejf",
+            "description": "in the garden, next to the footpath",
+            "address": "Schmidt-Ott-Str. 4, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "elisabethaue",
+            "description": "Elisabeth-Aue; open space; urban planning area",
+            "address": "Blankenfelder Str., Graben 5, Pankow, 13159 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "fasanen",
+            "description": "between Zoo assecc yard and TU Berlin",
+            "address": "Müller-Breslau-Str. 14, Mitte, 10623 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "fichtenberg",
+            "description": "in the garden of the FUB Institute of Meteorology",
+            "address": "Carl-Heinrich-Becker-Weg 6-10, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "LTO, IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ],
+                [
+                    "LUHimuk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "forstl0085",
+            "description": "on a tree",
+            "address": "Forststr. 52, Steglitz-Zehlendorf, 12163 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "forstl167",
+            "description": "on a tree",
+            "address": "Forststr. 46, Steglitz-Zehlendorf, 12163 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "funkturm",
+            "description": "Funkturm Messe Berlin",
+            "address": "Messedamm 22, Charlottenburg-Wilmersdorf, 14055 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "galvani",
+            "description": "Industry area",
+            "address": "Galvanistr. 1, Charlottenburg-Wilmersdorf, 10587 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "gatow",
+            "description": "Former airport Gatow, next to Luftwaffenmuseum",
+            "address": "General-Steinhoff-Kaserne, Spandau, 14089 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "gruntemppark",
+            "description": "park Bayerischer Platz",
+            "address": "Grunewaldstr. 55, Tempelhof-Schöneberg, 10825 Berlin",
+            "campaign": "IOP",
+            "remarks": "site name modified in V6 (unused before)",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "gutsmuths",
+            "description": "TSV GutsMuths sports centre",
+            "address": "Wullenweberstr. 15, Mitte, 10555 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "UAgeo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "hardenberg",
+            "description": "on lamppost in street median (no post number)",
+            "address": "Hardenbergstr. 6, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "IASS"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "herderl0089",
+            "description": "on a tree",
+            "address": "Herderstr. 26, Steglitz-Zehlendorf, 12163 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "herderl184",
+            "description": "on a tree",
+            "address": "Herderstr. 32, Steglitz-Zehlendorf, 12163 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "hermsdorf",
+            "description": "Area of Hermsdorf",
+            "address": "Reinickendorf",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "HUBgeo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "hertzallee",
+            "description": "fallow land",
+            "address": "Hertzallee 41, Mitte, 10787 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "UAgeo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "ifmroof",
+            "description": "roof of the FUB Institute of Meteorology",
+            "address": "Carl-Heinrich-Becker-Weg 6-10, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "jagen91",
+            "description": "urban forest Grunewald",
+            "address": "Hüttenweg, Steglitz-Zehlendorf, 14193 Berlin",
+            "campaign": "LTO",
+            "remarks": "UCON identifier: JAGE",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "jagow",
+            "description": "voluntary fire brigade Moabit",
+            "address": "Jagowstr. 31-34, Mitte, 10555 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "kaniswall",
+            "description": "Volunteer Observer Station",
+            "address": "Address subject to Data Privacy",
+            "campaign": "LTO",
+            "remarks": "DWD STAT_ID: 410",
+            "institution": [
+                [
+                    "DWD"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "kant",
+            "description": "on lamppost (Post 34 as per the Stadtverwaltung numbering)",
+            "address": "Kantstr. 17, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "IASS"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "knesebeck",
+            "description": "on various lampposts",
+            "address": "Knesebeckstr., Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "HUBgeo"
+                ],
+                [
+                    "IASS"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "knesebeck84",
+            "description": "on lamppost (Post 14 as per the Stadtverwaltung numbering)",
+            "address": "Knesebeckstr. 84, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "IASS"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "knesebeck92",
+            "description": "on the footpath",
+            "address": "Knesebeckstr. 92, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "knesebeck94",
+            "description": "on lamppost (Post 7 as per the Stadtverwaltung numbering)",
+            "address": "Knesebeckstr. 94, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "IASS"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "knesebeck99",
+            "description": "on lamppost (Post 3 as per the Stadtverwaltung numbering)",
+            "address": "Knesebeckstr. 99, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "IASS"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "koepenick",
+            "description": "urban forest",
+            "address": "Müggelheimer Damm, Treptow-Köpenick, 12559 Berlin",
+            "campaign": "LTO",
+            "remarks": "UCON identifier: KOEP?",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "landsberger",
+            "description": "area of Berliner Wasserbetriebe, Lichtenberg",
+            "address": "Landsberger Allee 230, Lichtenberg, 10367 Berlin",
+            "campaign": "LTO",
+            "remarks": "urban climate observation network FUBmeteo",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "lepsius",
+            "description": "garden area",
+            "address": "Lepsiusstr. 86, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "martinhoffm",
+            "description": "garden area",
+            "address": "Martin-Hoffmann-Str. 25-27, Treptow-Köpenick, 12435 Berlin",
+            "campaign": "LTO",
+            "remarks": "urban climate observation network FUBmeteo",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "marzahn",
+            "description": "Volunteer Observer Station",
+            "address": "Address subject to Data Privacy",
+            "campaign": "LTO",
+            "remarks": "DWD STAT_ID: 420",
+            "institution": [
+                [
+                    "DWD"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "marzahnwuhle",
+            "description": "area of Berliner Wasserbetriebe",
+            "address": "Zossener Str. 26, Friedrichshain-Kreuzberg, 12629 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "mattkirche",
+            "description": "Matthäus-Kirchengemeinde",
+            "address": "Matthäikirchplatz 1, Mitte, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "mc010",
+            "description": "BLUME container",
+            "address": "Amrumer Str./Limburger Str., Mitte, 13353 Berlin",
+            "campaign": "LTO",
+            "remarks": "or. DEBE 010",
+            "institution": [
+                [
+                    "SenUVKB"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "mc018",
+            "description": "BLUME container",
+            "address": "Belziger Str. 52, Tempelhof-Schöneberg, 10823 Berlin",
+            "campaign": "LTO",
+            "remarks": "or. DEBE 018",
+            "institution": [
+                [
+                    "SenUVKB"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "mc027",
+            "description": "BLUME container",
+            "address": "Schichauweg 60, Tempelhof-Schöneberg, 12307 Berlin",
+            "campaign": "LTO",
+            "remarks": "or. DEBE 027",
+            "institution": [
+                [
+                    "SenUVKB"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "mc032",
+            "description": "BLUME container",
+            "address": "Jagen 91, Forst Grunewald, Charlottenburg-Wilmersdorf, 14193 Berlin",
+            "campaign": "LTO",
+            "remarks": "or. DEBE 032",
+            "institution": [
+                [
+                    "SenUVKB"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "mc042",
+            "description": "BLUME container",
+            "address": "Nansenstr. 10, Neukölln, 12047 Berlin",
+            "campaign": "LTO",
+            "remarks": "or. DEBE 034 (at Kindergarten area)",
+            "institution": [
+                [
+                    "SenUVKB"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "mc077",
+            "description": "BLUME container",
+            "address": "Wiltbergstr. 50, Pankow, 13125 Berlin",
+            "campaign": "LTO",
+            "remarks": "or. DEBE 051",
+            "institution": [
+                [
+                    "SenUVKB"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "mc085",
+            "description": "BLUME container",
+            "address": "Müggelseedamm 307-310, Treptow-Köpenick, 12587 Berlin",
+            "campaign": "LTO",
+            "remarks": "or. DEBE 056",
+            "institution": [
+                [
+                    "SenUVKB"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "mc115",
+            "description": "BLUME container",
+            "address": "Hardenbergplatz 11, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "LTO",
+            "remarks": "or. DEBE 067",
+            "institution": [
+                [
+                    "SenUVKB"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "mc117",
+            "description": "BLUME container",
+            "address": "Schildhornstr. 76, Steglitz-Zehlendorf, 12163 Berlin",
+            "campaign": "LTO",
+            "remarks": "or. DEBE 061",
+            "institution": [
+                [
+                    "SenUVKB"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "mc124",
+            "description": "BLUME container",
+            "address": "Mariendorfer Damm 148, Tempelhof-Schöneberg, 12099 Berlin",
+            "campaign": "LTO",
+            "remarks": "or. DEBE 069",
+            "institution": [
+                [
+                    "SenUVKB"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "mc143",
+            "description": "BLUME container",
+            "address": "Silbersteinstr. 1, Neukölln, 12051 Berlin",
+            "campaign": "LTO",
+            "remarks": "or. DEBE 063",
+            "institution": [
+                [
+                    "SenUVKB"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "mc145",
+            "description": "BLUME container",
+            "address": "Jägerstieg 1 Frohnau, Reinickendorf, 13465 Berlin",
+            "campaign": "LTO",
+            "remarks": "or. DEBE 061",
+            "institution": [
+                [
+                    "SenUVKB"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "mc171",
+            "description": "BLUME container",
+            "address": "Brückenstr. 6, Mitte, 10179 Berlin",
+            "campaign": "LTO",
+            "remarks": "or. DEBE 068",
+            "institution": [
+                [
+                    "SenUVKB"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "mc174",
+            "description": "BLUME container",
+            "address": "Frankfurter Allee 86b, Friedrichshain-Kreuzberg, 10247 Berlin",
+            "campaign": "LTO",
+            "remarks": "or. DEBE 065",
+            "institution": [
+                [
+                    "SenUVKB"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "mc220",
+            "description": "BLUME container",
+            "address": "Karl-Marx-Str. 77 / Amtsgericht, Neukölln, 12043 Berlin",
+            "campaign": "LTO",
+            "remarks": "or. DEBE 064 (also MP 523)",
+            "institution": [
+                [
+                    "SenUVKB"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "mc282",
+            "description": "BLUME container",
+            "address": "Johanna-und-Willy-Brauer-Platz, Lichtenberg, 10318 Berlin",
+            "campaign": "LTO",
+            "remarks": "or. DEBE 066",
+            "institution": [
+                [
+                    "SenUVKB"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "montan",
+            "description": "Industry area",
+            "address": "Montanstrasse 8-16, Reinickendorf, 13407 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "motard",
+            "description": "Industry area",
+            "address": "Motardstr. 54, Spandau, 13629 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "mueggelsee",
+            "description": "Lake Mueggelsee, next to DLRG",
+            "address": "Josef-Nawrocki-Str. 14a, Treptow-Köpenick, 12587 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "petit",
+            "description": "Elisabeth-Aue, south southwest garden area",
+            "address": "Petitweg 9a, Pankow, 13127 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "pichelsdorf",
+            "description": "Lake Scharfe Lanke, area of DLRG",
+            "address": "Am Pichelssee 20-21, Spandau, 13595 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "planetarium",
+            "description": "on the top of the building",
+            "address": "Prenzlauer Allee 80, Pankow, 10405 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "preissconif",
+            "description": "Preiss gardening center, conifer",
+            "address": "Gollanczstr. 144, Reinickendorf, 13465 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "preissout",
+            "description": "Preiss gardening center, exit",
+            "address": "Gollanczstr. 144, Reinickendorf, 13465 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "rctegel",
+            "description": "rowing club Tegel",
+            "address": "Gabrielenstr. 83, Reinickendorf, 13507 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "rothab1lab",
+            "description": "TUB Institute of Ecology, AB1, laboratory",
+            "address": "Rothenburgstr. 12, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "rothab1lawn",
+            "description": "TUB Institute of Ecology, AB1, lawn, AWS 10m mast",
+            "address": "Rothenburgstr. 12, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "rothab1lib",
+            "description": "TUB Institute of Ecology, AB1, library",
+            "address": "Rothenburgstr. 12, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "rothab1r204",
+            "description": "TUB Institute of Ecology, AB1, room 204",
+            "address": "Rothenburgstr. 12, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "rothab2lawn",
+            "description": "TUB Institute of Ecology, AB2, lawn",
+            "address": "Rothenburgstr. 12, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "rothab2north",
+            "description": "TUB Institute of Ecology, AB2, facade north and roof",
+            "address": "Rothenburgstr. 12, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "rothab2south",
+            "description": "TUB Institute of Ecology, AB2, facade south and roof",
+            "address": "Rothenburgstr. 12, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "rothab3tree",
+            "description": "TUB Institute of Ecology, AB3, under the tree close to the street",
+            "address": "Rothenburgstr. 12, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "rothenburg",
+            "description": "TUB Institute of Ecology",
+            "address": "Rothenburgstr. 12, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "LTO",
+            "remarks": "UCON identifier: ROTH",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "rothgrunpark",
+            "description": "park corner Rothenburgstr. / Grunewaldstr.",
+            "address": "Rothenburgstr. Park Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "rothtree0030",
+            "description": "northwestern sidewalk Rothenburgstraße under the tree nr 0030",
+            "address": "Rothenburgstr. 1, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "rothtree0094",
+            "description": "northwestern sidewalk Rothenburgstraße under the tree nr 0094",
+            "address": "Rothenburgstr. 4, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "rothtree0196",
+            "description": "northwestern sidewalk Rothenburgstraße under the tree nr 0196",
+            "address": "Rothenburgstr. 7, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "rothtree0263",
+            "description": "northwestern sidewalk Rothenburgstraße under the tree nr 0263",
+            "address": "Rothenburgstr. 9, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "rothtree0376",
+            "description": "northwestern sidewalk Rothenburgstraße under the tree nr 0376",
+            "address": "Rothenburgstr. 10b, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "rothtree0441",
+            "description": "northwestern sidewalk Rothenburgstraße under the tree nr 0441",
+            "address": "Rothenburgstr. 12, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "rothtree0500",
+            "description": "northwestern sidewalk Rothenburgstraße under the tree nr 0500",
+            "address": "Rothenburgstr. 12, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "schillerosz",
+            "description": "school OSZ Körperpflege",
+            "address": "Schillerstr. 120, Charlottenburg-Wilmersdorf, 10625 Berlin",
+            "campaign": "LTO, IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ],
+                [
+                    "TUBklima"
+                ],
+                [
+                    "TUDDmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "schlosscharl",
+            "description": "Schlosspark Charlottenburg",
+            "address": "Spandauer Damm 10, 14059 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "schmidtleps",
+            "description": "Schmidt-Ott-Str corner Lepsius Str. 98",
+            "address": "Schmidt-Ott-Str. 3, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "schmidtott",
+            "description": "in front of water tower",
+            "address": "Schmidt-Ott-Str. 13, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "schmidtsand",
+            "description": "in front of building 11a",
+            "address": "Schmidt-Ott-Str. 11a, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "schmidttu",
+            "description": "in front of TU Klimatologie",
+            "address": "Schmidt-Ott-Str. 1, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "spandauer",
+            "description": "backyard",
+            "address": "Spandauer Str. 65, Spandau, 13581 Berlin",
+            "campaign": "LTO",
+            "remarks": "UCON identifier: SPAN",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "steglitz",
+            "description": "area around TUB Institute of Ecology in Steglitz",
+            "address": "Steglitz",
+            "campaign": "LTO, IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "HUBgeo"
+                ],
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "swinemuender",
+            "description": "courtyard",
+            "address": "Swinemünder Str. 87, Mitte, 13355 Berlin",
+            "campaign": "LTO",
+            "remarks": "UCON identifier: SWIN",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tegelersee",
+            "description": "Lake Tegel, sailing club Freia",
+            "address": "Bernauer Str. 152A, Reinickendorf, 13507 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tegelforest",
+            "description": "Forest Tegel, wild animal outdoor enclosure",
+            "address": "Ehrenpfortensteig 9, Reinickendorf, 13467 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tegelforoff",
+            "description": "Forestry office Tegel",
+            "address": "Ruppiner Chaussee 78, Reinickendorf, 13503 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tiergarten",
+            "description": "Tiergarten, street and green area office Berlin-Mitte",
+            "address": "Str. des 17. Juni 31, Mitte, 10785 Berlin",
+            "campaign": "LTO",
+            "remarks": "UCON identifier: TIER, green area office",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tucampus",
+            "description": "TUB campus",
+            "address": "Str. des 17. Juni 135, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUDDmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tucanteen",
+            "description": "TUB campus, green lane behind canteen",
+            "address": "Hardenbergstr. 34, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ],
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tuchem",
+            "description": "TUB campus, Institute of Chemistry, Technical Chemistry",
+            "address": "Str. des 17. Juni 124, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tuchembuild",
+            "description": "TUB campus, Institute of Chemistry, Chemistry Building",
+            "address": "Str. des 17. Juni 115, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "DWDku1"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tucontainer",
+            "description": "TUB campus,",
+            "address": "Fasanenstr. 90, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBSgeo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tuerpl",
+            "description": "TUB campus, AWS 10m mast",
+            "address": "Ernst-Reuter-Platz, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "LUHimuk"
+                ],
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tuextension",
+            "description": "TUB campus, extension forecourt",
+            "address": "Str. d. 17. Juni 145, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tuiurpnorth",
+            "description": "TUB campus, Institute of Urban and Regional Planning, alley noth",
+            "address": "Hardenbergstr. 40A, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tuiurpsouth",
+            "description": "TUB campus, Institute of Urban and Regional Planning, alley south",
+            "address": "Hardenbergstr. 40A, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tumainlawn",
+            "description": "TUB campus, main building lawn",
+            "address": "Str. des 17. Juni 135, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tumainplaza",
+            "description": "TUB campus, forecourt main building",
+            "address": "Str. des 17. Juni 135, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FZJiek8"
+                ],
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tumainroof",
+            "description": "TUB campus, main building roof",
+            "address": "Str. des 17. Juni 135, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "LTO, IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FZJiek8"
+                ],
+                [
+                    "HUBgeo"
+                ],
+                [
+                    "IASS"
+                ],
+                [
+                    "TUBklima"
+                ],
+                [
+                    "TUBSgeo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tumaintlight",
+            "description": "TUB campus, main building traffic lights",
+            "address": "Str. des 17. Juni 135, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "HUBgeo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tumarch",
+            "description": "TUB campus",
+            "address": "Marchstr., Charlottenburg-Wilmersdorf, 10587 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tumathnorth",
+            "description": "TUB campus, mathematics building north facade",
+            "address": "Str. des 17. Juni 136, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tumathsouth",
+            "description": "TUB campus, mathematics building south facade",
+            "address": "Str. des 17. Juni 136, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "HUBgeo"
+                ],
+                [
+                    "IASS"
+                ],
+                [
+                    "TUBklima"
+                ],
+                [
+                    "TUDDmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tustr17east",
+            "description": "TUB campus, measurement platform FUB bus",
+            "address": "Str. des 17. Juni 135, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tustr17west",
+            "description": "TUB campus, measurement platform HUB bus",
+            "address": "Str. des 17. Juni 145, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tuverform",
+            "description": "TUB campus, building Verformungskunde",
+            "address": "Str. des 17. Juni 135, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "tuvicinity",
+            "description": "Str. des 17 Juni, Einsteinufer, Untere Freiarchenbrücke, Hertzallee, TUB Campus",
+            "address": "Str. des 17. Juni 135, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUDDmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "udk",
+            "description": "courtyard",
+            "address": "Hardenbergstr. 33, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "uhland",
+            "description": "on various lampposts",
+            "address": "Uhlandstr., Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "IASS"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "uhland2",
+            "description": "on lamppost (Post 4 as per the Stadtverwaltung numbering)",
+            "address": "Uhlandstr. 2, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "IASS"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "uhland6",
+            "description": "on lamppost (Post 8 as per the Stadtverwaltung numbering)",
+            "address": "Uhlandstr. 6, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "IASS"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "waldschule",
+            "description": "school Wald-Grundschule",
+            "address": "Waldschulallee 83, Charlottenburg-Wilmersdorf, 14055 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "wannsee",
+            "description": "Lake Wannsee, FUB - water sports center",
+            "address": "Badeweg 3, Steglitz-Zehlendorf, 14129 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "wiener",
+            "description": "Fire Department Berlin-Kreuzberg",
+            "address": "Wiener Str. 64, Friedrichshain-Kreuzberg, 10999 Berlin",
+            "campaign": "LTO",
+            "remarks": "UCON identifier: WIEN",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "wterpplatz",
+            "description": "IOL Ernst-Reuter-Platz",
+            "address": "Str. des 17. Juni 136, Charlottenburg-Wilmersdorf, 10623 Berlin",
+            "campaign": "WT",
+            "remarks": "Scale model of IOL Ernst-Reuter-Platz Berlin; EWTL, UHH",
+            "institution": [
+                [
+                    "UHHmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "wtfiberg",
+            "description": "IOL Fichtenberg",
+            "address": "Schmidt-Ott-Str. 1, Steglitz-Zehlendorf, 12165 Berlin",
+            "campaign": "WT",
+            "remarks": "Scale model of IOL Fichtenberg Berlin; EWTL, UHH",
+            "institution": [
+                [
+                    "UHHmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "zerpensch",
+            "description": "BWN Möbelbau, Industry area",
+            "address": "Zerpenschleuser Ring 30, Reinickendorf, 13439 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "B",
+            "site": "zoo",
+            "description": "Inside Zoological Garden, exit to Embassy Spain",
+            "address": "Lichtensteinallee 2, Mitte, 10787 Berlin",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "FUBmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "HH",
+            "site": "airporthh",
+            "description": "airport Hamburg-Fuhlsbüttel",
+            "address": "DWD, Flughafen Fuhlsbüttel, 22335 Hamburg",
+            "campaign": "LTO",
+            "remarks": "DWD STAT_ID: 1975",
+            "institution": [
+                [
+                    "DWD"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "HH",
+            "site": "baakenhoeft",
+            "description": "harbour area, close to quay wall near warehouse",
+            "address": "Baakenhöft, 20457 Hamburg",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUDDmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "HH",
+            "site": "eddy1",
+            "description": "Langenhorn, between housing area (west) and green space (east), on mobile mast on top of building",
+            "address": "Tweeltenbek 23, 22417 Hamburg",
+            "campaign": "LTO",
+            "remarks": "HUSCONET",
+            "institution": [
+                [
+                    "UHHmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "HH",
+            "site": "hafencity",
+            "description": "new developing district near the harbour",
+            "address": "HafenCity, 20457 Hamburg",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUDDmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "HH",
+            "site": "hcuroof",
+            "description": "HafenCity Universiy, roof top",
+            "address": "Überseeallee 16, 20457 Hamburg",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUDDmeteo"
+                ],
+                [
+                    "UHHmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "HH",
+            "site": "hcv",
+            "description": "HafenCity (Vattenfall), parking lot",
+            "address": "Am Dalmannkai 1, 20457 Hamburg",
+            "campaign": "LTO",
+            "remarks": "HUSCONET",
+            "institution": [
+                [
+                    "UHHmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "HH",
+            "site": "lgs",
+            "description": "Langenhorn Kiwittsmoor, green space",
+            "address": "Tweeltenmoor 11, 22417 Hamburg",
+            "campaign": "LTO",
+            "remarks": "HUSCONET, including soil station",
+            "institution": [
+                [
+                    "UHHmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "HH",
+            "site": "lra",
+            "description": "Langenhorn, residential area, private backyard",
+            "address": "Foßberger Moor 31, 22417 Hamburg",
+            "campaign": "LTO",
+            "remarks": "HUSCONET, including soil station",
+            "institution": [
+                [
+                    "UHHmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "HH",
+            "site": "neuwiedenth",
+            "description": "Hamburg-Neuwiedenthal",
+            "address": "DWD, Falkenbergsweg 36, 21149 Hamburg",
+            "campaign": "LTO",
+            "remarks": "DWD STAT_ID: 1981",
+            "institution": [
+                [
+                    "DWD"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "HH",
+            "site": "nikolai",
+            "description": "Mahnmal St. Nikolai, church in the old core of Hamburg",
+            "address": "Willy-Brandt-Straße 60, 20457 Hamburg",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "UHHmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "HH",
+            "site": "rra",
+            "description": "Rissen, residential area, school backyard",
+            "address": "Wittenbergener Weg 41, 22559 Hamburg",
+            "campaign": "LTO",
+            "remarks": "HUSCONET, including soil station",
+            "institution": [
+                [
+                    "UHHmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "HH",
+            "site": "sgs",
+            "description": "Stellinger Feldmark, green space",
+            "address": "Gazellenkamp 138, 22529 Hamburg",
+            "campaign": "LTO",
+            "remarks": "HUSCONET, including soil station",
+            "institution": [
+                [
+                    "UHHmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "HH",
+            "site": "sra",
+            "description": "Stellingen, residential area, private backyard",
+            "address": "Wördemanns Weg 48, 22527 Hamburg",
+            "campaign": "LTO",
+            "remarks": "HUSCONET, including soil station",
+            "institution": [
+                [
+                    "UHHmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "HH",
+            "site": "stb",
+            "description": "Stadthausbrücke, courtyard city centre",
+            "address": "An der Stadthausbrücke 1, 20355 Hamburg",
+            "campaign": "LTO",
+            "remarks": "HUSCONET",
+            "institution": [
+                [
+                    "UHHmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "HH",
+            "site": "ueberseealle",
+            "description": "HafenCity, grass verge between two roads",
+            "address": "Überseeallee 16, 20457 Hamburg",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "UHHmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "HH",
+            "site": "weathermast",
+            "description": "weather mast Hamburg, boundary layer mast, 280m high, south east of Hamburg",
+            "address": "Unterer Landweg, 22113 Hamburg",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "UHHmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "HH",
+            "site": "wgs",
+            "description": "Wilhelmsburg Inselpark, green space",
+            "address": "Am Inselpark 1, 21109 Hamburg",
+            "campaign": "LTO",
+            "remarks": "HUSCONET, including soil station",
+            "institution": [
+                [
+                    "UHHmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "HH",
+            "site": "wra",
+            "description": "Wilhelmsburg, residential area, school backyard",
+            "address": "Neuenfelder Straße 106, 21109 Hamburg",
+            "campaign": "LTO",
+            "remarks": "HUSCONET, including soil station",
+            "institution": [
+                [
+                    "UHHmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "HH",
+            "site": "wthafencity",
+            "description": "IOL Hafencity",
+            "address": "HafenCity, 20457 Hamburg",
+            "campaign": "WT",
+            "remarks": "Scale model of IOL Hafencity Hamburg; EWTL, UHH",
+            "institution": [
+                [
+                    "UHHmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "HH",
+            "site": "zbi",
+            "description": "Zollamt Billwerder, parking lot, industrial area",
+            "address": "Pinkertweg 20a, 20097 Hamburg",
+            "campaign": "LTO",
+            "remarks": "HUSCONET",
+            "institution": [
+                [
+                    "UHHmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "LOS",
+            "site": "lindenberg",
+            "description": "station is located at the ground of the observatory",
+            "address": "Am Observatorium 12, 15848 Tauche/OT Lindenberg",
+            "campaign": "LTO",
+            "remarks": "OBS; DWD STAT_ID: 3015",
+            "institution": [
+                [
+                    "DWD"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "MOL",
+            "site": "heckelberg",
+            "description": "Volunteer Observer Station",
+            "address": "Address subject to Data Privacy",
+            "campaign": "LTO",
+            "remarks": "DWD STAT_ID: 7389",
+            "institution": [
+                [
+                    "DWD"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "MOL",
+            "site": "muencheberg",
+            "description": "Volunteer Observer Station",
+            "address": "Address subject to Data Privacy",
+            "campaign": "LTO",
+            "remarks": "DWD STAT_ID: 3376",
+            "institution": [
+                [
+                    "DWD"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "OHV",
+            "site": "zehdenick",
+            "description": "Volunteer Observer Station",
+            "address": "Address subject to Data Privacy",
+            "campaign": "LTO",
+            "remarks": "DWD STAT_ID: 5745",
+            "institution": [
+                [
+                    "DWD"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "OPR",
+            "site": "neuruppin",
+            "description": "station is located 1 km from S-edge of the city on the western shore of Ruppin Lake",
+            "address": "Am See, 16816 Neuruppin",
+            "campaign": "LTO",
+            "remarks": "DWD STAT_ID: 3552",
+            "institution": [
+                [
+                    "DWD"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "P",
+            "site": "potsdam",
+            "description": "station is located on the S-edge of the city 600 meters from the outskirts, on the NW slope of the Telegraph Hill",
+            "address": "Telegrafenberg M, 14473 Potsdam",
+            "campaign": "LTO",
+            "remarks": "DWD STAT_ID: 3987",
+            "institution": [
+                [
+                    "DWD"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "P",
+            "site": "potsdamneuga",
+            "description": "Potsdam Neuer Garten",
+            "address": "Am Neuen Garten 9A, 14469 Potsdam",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "TUBklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "PR",
+            "site": "berge",
+            "description": "Volunteer Observer Station",
+            "address": "Address subject to Data Privacy",
+            "campaign": "LTO",
+            "remarks": "DWD STAT_ID: 5825",
+            "institution": [
+                [
+                    "DWD"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "s",
+            "site": "airportstr",
+            "description": "meteorolocial observatory fligt weather Stuttgart",
+            "address": "Flughafenstraße 32, 70629 Stuttgart",
+            "campaign": "LTO",
+            "remarks": "FLUGWEWA; DWD STAT_ID: 4931",
+            "institution": [
+                [
+                    "DWD"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "bclerchen",
+            "description": "container on the ground",
+            "address": "Lerchenheide 20, Bad Cannstadt, 70374 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "KITimktro"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "bcfw",
+            "description": "virtual tower",
+            "address": "Mercedesstr. 35, Bad Cannstatt,70372 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "KITimkifu"
+                ],
+                [
+                    "KITimktro"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "bcmercedes",
+            "description": "virtual tower",
+            "address": "Mercedesstr. 100, Bad Cannstatt,70372 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "KITimktro"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "bcmsafubc",
+            "description": "AfUSklima measurement station Bad Cannstatt",
+            "address": "Mercedes Strasse 35, Bad Cannstatt, 70372 Stuttgart",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "AfUSklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "bcrailbridge",
+            "description": "location on railway bridge between Unterer Schlossgarten and Rosensteinpark; subarea of Flurstueck 9315",
+            "address": "Bad Cannstadt, 70376 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "DWDku1"
+                ],
+                [
+                    "KITimkaaf"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "bcreitstad",
+            "description": "location in horse riding stadium Stuttgart, near Cannstatter Wasen",
+            "address": "Talstraße 209, Bad Cannstadt, 70372 Stuttgart",
+            "campaign": "LTO, IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "DWDfelg"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "birkenwald",
+            "description": "viewing platform Birkenwaldstraße, container on the ground",
+            "address": "Birkenwaldstr. 148, Nord, 70191 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "KITimktro"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "boehmoehr",
+            "description": "location at corner Boeheimstrasse and Moehringer Strasse",
+            "address": "Böheimstraße/Möhringer Straße, Süd, 70199 Stuttgart",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "DWDku1"
+                ],
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "cityafus",
+            "description": "city centre, Amt für Umweltschutz (AfUS), rooftop",
+            "address": "Gaisburgstraße 4, Mitte, 70182 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "KITimkifu"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "cityberlinpl",
+            "description": "Traffic lights on Berlinerplatz",
+            "address": "Schloss Strasse 53A, Mitte, 70176 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "citycannstat",
+            "description": "virtual tower",
+            "address": "Cannstatterstr. 1, Mitte, 70173 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "KITimktro"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "citycentre",
+            "description": "city centre",
+            "address": "Mitte, Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "KITimk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "citycharkon",
+            "description": "Signpost at the junction of Charlotten Str. and Konrad-Adenauer Str.",
+            "address": "Charlotten Strasse 1, Mitte, 70182 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "citycharlpl",
+            "description": "Lamppost on Charlottenplatz on the B14 road",
+            "address": "Charlottenplatz, Mitte, 70173 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "cityhall",
+            "description": "city centre, city hall, rooftop",
+            "address": "Marktplatz 1, Mitte, 70173 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "KITimk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "cityhalltow",
+            "description": "city centre, city hall tower, rooftop",
+            "address": "Marktplatz 1, Mitte, 70173 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "KITimk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "cityhegelsei",
+            "description": "Traffic lights at the junction of Hegel Str. and Seiden Str.",
+            "address": "Hegel Strasse 33, Mitte, 70174 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "citymarkthol",
+            "description": "Signpost at the junction of Markt Str. and Holz Str.",
+            "address": "Eberhard Strasse 1, Mitte, 70173 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "citymosswall",
+            "description": "Traffic lights opposite to the Mosswall on the B14 road",
+            "address": "Cannstatter Strasse, Mitte, 70190 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "citymsafusz",
+            "description": "AfUSklima measurement station Schwabenzentrum",
+            "address": "Ecke Tor-/Hauptstätter Strasse, 70173 Stuttgart",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "AfUSklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "citymsgbh",
+            "description": "Lamppost in \"Mittlerer Schlossgarten\" near main station",
+            "address": "Mittlerer Schlossgarten, Mitte, 70173 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "citymsgneck",
+            "description": "Lamppost in \"Mittlerer Schlossgarten\" opposite to tram station \"Am Neckartor\"",
+            "address": "Am Neckartor, Mitte, 70190 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "cityneckadac",
+            "description": "Traffic lights opposite to the ADAC office on the B14 road",
+            "address": "Am Neckartor 2, Mitte, 70190 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "LUBW measurement station \"Am Neckartor\"",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "citynecklubw",
+            "description": "Site on the LUBW measurement station \"Am Neckartor\"",
+            "address": "Am Neckartor, Mitte, 70190 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "citynorth",
+            "description": "Site covering Stuttgart-City and Stuttgart-North",
+            "address": "Stuttgart-Mitte und Stuttgart-Nord",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "cityolgakath",
+            "description": "Signpost at the junction of Olga Str. and Katharinen Str.",
+            "address": "Olga Strasse 54, Mitte, 70182 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "cityrotebupl",
+            "description": "Traffic lights on Rotebühlplatz",
+            "address": "Rotebühlplatz 28, Mitte, 70178 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "citysouth",
+            "description": "Site covering Stuttgart-City and Stuttgart-South",
+            "address": "Stuttgart-Mitte und Stuttgart-Süd",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "citystaatsga",
+            "description": "Lamppost in \"Mittlerer Schlossgarten\" opposite to \"Staatsgalarie\"",
+            "address": "Am Schlossgarten 18, Mitte, 70173 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "citytstower",
+            "description": "city centre, train station tower, rooftop",
+            "address": "Arnulf-Klett-Platz 2, Mitte, 70173 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "KITimkifu"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "cityttower",
+            "description": "city centre, Tagblatt tower, rooftop",
+            "address": "Eberhardstraße 61B, Mitte, 70173 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "KITimkifu"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "citytuebsilb",
+            "description": "Signpost at the junction of Tübinger Str. and Silberburg Str.",
+            "address": "Tübinger Strasse 63, Mitte, 70178 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "cityusgbhne",
+            "description": "Signpost in \"Unterer Schlossgarten\" on the north east side of the main station",
+            "address": "Unterer Schlossgarten, Mitte, 70190 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "cityusgbhsw",
+            "description": "Tree in \"Unterer Schlossgarten\" on the south west side of the main station",
+            "address": "Unterer Schlossgarten, Mitte, 70190 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "cityusgfw",
+            "description": "Site in \"Unterer Schlossgarten\" on the meadow near grilling place and kiosk",
+            "address": "Unterer Schloßgarten 22, Mitte, 70190 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "cityusgkiosk",
+            "description": "Lamppost in \"Unterer Schlossgarten\" near kiosk",
+            "address": "Unterer Schlossgarten 22, Mitte, 70190 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "cityusgminb",
+            "description": "Lamppost in \"Unterer Schlossgarten\" opposite to tram station \"Mineralbaeder\"",
+            "address": "Unterer Schlossgarten, Mitte, 70190 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "cityusgnkmus",
+            "description": "Lamppost in \"Unterer Schlossgarten\" near \"Naturkundemuseum\"",
+            "address": "Unterer Schlossgarten, Mitte, 70190 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "citywera",
+            "description": "virtual tower",
+            "address": "Werastr. 120, Mitte, 70190 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "KITimktro"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "citywerakern",
+            "description": "Signpost at the junction of Wera Str. and Kerner Str.",
+            "address": "Werastr. 33, Mitte, 70190 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "citywilhelm",
+            "description": "Lamppost on Wilhelmsplatz opposite to Katharinen Str.",
+            "address": "Wilhelmsplatz, Mitte, 70182 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "degerloch",
+            "description": "Traffic lights opposite to the tram station \"Degerloch\" on the B27 road",
+            "address": "Löffel Strasse 4, Degerloch, 70597 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "dlnaegele",
+            "description": "Lamppost on the tram station \"Naegelestrasse\"",
+            "address": "Knödler Strasse 16, Degerloch, 70597 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "ehmannrosen",
+            "description": "Lamppost at the junction of Ehmann Str. and Rosenstein Str.",
+            "address": "Ehmann Strasse / Rosenstein Str., Nord, 70191 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "erwschoettpl",
+            "description": "location at Erwin-Schoettle-Platz, near entrance of Matthäus Kirche",
+            "address": "Möhringer Straße 52, Süd, 70199 Stuttgart",
+            "campaign": "LTO, IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "DWDku1"
+                ],
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "haigst",
+            "description": "Lamppost on the tram station \"Haigst\"",
+            "address": "Alte Weinsteige 101, Süd, 70597 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "hauptstaett",
+            "description": "Traffic lights at the junction of Hauptstaetter Str. and Filder Str.",
+            "address": "Hauptstätter Strasse / Filder Strasse, Süd, 70180 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "LUBW measurement station \"Hauptstätter Strasse\"",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "hauptstlubw",
+            "description": "Site on the LUBW measurement station \"Hauptstaetter Strasse\"",
+            "address": "Hauptstätter Strasse 119, Süd, 70178 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "heilbronner",
+            "description": "Signpost on Heilbronner Str. opposite to Sparda bank on the B27 road",
+            "address": "Heilbronner Strasse 18, Nord, 70191 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "heilbwolfram",
+            "description": "Traffic lights at the junction of Heilbronner Str. and Wolfram Str.",
+            "address": "Wolfram Strasse 50, Nord, 70191 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "kaltental",
+            "description": "Lamppost on the tram station \"Kaltental\"",
+            "address": "Böblinger Strasse 475, Süd, 70569 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "leonberg",
+            "description": "location on traffic island on eastern side of B14 tunnel near Rudolf-Sophien-Stift",
+            "address": "Leonberger Str. 199/1, Süd, 70199 Stuttgart",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "DWDku1"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "mhwtplant",
+            "description": "wastewater treatment plant Stuttgart, rooftop",
+            "address": "Aldinger Str. 212, Mühlhausen, 70378 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "KITimkifu"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "milchhof",
+            "description": "Traffic lights on the tram station \"Milchhof\"",
+            "address": "Nordbahnhof Strasse 25, Nord, 70191 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "mittnacht",
+            "description": "Signpost on the tram station \"Mittnachtstrasse\"",
+            "address": "Nordbahnhof Strasse 99, Nord, 70191 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "mschnarren",
+            "description": "location on lawn near DWD buildings, close to operational DWD Schnarrenberg site",
+            "address": "Am Schnarrenberg 17, Münster, 70376 Stuttgart",
+            "campaign": "LTO, IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "DWD"
+                ],
+                [
+                    "DWDfelg"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "naehter",
+            "description": "virtual tower",
+            "address": "Nähterstr. 199, Ost, 70327 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "KITimktro"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "nesenbachtal",
+            "description": "Nesenbachtal",
+            "address": "Böblinger Str., Süd, 70199 Stuttgart",
+            "campaign": "LTO, IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "DWDku1"
+                ],
+                [
+                    "LUHimuk"
+                ],
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "nordbahnhof",
+            "description": "Signpost on the tram station \"Nordbahnhof\"",
+            "address": "Rosenstein Strasse 113, Nord, 70191 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "pfaffen",
+            "description": "Lamppost on the tram station \"Pfaffenweg\"",
+            "address": "Alte Weinsteige 44, Süd, 70180 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "sbmsafusb",
+            "description": "AfUSklima measurement station Sillenbuch",
+            "address": "Richard-Schmid-Strasse 25, Sillenbuch, 70619 Stuttgart",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "AfUSklima"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "stoeckach",
+            "description": "Traffic lights on the tram station \"Stoeckach\"",
+            "address": "Neckar Strasse 143, Ost, 70190 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "stuttgarcity",
+            "description": "site covering whole city",
+            "address": "Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FZJiek8"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "suedheimerpl",
+            "description": "sealed surface representing the western part of Südheimer Platz",
+            "address": "Südheimer Platz, Süd, 70199 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "DWDku1"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "uthbherzogen",
+            "description": "virtual tower",
+            "address": "Beim Herzogenberg 25, Untertürkheim,70327 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "KITimktro"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "vaihingen",
+            "description": "Lamppost on the tram station \"Vaihingen Schillerplatz\"",
+            "address": "Vaihingen Schillerplatz, Vaihingen, 70563 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "vpfaffenwald",
+            "description": "Uni Stuttgart, Institute of Combustion and Power Plant Technology",
+            "address": "Pfaffenwaldring 23, Vaihingen, 70569 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "FZJiek8"
+                ],
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "vsouthdl",
+            "description": "Site covering Vaihingen, Stuttgart-South and Degerloch",
+            "address": "Vaihingen, Stuttgart-Süd, Degerloch",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "wielandshoeh",
+            "description": "Lamppost on the tram station \"Wielandshoehe\"",
+            "address": "Alte Weinsteige 67, Süd, 70180 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "wilplhauptst",
+            "description": "Signpost at the junction of Wilhelmsplatz and Hauptstaetter Str.",
+            "address": "Hauptstätter Strasse 51, Süd, 70178 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "",
+            "institution": [
+                [
+                    "USifk"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "wolfram",
+            "description": "virtual tower",
+            "address": "Wolframstr. 58, Nord, 70191 Stuttgart",
+            "campaign": "IOP",
+            "remarks": "AWST; DWD STAT_ID: 303",
+            "institution": [
+                [
+                    "KITimktro"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "S",
+            "site": "wtstzentrum",
+            "description": "IOL Stadtzentrum",
+            "address": "Stuttgart",
+            "campaign": "WT",
+            "remarks": "Scale model of IOL Stadtzentrum Stuttgart; EWTL, UHH",
+            "institution": [
+                [
+                    "UHHmeteo"
+                ]
+            ]
+        }
+    },
+    {
+        "model": "data.site",
+        "fields": {
+            "location": "TF",
+            "site": "baruth",
+            "description": "station is located in the central area of the extending across the southern Brandenburg from SE to NW Baruther Urstromtales",
+            "address": "Horstwalder Str. 21, 15837 Baruth",
+            "campaign": "LTO",
+            "remarks": "",
+            "institution": [
+                [
+                    "DWD"
+                ]
+            ]
+        }
+    }
+]

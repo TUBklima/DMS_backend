@@ -12,10 +12,12 @@ from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet
-
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework import mixins
 
 from guardian.shortcuts import assign_perm, get_objects_for_user
+
+import csv
 
 from .filters import UC2Filter
 from .models import *
@@ -238,43 +240,7 @@ class FileView(APIView):
             new_entry['ur_e_utm'] = ur_e_utm
             new_entry['utm_epsg'] = utm_epsg
 
-        new_entry["variables"] = []
-        new_variables = []
-
-        # read variables from fiel and create if they not already exist
-        for uc2var in uc2ds.data_vars:
-            try:
-                var_id = Variable.objects.get(variable=uc2var).id
-                new_entry["variables"].append(var_id)
-            except ObjectDoesNotExist:
-                long_name = None
-                try:
-                    long_name = uc2ds.ds.data_vars[uc2var].long_name
-                except AttributeError:
-                    result.fatal.append("Can not access long_name for variable "+str(uc2var))
-                standart_name = None
-                try:
-                    standart_name = uc2ds.ds.data_vars[uc2var].standard_name
-                except AttributeError:
-                    result.fatal.append("Can not access standard_name for variable "+str(uc2var))
-
-                new_var = {
-                    "variable": uc2var,
-                    "long_name": long_name,
-                    "standard_name": standart_name,
-                }
-                new_variables.append(new_var)
-
-        if not result.has_fatal:
-            # we do this in an extra step so we can avoid creating
-            # variables if a fatal error exist. A unsuccessful request should not mutate
-            # the db state
-            serializer = VariableSerializer(data=new_variables, many=True)
-            if serializer.is_valid():
-                serializer.save()
-                new_entry["variables"].extend([var['id'] for var in serializer.data])
-            else:
-                result.fatal.append(serializer.errors)
+        new_entry["variables"] = uc2ds.data_vars
 
         ####
         # serialize and save
@@ -352,7 +318,6 @@ class FileView(APIView):
         """
 
         input_name = "-".join(standart_name.split("-")[:-1])  # ignore version in standart_name
-
         max_version = UC2Observation.objects.filter(file_standard_name__startswith=input_name).order_by('version').last()
 
         if max_version:
@@ -389,6 +354,41 @@ class LicenseView(ModelViewSet):
         IsAdminUser: ['update', 'partial_update', 'destroy', 'create'],
         AllowAny: ['list', 'retrieve']
     }
+
+
+class CsvViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, GenericViewSet):
+    """
+    A class representing data read from a CSV file
+    """
+    permission_classes = (ActionBasedPermission,)
+    action_permissions = {
+        IsAdminUser: ['create'],
+        AllowAny: ['list']
+    }
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data, many=True)
+        if not serializer.is_valid():
+            #errors = [x for x in serializer.errors if x]
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class InstitutionView(CsvViewSet):
+    serializer_class = InstitutionSerializer
+    queryset = Institution.objects.all()
+
+
+class SiteView(CsvViewSet):
+    serializer_class = SiteSerializer
+    queryset = Site.objects.all()
+
+
+class VariableView(CsvViewSet):
+    serializer_class = VariableCsvSerializer
+    queryset = Variable.objects.all()
 
 
 @action(methods=["get"], detail=True, renderer_classes=(PassthroughRenderer,))
