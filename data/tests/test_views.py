@@ -24,26 +24,29 @@ from pathlib import Path
 import json
 
 from .. import views
+from django.core.management import call_command
+import io
 
 
-def make_fixture(path, data, model_str, ignore_fields=None, append=False):
+def make_fixture(path, model_str, ignore_pk=True, ignore_fields=None, append=False):
     mode = 'w'
     if append:
         mode = 'a'
 
-    write_data = []
-    for elm in data:
-        write_elm = {
-            'model': model_str,
-            'fields': {}
-        }
-        for key, item in elm.items():
-            if key not in ignore_fields:
-                write_elm['fields'][key] = item
-        write_data.append(write_elm)
+    with io.StringIO() as out:
+        call_command('dumpdata', model_str, '--natural-primary', '--natural-foreign', stdout=out)
+        text = out.getvalue()
+
+    dc = json.loads(text)
+    for elm in dc:
+        if ignore_pk:
+            elm.pop('pk')
+        for key, item in elm['fields'].items():
+            if ignore_fields and key in ignore_fields:
+                elm['fields'].pop('key')
 
     with open(path, mode, encoding='utf-8') as f:
-        json.dump(write_data, f, indent=4, ensure_ascii=False)
+        json.dump(dc, f, indent=4, ensure_ascii=False)
 
 
 class TestFileView(APITestCase):
@@ -53,7 +56,7 @@ class TestFileView(APITestCase):
     def setUp(self):
         self.super_user = User.objects.create_superuser(username="TestUser", email="test@user.com", password="test")
         self.user = User.objects.create_user(username="TestUser2", email="test@user2.com", password="test")
-        self.user_3do = User.objects.create_user("test3",email="foo@baa.de", password="xxx", is_active=True)
+        self.user_3do = User.objects.create_user("test3", email="foo@baa.de", password="xxx", is_active=True)
 
         gr = Group.objects.get(name="3DO")
         self.user_3do.groups.add(gr)

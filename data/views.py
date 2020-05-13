@@ -240,15 +240,7 @@ class FileView(APIView):
             new_entry['ur_e_utm'] = ur_e_utm
             new_entry['utm_epsg'] = utm_epsg
 
-        new_entry["variables"] = []
-
-        # read variables from fiel and create if they not already exist
-        for uc2var in uc2ds.data_vars:
-            try:
-                var_id = Variable.objects.get(variable=uc2var).id
-                new_entry["variables"].append(var_id)
-            except ObjectDoesNotExist:
-                result.fatal.append("Variable " + str(uc2var) + " not present in DMS database")
+        new_entry["variables"] = uc2ds.data_vars
 
         ####
         # serialize and save

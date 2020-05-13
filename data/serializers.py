@@ -45,6 +45,10 @@ class LicenceSerializer(serializers.ModelSerializer):
 
 
 class UC2Serializer(BaseSerializer):
+    site = serializers.SlugRelatedField(slug_field='site', queryset=Site.objects.all())
+    acronym = serializers.SlugRelatedField(slug_field='acronym', queryset=Institution.objects.all())
+    variables = serializers.SlugRelatedField(slug_field='variable', queryset=Variable.objects.all(), many=True)
+
     class Meta:
         model = UC2Observation
         fields = "__all__"

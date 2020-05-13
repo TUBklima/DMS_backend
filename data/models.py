@@ -58,7 +58,9 @@ class DataFile(models.Model):
     uploader = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, default=None, null=True)
     author = models.CharField(max_length=200, default="test")
     source = models.CharField(max_length=200, default="test")
-    institution = models.CharField(max_length=200, default="Not specified")
+    institution = models.CharField(max_length=200)
+    acronym = models.ForeignKey(Institution, on_delete=models.PROTECT, to_field='acronym')
+
     licence = models.ForeignKey(License, null=False, on_delete=models.PROTECT)
     version = models.PositiveIntegerField(default=1)
     upload_date = models.DateTimeField(default=dateformat.format(timezone.now(), "Y-m-d H:i:s"))
@@ -129,10 +131,9 @@ class UC2Observation(DataFile):
     featureType = models.CharField(max_length=32)
     data_content = models.CharField(max_length=200)
     version = models.PositiveSmallIntegerField(default=1)
-    acronym = models.CharField(max_length=10)
     # spatial atts
     location = models.CharField(max_length=3)
-    site = models.CharField(max_length=12)
+    site = models.ForeignKey(Site, to_field='site', null=False, on_delete=models.PROTECT)
     origin_lon = models.FloatField(default=0.0)
     origin_lat = models.FloatField(default=0.0)
     # time atts
