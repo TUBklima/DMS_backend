@@ -249,6 +249,11 @@ class FileView(APIView):
             result.fatal.append(serializer.errors)
             return Response(result.to_dict(), status=status.HTTP_406_NOT_ACCEPTABLE)
 
+        user_in_institution_group = request.user.groups.filter(name=serializer.validated_data['acronym']).exists()
+        if not user_in_institution_group or request.user.is_superuser:
+            result.fatal.append("You are not part of the institution this file belongs to. Uploading prohibited.")
+            return Response(result.to_dict(), status=status.HTTP_403_FORBIDDEN)
+
         #  toggle old version before saving -> in case of error we don't pollute the db
         if version > 1:
             self._toggle_old_entry(standart_name, version)
@@ -293,7 +298,8 @@ class FileView(APIView):
     def _set_invalid(request):
         try:
             entry = UC2Observation.objects.get(file_standard_name=request.data['file_standard_name'])
-            if request.user == entry.uploader or request.user.is_superuser:
+            user_in_institution_group = request.user.groups.filter(name=entry.institution.acronym).exists()
+            if user_in_institution_group or request.user.is_superuser:
                 result = ApiResult()
                 data = {'is_invalid': to_bool(request.data['is_invalid'])}
                 serializer = UC2Serializer(entry, data=data, partial=True)
@@ -305,7 +311,7 @@ class FileView(APIView):
                     result.errors.extend(serializer.errors)
                     return Response(result.to_dict(), status=status.HTTP_400_BAD_REQUEST)
             else:
-                return Response(status=status.HTTP_401_UNAUTHORIZED)
+                return Response(status=status.HTTP_403_FORBIDDEN)
         except ObjectDoesNotExist:
             return Response("Object does not exist in data base.", status=status.HTTP_404_NOT_FOUND)
 

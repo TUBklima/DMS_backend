@@ -58,11 +58,15 @@ class TestFileView(APITestCase):
 
     def setUp(self):
         self.super_user = User.objects.create_superuser(username="TestUser", email="test@user.com", password="test")
-        self.user = User.objects.create_user(username="TestUser2", email="test@user2.com", password="test")
-        self.user_3do = User.objects.create_user("test3", email="foo@baa.de", password="xxx", is_active=True)
+        self.inactive_user = User.objects.create_user(username="TestUser2", email="test@user2.com", password="test")
+        self.active_user = User.objects.create_user(username="t3", email="tt@u2.de", password="test", is_active=True)
+        self.user_3do_klima = User.objects.create_user("test3", email="foo@baa.de", password="xxx", is_active=True)
 
         gr = Group.objects.get(name="3DO")
-        self.user_3do.groups.add(gr)
+        self.user_3do_klima.groups.add(gr)
+
+        gr = Group.objects.get(name="TUBklima")
+        self.user_3do_klima.groups.add(gr)
 
         self.view = views.FileView.as_view()
         self.factory = APIRequestFactory()
@@ -117,14 +121,18 @@ class TestFileView(APITestCase):
         self.assertEqual(resp.status_code, status.HTTP_406_NOT_ACCEPTABLE)
 
     def test_post_good_file(self):
-        req = self._build_post_request("good_format_file.nc", user=self.user_3do)
+        req = self._build_post_request("good_format_file.nc", user=self.active_user)
         resp = self.view(req)
+        self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN, "Uploading a file the user does "
+                                                                      "not belong to should be forbidden")
 
+        req = self._build_post_request("good_format_file.nc", user=self.user_3do_klima)
+        resp = self.view(req)
         self.assertEqual(resp.data['status'], uc2data.ResultCode.OK.value)
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED, "Should create a database entry!")
-        obj = get_objects_for_user(self.user_3do, 'view_uc2observation', klass=UC2Observation)
+        obj = get_objects_for_user(self.user_3do_klima, 'view_uc2observation', klass=UC2Observation)
         self.assertEqual(obj[0].file_standard_name, 'LTO-B-bamberger-TUBklima-plev-20150401-001.nc')
-        obj = get_objects_for_user(self.user, 'view_uc2observation', klass=UC2Observation)
+        obj = get_objects_for_user(self.inactive_user, 'view_uc2observation', klass=UC2Observation)
         self.assertFalse(obj.exists())
 
     def test_version(self):
@@ -194,9 +202,10 @@ class TestFileView(APITestCase):
 
         # unauthorized user requests
         data = {'is_invalid': val, 'file_standard_name': fname}
-        req = self._build_patch_request(data, user=self.user)
+        req = self._build_patch_request(data, user=self.active_user)
         resp = self.view(req)
-        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED, 'User is neither uploader nor superuser')
+        self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN, 'User does not belong to institution '
+                                                                      'nor is superuser')
 
         # patch wrong field requests
         # TODO: Should superuser be able to patch any field?
@@ -221,13 +230,13 @@ class TestFileView(APITestCase):
         self.assertEqual(resp.status_code, status.HTTP_200_OK, 'Search query should succeed')
         self.assertEqual(resp.data, [], "Anonymous user should not see a file licensed to 3DO")
 
-        req = self._build_get_request(data, user=self.user_3do)
+        req = self._build_get_request(data, user=self.user_3do_klima)
         resp = self.view(req)
         self.assertEqual(resp.status_code, status.HTTP_200_OK, 'Search query should succeed')
         self.assertEqual(len(resp.data), 1, "3DO user should see the object")
 
         data = {'acronym': "not_in_db"}
-        req = self._build_get_request(data, user=self.user_3do)
+        req = self._build_get_request(data, user=self.user_3do_klima)
         resp = self.view(req)
         self.assertEqual(resp.status_code, status.HTTP_200_OK, 'Search query should succeed')
         self.assertEqual(resp.data, [])
