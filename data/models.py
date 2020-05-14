@@ -64,7 +64,7 @@ class DataFile(models.Model):
 
     licence = models.ForeignKey(License, on_delete=models.PROTECT)
     version = models.PositiveIntegerField(default=1)
-    upload_date = models.DateTimeField(default=dateformat.format(timezone.now(), "Y-m-d H:i:s"))
+    upload_date = models.DateTimeField(auto_now_add=True)
     download_count = models.PositiveIntegerField(default=0)
     is_invalid = models.BooleanField(default=False)
     is_old = models.BooleanField(default=False)
