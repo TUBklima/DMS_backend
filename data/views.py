@@ -192,8 +192,6 @@ class FileView(APIView):
 
         new_entry['data_type'] = user_input['file_type']
         new_entry['file'] = request.data['file']
-        if new_entry['keywords'] == '':
-            new_entry['keywords'] = None
 
         new_entry["file_standard_name"] = standart_name
         new_entry["version"] = version
