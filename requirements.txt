@@ -4,4 +4,4 @@ djangorestframework
 mixer
 pandas
 pytest
-git+https://gitlab.klima.tu-berlin.de/klima/uc2data.git
+git+https://gitlab.klima.tu-berlin.de/klima/uc2data.git >= 0.4.0
