@@ -138,9 +138,9 @@ class UC2Observation(DataFile):
     origin_lat = models.FloatField()
     # time atts
     campaign = models.CharField(max_length=6)
-    # FIXME: These should be to datetime fields
-    creation_time = models.CharField(max_length=23)
-    origin_time = models.CharField(max_length=23)
+
+    creation_time = models.DateTimeField()
+    origin_time = models.DateTimeField()
 
     ll_lon = models.FloatField(help_text="longitude of lower left corner of bounding rectangle")
     ll_lat = models.FloatField(help_text="latitude of lower left corner of bounding rectangle")
