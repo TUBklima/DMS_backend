@@ -135,6 +135,8 @@ class TestFileView(APITestCase):
         obj = get_objects_for_user(self.inactive_user, 'view_uc2observation', klass=UC2Observation)
         self.assertFalse(obj.exists())
 
+
+
     def test_version(self):
         req = self._build_post_request("good_format_file_v2.nc")
         resp = self.view(req)
