@@ -196,7 +196,6 @@ class FileView(APIView):
         new_entry["file_standard_name"] = standart_name
         new_entry["version"] = version
 
-        new_entry["upload_date"] = dateformat.format(timezone.now(), "Y-m-d H:i:s")
         new_entry["uploader"] = request.user.pk
         new_entry["is_old"] = False
         new_entry["is_invalid"] = False
@@ -243,7 +242,6 @@ class FileView(APIView):
         ####
         # serialize and save
         ####
-
         serializer = UC2Serializer(data=new_entry)
         if not serializer.is_valid():
             result.fatal.append(serializer.errors)
