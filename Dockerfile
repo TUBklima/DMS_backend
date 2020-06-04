@@ -11,6 +11,5 @@ RUN apt update && apt -y install openssh-client git libudunits2-dev netcat-openb
 COPY . .
 RUN echo "\ngunicorn" >> requirements.txt
 # install dependencies
-RUN pip install --upgrade pip
 RUN pip install -q -r requirements.txt
 ENTRYPOINT ["/usr/src/dms_backend/entrypoint.sh"]
