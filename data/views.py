@@ -248,7 +248,7 @@ class FileView(APIView):
             return Response(result.to_dict(), status=status.HTTP_406_NOT_ACCEPTABLE)
 
         user_in_institution_group = request.user.groups.filter(name=serializer.validated_data['acronym'].acronym).exists()
-        if not user_in_institution_group or request.user.is_superuser:
+        if not user_in_institution_group and not request.user.is_superuser:
             result.fatal.append("You are not part of the institution this file belongs to. Uploading prohibited.")
             return Response(result.to_dict(), status=status.HTTP_403_FORBIDDEN)
 
