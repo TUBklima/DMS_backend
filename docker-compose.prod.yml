@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  dms_backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    command: gunicorn dms_backend.wsgi:application --bind 0.0.0.0:8000 --access-logfile  /var/log/gunicorn.log --log-level debug
+    volumes:
+      - /var/log/dms/:/var/log/
+      - /local_data/dms_backend/static:/static
+    ports:
+      - 8000:8000
+    env_file:
+      - /root/dms_backend/env.prod
+    network_mode: "host"

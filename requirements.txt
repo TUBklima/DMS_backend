@@ -1,7 +1,10 @@
 Django
-django_filters
 djangorestframework
+django-cors-headers
+django-guardian
+django-filter
 mixer
 pandas
+psycopg2-binary
 pytest
-git+https://gitlab.klima.tu-berlin.de/klima/uc2data.git >= 0.4.0
+git+https://gitlab.klima.tu-berlin.de/klima/uc2data.git
