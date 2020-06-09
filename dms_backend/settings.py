@@ -49,8 +49,27 @@ else:
             "PORT": os.environ.get("SQL_PORT"),
         }
     }
+    log_level = os.getenv('DMS_LOG_LEVEL', 'INFO')
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'file': {
+                'level': log_level,
+                'class': 'logging.FileHandler',
+                'filename': os.getenv('DMS_LOG'),
+            },
+        },
+        'loggers': {
+            'django': {
+                'handlers': ['file'],
+                'level': log_level,
+                'propagate': False,
+            },
+        },
+    }
 
-ALLOWED_HOSTS = ["dmsapi.klima.tu-berlin.de","130.149.72.77","127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["dmsapi.klima.tu-berlin.de", "130.149.72.77", "127.0.0.1", "localhost"]
 AUTH_USER_MODEL = "custom_auth.User"
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",  # default
