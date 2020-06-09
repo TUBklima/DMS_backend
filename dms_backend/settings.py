@@ -33,11 +33,12 @@ if 'DEBUG' in os.environ and bool(int(os.environ.get('DEBUG'))):
             "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
         }
     }
-
+    MEDIA_ROOT = os.path.join(BASE_DIR, "files")
 else:
     DEBUG = False
     SECRET_KEY = os.environ.get('DMS_SECRET')
     STATIC_ROOT = os.environ.get('DMS_STATIC_ROOT')
+    MEDIA_ROOT = os.environ.get('DMS_MEDIA_ROOT')
     DATABASES = {
         "default": {
             "ENGINE": os.environ.get("SQL_ENGINE"),
