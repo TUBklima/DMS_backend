@@ -9,6 +9,8 @@ ENV PYTHONUNBUFFERED 1
 RUN apt update && apt -y install openssh-client git libudunits2-dev netcat-openbsd > /dev/null
 
 COPY . .
-RUN echo "\ngunicorn" >> requirements.txt
+RUN echo "\ngunicorn" >> requirements.txt && mkdir /static
 # install dependencies
 RUN pip install -q -r requirements.txt
+
+ENTRYPOINT ["/usr/src/dms_backend/entrypoint.prod.sh"]

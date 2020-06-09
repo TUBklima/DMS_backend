@@ -37,6 +37,7 @@ if 'DEBUG' in os.environ and bool(int(os.environ.get('DEBUG'))):
 else:
     DEBUG = False
     SECRET_KEY = os.environ.get('DMS_SECRET')
+    STATIC_ROOT = os.environ.get('DMS_STATIC_ROOT')
     DATABASES = {
         "default": {
             "ENGINE": os.environ.get("SQL_ENGINE"),
@@ -48,20 +49,20 @@ else:
         }
     }
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["dmsapi.klima.tu-berlin.de","130.149.72.77","127.0.0.1", "localhost"]
 AUTH_USER_MODEL = "custom_auth.User"
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",  # default
     "guardian.backends.ObjectPermissionBackend",
 )
-
+STATIC_URL = "/static/"
 # Allow requests from localhost / frontend
-CORS_ORIGIN_ALLOW_ALL = False
-CORS_ORIGIN_WHITELIST = ["http://localhost:8080", "http://127.0.0.1:8080"]
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Even without CSRF
 CSRF_TRUSTED_ORIGINS = [
     "localhost:8080",
+    "dmsapi.klima.tu-berlin.de"
 ]
 
 # Application definition
@@ -157,12 +158,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.0/howto/static-files/
-
-STATIC_URL = "/static/"
 
 # always store files in TmpFolder. See data/views/FileView before changing. It might break !!!
 FILE_UPLOAD_HANDLERS = [
