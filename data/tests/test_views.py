@@ -1,9 +1,9 @@
 # test_views.py
 
 import os
+from django.conf import settings
 
 from django.core.handlers.wsgi import WSGIRequest
-from django.contrib.auth.models import Group, AnonymousUser
 
 
 from rest_framework import status
@@ -17,7 +17,7 @@ from guardian.shortcuts import get_objects_for_user
 
 from django.urls import reverse
 
-from dms_backend import settings
+from django.contrib.auth.models import Group, AnonymousUser
 
 import uc2data
 from pathlib import Path

@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-
 import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -71,10 +70,7 @@ else:
 
 ALLOWED_HOSTS = ["dmsapi.klima.tu-berlin.de", "130.149.72.77", "127.0.0.1", "localhost"]
 AUTH_USER_MODEL = "custom_auth.User"
-AUTHENTICATION_BACKENDS = (
-    "django.contrib.auth.backends.ModelBackend",  # default
-    "guardian.backends.ObjectPermissionBackend",
-)
+
 STATIC_URL = "/static/"
 # Allow requests from localhost / frontend
 CORS_ORIGIN_ALLOW_ALL = True
@@ -88,9 +84,9 @@ CSRF_TRUSTED_ORIGINS = [
 # Application definition
 
 INSTALLED_APPS = [
+    "django.contrib.contenttypes",
     "django.contrib.admin",
     "django.contrib.auth",
-    "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
@@ -165,6 +161,11 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
 ]
 
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",  # default
+    "guardian.backends.ObjectPermissionBackend",
+    "auth.kb_auth.KBBackend"
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
