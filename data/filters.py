@@ -4,11 +4,11 @@ from data.models import UC2Observation, Variable
 
 class UC2Filter(django_filters.FilterSet):
     acronym = django_filters.CharFilter(field_name="acronym__acronym")
+    file_standard_name = django_filters.CharFilter(field_name='file_standard_name', lookup_expr='icontains')
     class Meta:
         model = UC2Observation
         fields = {
             'data_type': ['exact'],
-            'file_standard_name': ['icontains'],
             'keywords': ['icontains'],
             'uploader': ['exact'],
             'author': ['exact'],
