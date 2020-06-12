@@ -10,9 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 import os
+from corsheaders.defaults import default_headers
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -73,12 +73,20 @@ AUTH_USER_MODEL = "custom_auth.User"
 
 STATIC_URL = "/static/"
 # Allow requests from localhost / frontend
-CORS_ORIGIN_ALLOW_ALL = True
+#  CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = [
+    "http://dms.klima.tu-berlin.de"
+]
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'Access-Control-Allow-Origin',
+]
 
 # Even without CSRF
 CSRF_TRUSTED_ORIGINS = [
     "localhost:8080",
     "dmsapi.klima.tu-berlin.de"
+    "dms.klima.tu-berlin.de"
 ]
 
 # Application definition
