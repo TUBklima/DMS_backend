@@ -73,10 +73,7 @@ AUTH_USER_MODEL = "custom_auth.User"
 
 STATIC_URL = "/static/"
 # Allow requests from localhost / frontend
-#  CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = [
-    "http://dms.klima.tu-berlin.de"
-]
+CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'Access-Control-Allow-Origin',
