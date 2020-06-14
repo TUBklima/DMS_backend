@@ -2,7 +2,7 @@ import json
 
 import uc2data
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import FileResponse
+from django.http import HttpResponse, Http404
 from django.utils import dateformat, timezone
 from django.contrib.auth.models import Group, AnonymousUser
 
@@ -393,11 +393,41 @@ class VariableView(CsvViewSet):
     queryset = Variable.objects.all()
 
 
-@action(methods=["get"], detail=True, renderer_classes=(PassthroughRenderer,))
-def download(self, *args, **kwargs):
-    instance = self.get_object()
-    file_handle = instance.file_path.open()
+#  @action(methods=["get"], detail=True, renderer_classes=(PassthroughRenderer,))
+#  def download(self, *args, **kwargs):
+#      instance = self.get_object()
+#      file_handle = instance.file_path.open()
 
-    response = FileResponse(file_handle)
+#      response = FileResponse(file_handle)
 
-    return response
+#      return response
+
+class DetailView(APIView):
+    """
+    A class to retrieve and delete single objects from the database.
+    """
+    permission_classes = (IsAuthenticatedOrGet,)
+
+    def get_object(self, id):
+        try:
+            return UC2Observation.objects.get(pk=id)
+        except UC2Observation.DoesNotExist:
+            raise Http404
+            #  return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, id):
+        obj = self.get_object(id)
+        response = HttpResponse(obj.file, content_type='multipart/form', status=status.HTTP_200_OK)
+        response['Content-Disposition'] = "attachment; filename=%s" % str(obj.file_standard_name)
+        response['Content-Length'] = obj.file.size
+        # change download_count of object
+        obj.download_count += 1
+        obj.save()
+        return response
+
+    def delete(self, request, id):
+        obj = self.get_object(id)
+        if obj.download_count != 0:
+            return Response("Download count not 0.", status=status.HTTP_403_FORBIDDEN)
+        obj.delete()
+        return Response("File deleted", status=status.HTTP_204_NO_CONTENT)

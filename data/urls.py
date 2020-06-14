@@ -15,7 +15,7 @@ urlpatterns = [
     #  path('', views.FileView.as_view(), name='uc2upload'),
     path('uc2upload/', views.FileView.as_view(), name='uc2upload'),
     path('uc2list/', views.FileView.as_view(), name='uc2list'),
-    path('download/', views.download, name='download')
+    path('uc2list/<int:id>/', views.DetailView.as_view(), name='detail')
 ]
 
 router = DefaultRouter()
