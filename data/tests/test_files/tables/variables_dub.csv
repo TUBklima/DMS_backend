@@ -1,0 +1,3 @@
+long_name	standard_name	units	variable	acronym	AMIP	deprecated	remarks
+surface albedo	surface_albedo	1	albedo_surf	TUBklima	N	N	
+albedo type classification		1	albedo_type_test	LUHimuk	N	N	
