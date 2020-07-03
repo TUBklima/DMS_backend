@@ -354,4 +354,19 @@ class TestVariableView(APITestCase):
                 }
             )
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        # test update /dublicates
 
+        testfile_path = self.file_dir / 'variables_dub.csv'
+        with open(testfile_path, 'rb') as f:
+            resp = self.client.post(
+                url,
+                data={
+                    'file': f
+                }
+            )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        count = Variable.objects.filter(long_name='surface albedo').count()
+        self.assertEqual(count, 1, 'duplicates should not be added')
+        update = list(Variable.objects.filter(long_name='albedo type classification'))
+        self.assertEqual(len(update), 2)
+        self.assertEqual(update[0].deprecated, True)

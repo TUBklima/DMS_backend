@@ -390,17 +390,8 @@ class SiteView(CsvViewSet):
 
 class VariableView(CsvViewSet):
     serializer_class = VariableCsvSerializer
-    queryset = Variable.objects.all()
+    queryset = Variable.objects.filter(deprecated=False)
 
-
-#  @action(methods=["get"], detail=True, renderer_classes=(PassthroughRenderer,))
-#  def download(self, *args, **kwargs):
-#      instance = self.get_object()
-#      file_handle = instance.file_path.open()
-
-#      response = FileResponse(file_handle)
-
-#      return response
 
 class DetailView(APIView):
     """

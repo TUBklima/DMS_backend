@@ -91,15 +91,16 @@ class Variable(models.Model):
 
     objects = VariableManger()
 
-    class Meta:
-        unique_together = ('long_name', 'variable',)
     variable = models.CharField(max_length=32)  # Is not unique because deprecate var can exist
     institution = models.ManyToManyField(Institution, blank=True)  # The institutions for which this was introduced
-    long_name = models.CharField(max_length=200, unique=True)
+    long_name = models.CharField(max_length=200)
     standard_name = models.CharField(max_length=200, blank=True, default='')
     units = models.CharField(max_length=32)
     AMIP = models.BooleanField()
+    deprecated = models.BooleanField()
     remarks = models.CharField(max_length=200, blank=True, default='')
+    introduced_at = models.DateField(auto_now_add=True)
+    deprecated_at = models.DateField(auto_now=True)
 
     def natural_key(self):
         return [self.long_name]
