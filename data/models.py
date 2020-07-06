@@ -99,8 +99,8 @@ class Variable(models.Model):
     AMIP = models.BooleanField()
     deprecated = models.BooleanField()
     remarks = models.CharField(max_length=200, blank=True, default='')
-    introduced_at = models.DateField(auto_now_add=True)
-    deprecated_at = models.DateField(auto_now=True)
+    introduced_at = models.DateField(auto_now_add=True, null=True)
+    deprecated_at = models.DateField(auto_now=True, null=True)
 
     def natural_key(self):
         return [self.long_name]
