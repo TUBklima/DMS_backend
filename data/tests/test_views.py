@@ -269,17 +269,6 @@ class TestInstitutionView(APITestCase):
 
         self.assertTrue(Group.objects.filter(name='TUBklima').exists())
 
-        new_institution_file = self.file_dir / 'with_new_inst.csv'
-        with open(new_institution_file, 'rb') as f:
-            resp = self.client.post(
-                url,
-                data={
-                    'file': f
-                }
-            )
-        self.assertEqual(resp.status_code, status.HTTP_201_CREATED, "Reposting existing data fails")
-        self.assertTrue(Institution.objects.filter(acronym='NoSe').exists())
-
     def test_list_institution(self):
         self.client.force_login(self.super_user)
         testfile_path = self.file_dir / "institutions.csv"
