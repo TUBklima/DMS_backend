@@ -136,7 +136,6 @@ class TestFileView(APITestCase):
         self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN, "Uploading a file the user does "
                                                                       "not belong to should be forbidden")
 
-
     def test_version(self):
         req = self._build_post_request("good_format_file_v2.nc")
         resp = self.view(req)

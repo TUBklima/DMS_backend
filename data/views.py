@@ -1,13 +1,12 @@
 import json
+import pkg_resources
 
 import uc2data
-from django.core.exceptions import ObjectDoesNotExist
+
 from django.http import HttpResponse, Http404
-from django.utils import dateformat, timezone
 from django.contrib.auth.models import Group, AnonymousUser
 
 from rest_framework import filters, renderers, status
-from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
@@ -17,7 +16,6 @@ from rest_framework import mixins
 
 from guardian.shortcuts import assign_perm, get_objects_for_user
 
-import csv
 
 from .filters import UC2Filter
 from .models import *
@@ -189,6 +187,17 @@ class FileView(APIView):
         for key in uc2ds.ds.attrs:
             if key in UC2Serializer().data.keys():
                 new_entry[key] = uc2ds.ds.attrs[key]
+
+
+        uc2checker_version = pkg_resources.get_distribution("uc2data").version
+        try:
+            major, minor, sub = uc2checker_version.split('.')
+        except ValueError:
+            return Response(data="internal error", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        new_entry['checkerVersionMajor'] = major
+        new_entry['checkerVersionMinor'] = minor
+        new_entry['checkerVersionSub'] = sub
 
         new_entry['data_type'] = user_input['file_type']
         new_entry['file'] = request.data['file']

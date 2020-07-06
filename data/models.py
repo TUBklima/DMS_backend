@@ -156,3 +156,6 @@ class UC2Observation(DataFile):
 
     # variables
     variables = models.ManyToManyField(Variable, related_name='datasets')
+    checkerVersionMajor = models.IntegerField()
+    checkerVersionMinor = models.IntegerField()
+    checkerVersionSub = models.IntegerField()
