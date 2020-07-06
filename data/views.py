@@ -23,6 +23,7 @@ from .serializers import *
 
 from auth.views import ActionBasedPermission, IsAuthenticatedOrPost
 
+
 class PassthroughRenderer(renderers.BaseRenderer):
     """
         Return data as-is. View should supply a Response.
@@ -161,14 +162,14 @@ class FileView(APIView):
         except Exception:
             result.fatal.append("Can not access the version attribute.")
 
-        standart_name = None
+        standard_name = None
         try:
-            standart_name = uc2ds.filename
+            standard_name = uc2ds.filename
         except Exception:
             result.fatal.append("Can not build a standart name.")
 
-        if standart_name and version:
-            version_ok, expected_version = self._is_version_valid(standart_name, version)
+        if standard_name and version:
+            version_ok, expected_version = self._is_version_valid(standard_name, version)
             if not version_ok:
                 result.errors.insert(0, "The given version number does not match the accepted version number. "
                                         "The expected version number is "+str(expected_version) + ".")
@@ -188,7 +189,6 @@ class FileView(APIView):
             if key in UC2Serializer().data.keys():
                 new_entry[key] = uc2ds.ds.attrs[key]
 
-
         uc2checker_version = pkg_resources.get_distribution("uc2data").version
         try:
             major, minor, sub = uc2checker_version.split('.')
@@ -202,7 +202,7 @@ class FileView(APIView):
         new_entry['data_type'] = user_input['file_type']
         new_entry['file'] = request.data['file']
 
-        new_entry["file_standard_name"] = standart_name
+        new_entry["file_standard_name"] = standard_name
         new_entry["version"] = version
 
         new_entry["uploader"] = request.user.pk
@@ -263,7 +263,7 @@ class FileView(APIView):
 
         #  toggle old version before saving -> in case of error we don't pollute the db
         if version > 1:
-            self._toggle_old_entry(standart_name, version)
+            self._toggle_old_entry(standard_name, version)
 
         serializer.save()
         # assign view permissions

@@ -130,6 +130,13 @@ class TestFileView(APITestCase):
         obj = get_objects_for_user(self.inactive_user, 'view_uc2observation', klass=UC2Observation)
         self.assertFalse(obj.exists())
 
+    def test_super_user_can_post(self):
+        # super_user can post all files
+        req = self._build_post_request("good_format_file.nc", user=self.super_user)
+        resp = self.view(req)
+        self.assertEqual(resp.data['status'], uc2data.ResultCode.OK.value)
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED, "Should create a database entry!")
+
     def test_institution(self):
         req = self._build_post_request("good_format_file.nc", user=self.active_user)
         resp = self.view(req)
