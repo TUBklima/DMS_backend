@@ -296,7 +296,7 @@ class FileView(APIView):
     def _set_invalid(request):
         try:
             entry = UC2Observation.objects.get(file_standard_name=request.data['file_standard_name'])
-            user_in_institution_group = request.user.groups.filter(name=entry.institution.acronym).exists()
+            user_in_institution_group = request.user.groups.filter(name=entry.acronym.acronym).exists()
             if user_in_institution_group or request.user.is_superuser:
                 result = ApiResult()
                 data = {'is_invalid': to_bool(request.data['is_invalid'])}
@@ -371,7 +371,6 @@ class CsvViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, GenericViewSet)
     def create(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data, many=True)
         if not serializer.is_valid():
-            #errors = [x for x in serializer.errors if x]
             return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
         serializer.save()
 
