@@ -54,40 +54,6 @@ class VariableSerializer(serializers.ModelSerializer):
 
 class BaseListCsvSerializer(serializers.ListSerializer):
 
-    def _many_to_many(self, key, value):
-        '''
-        Parse a given string into a list of primary keys
-        :return:
-        '''
-        mapping = self.child.Meta.many_to_many[key]
-        if 'separator' in mapping:
-            sep = mapping['separator']
-        else:
-            sep = ','
-
-        if not isinstance(value, str):
-            raise ValidationError(
-                {key: ['Must be given as string']},
-                'type')
-
-        model = mapping['model']
-        field = mapping['field']
-        ret = []
-        errors = []
-
-        for elm in value.split(sep):
-            if elm == '':
-                continue
-            try:
-                query = {field: elm.strip()}
-                obj = model.objects.get(**query)  # use dict + splash separator to dynamically query the model
-                ret.append(obj.pk)
-            except ObjectDoesNotExist:
-                errors.append('Can not find %s ' % elm)
-            except MultipleObjectsReturned:
-                errors.append('%s is not a foreign key' % elm)
-        return ret, errors
-
     def to_internal_value(self, data):
         '''
         Read a line from csv file -> split according to child definition
@@ -144,13 +110,7 @@ class BaseListCsvSerializer(serializers.ListSerializer):
                             errors.append({api_settings.NON_FIELD_ERRORS_KEY: [message]})
                             break
 
-                        if key in child_meta.many_to_many:
-                            val, err = self._many_to_many(key, raw_val)
-                            if err:
-                                errors.append({'line_%s' % c: err})
-                        else:
-                            val = raw_val
-                        new_elm[key] = val
+                        new_elm[key] = raw_val
 
                     if not ok:
                         continue  # we cannot run child validation if the line has wrong number of separators
@@ -158,10 +118,9 @@ class BaseListCsvSerializer(serializers.ListSerializer):
                     try:
                         validated = self.child.run_validation(new_elm)
                     except ValidationError as exc:
-                        errors.append(exc.detail)
+                        errors.append({'line_%s"' % c: exc.detail})
                     else:
                         ret.append(validated)
-                        errors.append({})
 
                 if any(errors):
                     raise ValidationError(errors)
@@ -202,6 +161,54 @@ class BaseCsvSerializer(serializers.ModelSerializer):
             "For all key in many to many a mapping must be defined"
         )
         super().__init__(*args, **kwargs)
+
+    def _many_to_many(self, key, value):
+        '''
+        Parse a given string into a list of primary keys
+        :return:
+        '''
+        mapping = self.Meta.many_to_many[key]
+        if 'separator' in mapping:
+            sep = mapping['separator']
+        else:
+            sep = ','
+
+        if not isinstance(value, str):
+            raise ValidationError(
+                {key: ['Must be given as string']},
+                'type')
+
+        model = mapping['model']
+        field = mapping['field']
+        ret = []
+        errors = []
+
+        for elm in value.split(sep):
+            if elm == '':
+                continue
+            try:
+                query = {field: elm.strip()}
+                obj = model.objects.get(**query)  # use dict + splash separator to dynamically query the model
+                ret.append(obj.pk)
+            except ObjectDoesNotExist:
+                errors.append('Can not find %s ' % elm)
+            except MultipleObjectsReturned:
+                errors.append('%s is not a foreign key' % elm)
+        return ret, errors
+
+    def to_internal_value(self, data):
+        many_mapping = self.Meta.many_to_many
+        errors = []
+        if many_mapping:
+            for key in many_mapping:
+                if key in data and isinstance(data[key], str):
+                    val, err = self._many_to_many(key, data[key])
+                    data[key] = val
+                    if err:
+                        errors.append(err)
+        if errors:
+            raise ValidationError(errors)
+        return super().to_internal_value(data)
 
 
 class InstitutionSerializer(BaseCsvSerializer):
