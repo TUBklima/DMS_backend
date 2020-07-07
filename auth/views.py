@@ -38,7 +38,7 @@ class UserApi(APIView):
 
         users = User.objects.all()
         f = UserFilter(request.GET, queryset=users)
-        serializer = UserSerializer(f.qs, many=True)
+        serializer = UserSerializer(f.qs, many=True, context={'request': request})
         return Response(serializer.data)
 
     def post(self, request):
