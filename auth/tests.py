@@ -17,7 +17,7 @@ class UserTest(APITestCase):
     def setUp(self):
         test_group = Group.objects.create(name="test")
 
-        User.objects.create_superuser(username='foo', email='foo@baa.de', first_name="foo",
+        self.super_user = User.objects.create_superuser(username='foo', email='foo@baa.de', first_name="foo",
                                                          last_name="baa", password="xxx")
         self.in_active_user = User.objects.create_user(username="Bob", password="Bob", email="bob@baa.de")
         self.active_user = User.objects.create_user(username="eve", password="eve", email="eve@baa.de", is_active=True)
@@ -56,6 +56,11 @@ class UserTest(APITestCase):
         url = reverse('users')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.client.force_login(self.super_user)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue('is_superuser' in response.data[0])
 
     def test_update_user(self):
         self.client.force_login(self.active_user)
