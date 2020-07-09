@@ -393,7 +393,9 @@ class CsvViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, GenericViewSet)
     def create(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data, many=True)
         if not serializer.is_valid():
-            return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
+            result = ApiResult()
+            result.fatal.extend(serializer.errors)
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=result.to_dict())
         serializer.save()
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
