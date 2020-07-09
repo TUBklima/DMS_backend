@@ -78,7 +78,7 @@ class FileView(mixins.ListModelMixin,
                GenericViewSet):
     permission_classes = (ActionBasedPermission,)
     action_permissions = {
-        IsAuthenticated: ['create','set_invalid'],
+        IsAuthenticated: ['create', 'set_invalid'],
         AllowAny: ['list']
     }
 
@@ -320,7 +320,7 @@ class FileView(mixins.ListModelMixin,
             result.errors.extend(serializer.errors)
             return Response(result.to_dict(), status=status.HTTP_400_BAD_REQUEST)
 
-    def retrive(self, request, pk=None):
+    def retrieve(self, request, pk=None):
         obj = self.get_object()
         response = HttpResponse(obj.file, content_type='multipart/form', status=status.HTTP_200_OK)
         response['Content-Disposition'] = "attachment; filename=%s" % str(obj.file_standard_name)
@@ -330,7 +330,7 @@ class FileView(mixins.ListModelMixin,
         obj.save()
         return response
 
-    def delete(self, request, pk=None):
+    def destroy(self, request, pk=None):
         obj = self.get_object()
         if obj.download_count != 0:
             return Response("Download count not 0.", status=status.HTTP_403_FORBIDDEN)
