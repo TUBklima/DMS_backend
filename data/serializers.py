@@ -16,19 +16,6 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.core.files.uploadhandler import TemporaryUploadedFile
 
 
-
-
-class BaseSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = DataFile
-        fields = (
-            "data_type",
-            "file",
-            "version",
-        )
-
-
 class LicenceSerializer(serializers.ModelSerializer):
     # TODO nicer serialisation of groups
     class Meta:
@@ -36,7 +23,7 @@ class LicenceSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class UC2Serializer(BaseSerializer):
+class UC2Serializer(serializers.ModelSerializer):
     site = serializers.SlugRelatedField(slug_field='site', queryset=Site.objects.all())
     acronym = serializers.SlugRelatedField(slug_field='acronym', queryset=Institution.objects.all())
     variables = serializers.SlugRelatedField(slug_field='variable', queryset=Variable.objects.all(), many=True)

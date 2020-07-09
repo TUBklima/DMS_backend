@@ -13,6 +13,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework import mixins
+from rest_framework.decorators import action
 
 from guardian.shortcuts import assign_perm, get_objects_for_user
 
@@ -22,19 +23,6 @@ from .models import *
 from .serializers import *
 
 from auth.views import ActionBasedPermission, IsAuthenticatedOrPost
-
-
-class PassthroughRenderer(renderers.BaseRenderer):
-    """
-        Return data as-is. View should supply a Response.
-    """
-
-    media_type = ""
-    format = ""
-
-    def render(self, data, accepted_media_type=None, renderer_context=None):
-        return data
-
 
 class ApiResult:
     def __init__(self):
@@ -86,12 +74,50 @@ class IsAuthenticatedOrGet(IsAuthenticatedOrPost):
     SAFE_METHODS = ['GET']
 
 
-class FileView(APIView):
-    permission_classes = (IsAuthenticatedOrGet,)
-    parser_classes = (MultiPartParser, FormParser)
-    filter_backends = (filters.SearchFilter,)
+class FileView(mixins.ListModelMixin,
+               GenericViewSet):
+    permission_classes = (ActionBasedPermission,)
+    action_permissions = {
+        IsAuthenticated: ['create','set_invalid'],
+        AllowAny: ['list']
+    }
 
-    def post(self, request):
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ['acronym__ge_title', 'acronym__en_title', 'acronym__acronym', 'variables__acronym',
+                     'variables__long_name', 'variables__standard_name']
+    serializer_class = UC2Serializer
+
+    def get_queryset(self):
+        """
+        Ensure that only objects with a licence matching the user are returned
+        :return:
+        """
+        license_perms = License.objects.all().select_related('view_permission')
+        license_set = set()
+        for license_perm in license_perms:
+            perm_string = license_perm.view_permission.codename
+            license_set.add(perm_string)
+
+        uc2_entries = get_objects_for_user(self.request.user, license_set, klass=UC2Observation, any_perm=True)
+        f = UC2Filter(self.request.GET, queryset=uc2_entries)
+        return f.qs
+
+    def check_object_permissions(self, request, obj):
+        if self.action in ['set_invalid', 'destroy']:
+            if self.action == 'set_invalid':
+                msg = 'Only a superuser or a member of the uploading institution can mark a file as invalid'
+            else:
+                msg = 'Only a superuser or a member of the uploading institution can delete a file'
+
+            user_in_institution_group = request.user.groups.filter(name=obj.acronym.acronym).exists()
+            if not user_in_institution_group and not request.user.is_superuser:
+                self.permission_denied(
+                    request, message=msg
+                )
+
+        super().check_object_permissions(request, obj)
+
+    def create(self, request):
 
         required_tags = {"file", "file_type"}
         possible_tags = {"ignore_errors", "ignore_warnings"}
@@ -183,11 +209,12 @@ class FileView(APIView):
         ####
         # set attributes
         ####
-
         new_entry = {}
-        for key in uc2ds.ds.attrs:
-            if key in UC2Serializer().data.keys():
-                new_entry[key] = uc2ds.ds.attrs[key]
+
+        if uc2ds.ds:
+            for key in uc2ds.ds.attrs:
+                if key in UC2Serializer().data.keys():
+                    new_entry[key] = uc2ds.ds.attrs[key]
 
         uc2checker_version = pkg_resources.get_distribution("uc2data").version
         try:
@@ -211,12 +238,13 @@ class FileView(APIView):
         new_entry["has_warnings"] = result.has_warnings
         new_entry['has_errors'] = result.has_errors
 
-        try:
-            licence = License.objects.get(full_text=new_entry['licence'])
-            new_entry['licence'] = licence.id
-        except ObjectDoesNotExist:
-            licence = None
-            result.fatal.append("No matching licence found")
+        if 'licence' in new_entry:
+            try:
+                licence = License.objects.get(full_text=new_entry['licence'])
+                new_entry['licence'] = licence.id
+            except ObjectDoesNotExist:
+                licence = None
+                result.fatal.append("No matching licence found")
 
         # Add coordinates
         lat_lon_ok = True
@@ -278,49 +306,36 @@ class FileView(APIView):
         result.result = serializer.data
         return Response(result.to_dict(), status=status.HTTP_201_CREATED)
 
-    def patch(self, request):
-        if 'is_invalid' in request.data and to_bool(request.data['is_invalid']):
-            resp = self._set_invalid(request)
-            return resp
-        return Response("Patch method not available for" + json.dumps(request.data), status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    @action(detail=True, methods=['patch'])
+    def set_invalid(self, request, pk=None):
+        entry = self.get_object()
+        result = ApiResult()
+        data = {'is_invalid': True}
+        serializer = UC2Serializer(entry, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            result.result = serializer.data
+            return Response(data=result.to_dict(), status=status.HTTP_205_RESET_CONTENT)
+        else:
+            result.errors.extend(serializer.errors)
+            return Response(result.to_dict(), status=status.HTTP_400_BAD_REQUEST)
 
-    def get(self, request):
-        '''
-        :param request:
-        :return: A json representation of search query
-        '''
+    def retrive(self, request, pk=None):
+        obj = self.get_object()
+        response = HttpResponse(obj.file, content_type='multipart/form', status=status.HTTP_200_OK)
+        response['Content-Disposition'] = "attachment; filename=%s" % str(obj.file_standard_name)
+        response['Content-Length'] = obj.file.size
+        # change download_count of object
+        obj.download_count += 1
+        obj.save()
+        return response
 
-        license_perms = License.objects.all().select_related('view_permission')
-        license_set = set()
-        for license_perm in license_perms:
-            perm_string = license_perm.view_permission.codename
-            license_set.add(perm_string)
-
-        uc2_entries = get_objects_for_user(request.user, license_set, klass=UC2Observation, any_perm=True)
-        f = UC2Filter(request.GET, queryset=uc2_entries)
-        serializer = UC2Serializer(f.qs, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    @staticmethod
-    def _set_invalid(request):
-        try:
-            entry = UC2Observation.objects.get(file_standard_name=request.data['file_standard_name'])
-            user_in_institution_group = request.user.groups.filter(name=entry.acronym.acronym).exists()
-            if user_in_institution_group or request.user.is_superuser:
-                result = ApiResult()
-                data = {'is_invalid': to_bool(request.data['is_invalid'])}
-                serializer = UC2Serializer(entry, data=data, partial=True)
-                if serializer.is_valid():
-                    serializer.save()
-                    result.result = serializer.data
-                    return Response(data=result.to_dict(), status=status.HTTP_205_RESET_CONTENT)
-                else:
-                    result.errors.extend(serializer.errors)
-                    return Response(result.to_dict(), status=status.HTTP_400_BAD_REQUEST)
-            else:
-                return Response(status=status.HTTP_403_FORBIDDEN)
-        except ObjectDoesNotExist:
-            return Response("Object does not exist in data base.", status=status.HTTP_404_NOT_FOUND)
+    def delete(self, request, pk=None):
+        obj = self.get_object()
+        if obj.download_count != 0:
+            return Response("Download count not 0.", status=status.HTTP_403_FORBIDDEN)
+        obj.delete()
+        return Response("File deleted", status=status.HTTP_204_NO_CONTENT)
 
     def _is_version_valid(self, standart_name, version):
         """
@@ -346,8 +361,6 @@ class FileView(APIView):
     def _toggle_old_entry(self, standart_name, version):
         """ Queries for previous entry with the same input (file) name and switches urns it, if found.
         Returns False if previous version of file is not in database"""
-        # FIXME: Only allow if uploaders are the same one?
-
         input_name = "-".join(standart_name.split("-")[:-1])  # ignore version in standart_name
 
         prev_entries = UC2Observation.objects.filter(file_standard_name__startswith=input_name, version=(version - 1))
@@ -399,34 +412,3 @@ class SiteView(CsvViewSet):
 class VariableView(CsvViewSet):
     serializer_class = VariableCsvSerializer
     queryset = Variable.objects.filter(deprecated=False)
-
-
-class DetailView(APIView):
-    """
-    A class to retrieve and delete single objects from the database.
-    """
-    permission_classes = (IsAuthenticatedOrGet,)
-
-    def get_object(self, id):
-        try:
-            return UC2Observation.objects.get(pk=id)
-        except UC2Observation.DoesNotExist:
-            raise Http404
-            #  return Response(status=status.HTTP_404_NOT_FOUND)
-
-    def get(self, request, id):
-        obj = self.get_object(id)
-        response = HttpResponse(obj.file, content_type='multipart/form', status=status.HTTP_200_OK)
-        response['Content-Disposition'] = "attachment; filename=%s" % str(obj.file_standard_name)
-        response['Content-Length'] = obj.file.size
-        # change download_count of object
-        obj.download_count += 1
-        obj.save()
-        return response
-
-    def delete(self, request, id):
-        obj = self.get_object(id)
-        if obj.download_count != 0:
-            return Response("Download count not 0.", status=status.HTTP_403_FORBIDDEN)
-        obj.delete()
-        return Response("File deleted", status=status.HTTP_204_NO_CONTENT)

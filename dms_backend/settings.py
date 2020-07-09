@@ -105,6 +105,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "guardian",
     "django_filters",
+    'django_extensions',
     # our stuff
     "auth.apps.AuthConfig",
 ]
