@@ -17,10 +17,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.urls import include
+from rest_framework.routers import DefaultRouter
+from data.urls import router as data_router
+from auth.urls import router as auth_router
+
 #  from data import views
+
+router = DefaultRouter()
+router.registry.extend(data_router.registry)
+router.registry.extend(auth_router.registry)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('auth/', include('auth.urls')),
-    path('', include('data.urls'))
 ]
+urlpatterns.extend(router.urls)

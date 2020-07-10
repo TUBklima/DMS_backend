@@ -1,9 +1,17 @@
-from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.decorators import api_view, action, permission_classes
+from rest_framework.viewsets import ModelViewSet, GenericViewSet, ViewSet
+
+
+from rest_framework import mixins
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny, BasePermission
+from rest_framework import parsers
+from rest_framework import filters
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+
+
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from auth.serializers import *
 from auth.models import User
 from auth.filters import UserFilter
@@ -11,38 +19,58 @@ from django.core import mail
 from auth.tokens import Actions, ActivateUserTokenGenerator
 from django.urls import reverse
 
-
-
-class IsAuthenticatedOrPost(BasePermission):
+class ActionBasedPermission(AllowAny):
     """
-    The request is authenticated as a user, or is a read-only request.
+    Grant or deny access to a view, based on a mapping in view.action_permissions
     """
-    SAFE_METHODS = ['POST']
-
     def has_permission(self, request, view):
-        if (request.method in self.SAFE_METHODS or
-            request.user and
-            request.user.is_authenticated):
-            return True
+        for klass, actions in getattr(view, 'action_permissions', {}).items():
+            if view.action in actions:
+                return klass().has_permission(request, view)
         return False
 
 
-class UserApi(APIView):
-    permission_classes = (IsAuthenticatedOrPost,)
+class AuthTokenViewSet(ViewSet):
+    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
+    serializer_class = AuthTokenSerializer
+    permission_classes = (AllowAny,)
 
-    def get(self, request):
-        '''
-        :param request:
-        :return: A json representation of all users
-        '''
+    def create(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data,
+                                           context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({'token': token.key})
 
-        users = User.objects.all()
-        f = UserFilter(request.GET, queryset=users)
-        serializer = UserSerializer(f.qs, many=True, context={'request': request})
-        return Response(serializer.data)
 
-    def post(self, request):
-        us = UserSerializer(data=request.data, context={'request': request})
+class UserApi(mixins.ListModelMixin,
+              mixins.RetrieveModelMixin,
+              mixins.UpdateModelMixin,
+              GenericViewSet):
+    permission_classes = (ActionBasedPermission,)
+    action_permissions = {
+        IsAdminUser: ['list'],
+        IsAuthenticated: ['update', 'partial_update', 'retrieve'],
+        AllowAny: ['create', 'manage_account']
+    }
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ['username', 'email']
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        f = UserFilter(self.request.GET, queryset=qs)
+        return f.qs
+
+    def check_object_permissions(self, request, obj):
+        if request.user.id != obj.id and not request.user.is_superuser:
+            self.permission_denied(request, 'Only a superuser can modify other users')
+        super().check_object_permissions(request, obj)
+
+    def create(self, request):
+        us = self.get_serializer(data=request.data, context={'request': request})
         if not us.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST, data=us.errors)
         new_user = us.save()
@@ -69,39 +97,50 @@ class UserApi(APIView):
         mail.send_mail("Account request on klima-dms",
                        "A new account was requested. The user entered the following information: \n\n"
                        + user_info + "\n" +
-                       "Click : " + bp + reverse('manageAccount',
-                                                 kwargs={'token': activate_token}) + " to accept the request. \n"
-                                                                                     "Click : " + bp + reverse(
-                           'manageAccount', kwargs={'token': decline_token}) + " to decline the request. \n",
+                       "Click : " + bp + reverse('user-manage-account',
+                                                 args=[activate_token]) + " to accept the request. \n"
+                        "Click : " + bp + reverse('user-manage-account', args=[decline_token]) + " to decline the request. \n",
                        "dms@klima.tu-berlin.de",
                        admin_mails
                        )
         return Response(status=status.HTTP_201_CREATED, data=us.data)
 
-    def patch(self, request):
-        if 'id' in request.data:
-            try:
-                user = User.objects.get(id=request.data['id'])
-            except ObjectDoesNotExist:
-                return Response(status=status.HTTP_404_NOT_FOUND, data={"Requested id not found"})
-        else:
-            user = request.user
+    @action(methods=['GET', 'POST'], detail=False, url_path='manage_account/(?P<token>[^/.]+)')
+    def manage_account(self, request, token):
+        if not token:
+            Response(status=status.HTTP_400_BAD_REQUEST)
+        gen = ActivateUserTokenGenerator()
+        valid, pk, action = gen.check_token(token)
+        if not valid:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data="Bad token")
 
-        us = UserSerializer(user, data=request.data, partial=True, context={'request': request})
-        if not us.is_valid():
-            return Response(status=status.HTTP_400_BAD_REQUEST, data=us.errors)
-        us.save()
-        return Response(us.data)
+        try:
+            user = User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-class ActionBasedPermission(AllowAny):
-    """
-    Grant or deny access to a view, based on a mapping in view.action_permissions
-    """
-    def has_permission(self, request, view):
-        for klass, actions in getattr(view, 'action_permissions', {}).items():
-            if view.action in actions:
-                return klass().has_permission(request, view)
-        return False
+        if action == Actions.ACTIVATE:
+            user.is_active = True
+            user.save()
+            us = UserSerializer(user)
+            mail.send_mail("Account activated on klima-dms",
+                           "Your account was activated. You can now login at : \n" +
+                           reverse("login-list"),
+                           "dms@klima.tu-berlin.de",
+                           [user.email]
+                           )
+            return Response(status=status.HTTP_200_OK, data=us.data)
+
+        elif action == Actions.DECLINE:
+            user_mail = user.email
+            user.delete()
+            mail.send_mail("Account request declined on klima-dms",
+                           "Your account request was declined. We are sorry for this inconvenience."
+                           "If you believe this is a mistake please get in touch with us.",
+                           "dms@klima.tu-berlin.de",
+                           [user_mail]
+                           )
+            return Response(status=status.HTTP_200_OK)
 
 
 class GroupView(ModelViewSet):
@@ -192,40 +231,4 @@ class GroupView(ModelViewSet):
             gr.user_set.remove(user_id)
         return Response(status=status.HTTP_200_OK)
 
-@api_view(['POST', 'GET'])
-@permission_classes([AllowAny])
-def manage_account(request, token):
-    if not token:
-        Response(status=status.HTTP_400_BAD_REQUEST)
-    gen = ActivateUserTokenGenerator()
-    valid, pk, action = gen.check_token(token)
-    if not valid:
-        return Response(status=status.HTTP_400_BAD_REQUEST, data="Bad token")
 
-    try:
-        user = User.objects.get(pk=pk)
-    except User.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if action == Actions.ACTIVATE:
-        user.is_active = True
-        user.save()
-        us = UserSerializer(user)
-        mail.send_mail("Account activated on klima-dms",
-                       "Your account was activated. You can now login at : \n" +
-                       reverse("login"),
-                       "dms@klima.tu-berlin.de",
-                       [user.email]
-        )
-        return Response(status=status.HTTP_200_OK, data=us.data)
-
-    elif action == Actions.DECLINE:
-        user_mail = user.email
-        user.delete()
-        mail.send_mail("Account request declined on klima-dms",
-                       "Your account request was declined. We are sorry for this inconvenience."
-                       "If you believe this is a mistake please get in touch with us.",
-                       "dms@klima.tu-berlin.de",
-                       [user_mail]
-                       )
-        return Response(status=status.HTTP_200_OK)

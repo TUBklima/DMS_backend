@@ -22,7 +22,7 @@ from .filters import UC2Filter
 from .models import *
 from .serializers import *
 
-from auth.views import ActionBasedPermission, IsAuthenticatedOrPost
+from auth.views import ActionBasedPermission
 
 class ApiResult:
     def __init__(self):
@@ -68,10 +68,6 @@ def to_bool(input):
         return False
     else:
         raise ValueError
-
-
-class IsAuthenticatedOrGet(IsAuthenticatedOrPost):
-    SAFE_METHODS = ['GET']
 
 
 class FileView(mixins.ListModelMixin,
