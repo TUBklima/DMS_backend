@@ -105,7 +105,7 @@ class BaseListCsvSerializer(serializers.ListSerializer):
                     try:
                         validated = self.child.run_validation(new_elm)
                     except ValidationError as exc:
-                        errors.append({'line_%s"' % c: exc.detail})
+                        errors.append({'line_%s' % c: exc.detail})
                     else:
                         ret.append(validated)
 
