@@ -243,6 +243,15 @@ class TestInstitutionView(APITestCase):
 
         self.assertTrue(Group.objects.filter(name='TUBklima').exists())
 
+        with open(testfile_path, 'rb') as f:
+            resp = self.client.post(
+                url,
+                data={
+                    'file': f
+                }
+            )
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_list_institution(self):
         self.client.force_login(self.super_user)
         testfile_path = self.file_dir / "institutions.csv"
