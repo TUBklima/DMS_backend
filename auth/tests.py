@@ -29,7 +29,7 @@ class UserTest(APITestCase):
 
         :return: None
         """
-        url = reverse("login")
+        url = reverse("login-list")
         response = self.client.get(url)
         # must use post to send data
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
@@ -39,23 +39,25 @@ class UserTest(APITestCase):
                                         'password': 'xxx'
                                     }),
                                     content_type='application/json')
-        user = User.objects.get(username='foo')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue('token' in response.data)
+        # user = User.objects.get(username='foo')
         # TODO: fill with test values from kb
-        user.password = 'xx'
-        user.save()
-        response = self.client.post(url,
-                                    data=json.dumps({
-                                        'username': 'foo',
-                                        'password': 'asdasd'
-                                    }),
-                                    content_type='application/json')
+        # user.password = 'xx'
+        # user.save()
+        # response = self.client.post(url,
+        #                            data=json.dumps({
+        #                                'username': 'foo',
+        #                                'password': 'asdasd'
+        #                            }),
+        #                            content_type='application/json')
         # self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_list_users(self):
         self.client.force_login(self.active_user)
-        url = reverse('users')
+        url = reverse('user-list')
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         self.client.force_login(self.super_user)
         response = self.client.get(url)
@@ -64,7 +66,7 @@ class UserTest(APITestCase):
 
     def test_update_user(self):
         self.client.force_login(self.active_user)
-        url = reverse('users')
+        url = reverse('user-detail', args=[self.active_user.id])
         response = self.client.patch(url,
                                    data=json.dumps({
                                        'first_name': "xxx"
@@ -75,11 +77,18 @@ class UserTest(APITestCase):
         self.assertEqual(u.first_name, "xxx")
 
     def test_filter_users(self):
-        self.client.force_login(self.active_user)
-        url = reverse('users')
+        self.client.force_login(self.super_user)
+        url = reverse('user-list')
         response = self.client.get(url+"?username=foo")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0]['username'], 'foo')
+
+    def test_retrive_user(self):
+        self.client.force_login(self.active_user)
+        url = reverse('user-detail', args=[self.active_user.id])
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['username'], 'eve')
 
     def test_default_is_not_active(self):
         bob = User.objects.get(username='Bob')
@@ -88,7 +97,7 @@ class UserTest(APITestCase):
         self.assertTrue(foo.is_active, msg="New superusers are active by default") # otherwise we could never lock in the first time
 
     def test_account_request(self):
-        url = reverse("requestAccount")
+        url = reverse("user-list")
         response = self.client.post(url,
                                     data=json.dumps({
                                         'username': 'balu',
@@ -130,10 +139,9 @@ class UserTest(APITestCase):
                                     content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-
     def test_account_decline(self):
 
-        url = reverse("requestAccount")
+        url = reverse("user-list")
         response = self.client.post(url,
                         data=json.dumps({
                             'username': 'evil',

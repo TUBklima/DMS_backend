@@ -61,68 +61,71 @@ class TestFileView(APITestCase):
         self.inactive_user = User.objects.create_user(username="TestUser2", email="test@user2.com", password="test")
         self.active_user = User.objects.create_user(username="t3", email="tt@u2.de", password="test", is_active=True)
         self.user_3do_klima = User.objects.create_user("test3", email="foo@baa.de", password="xxx", is_active=True)
+        self.user_3do = User.objects.create_user("test4", email="foo2@baa.de", password="xxx", is_active=True)
 
         gr = Group.objects.get(name="3DO")
         self.user_3do_klima.groups.add(gr)
+        self.user_3do.groups.add(gr)
 
         gr = Group.objects.get(name="TUBklima")
         self.user_3do_klima.groups.add(gr)
 
-        self.view = views.FileView.as_view()
+        #self.view = views.FileView.as_view()
         self.factory = APIRequestFactory()
 
-    def _build_post_request(self, filename, user=None, ignore_warnings=None, ignore_errors=None):
+    def _login_user(self, user=None):
+        if user and user.is_anonymous:
+            self.client.logout()
+            return
+        if user:
+            self.client.force_login(user)
+        else:
+            self.client.force_login(self.super_user)
+
+    def post_request(self, filename, user=None, ignore_warnings=None, ignore_errors=None):
+        self._login_user(user=user)
         testfile_path = self.file_dir / Path(filename)
         data = {'file_type': 'UC2'}
         if ignore_warnings:
             data['ignore_warnings'] = ignore_warnings
         if ignore_errors:
             data['ignore_errors'] = ignore_errors
+
         with open(testfile_path, "rb") as testfile:
             data['file'] = testfile
-            req = self.factory.post(
-                "/uc2upload/",
+            url = reverse('file-list')
+
+            resp = self.client.post(
+                url,
                 data=data
             )
-        if user:
-            req.user = user
-        else:
-            req.user = self.super_user
-        return req
 
-    def _build_patch_request(self, data, user=None):
-        req = self.factory.patch(
-            "/uc2upload/",
-            data=data
+        return resp
+
+    def patch_request(self, data, user=None):
+        self._login_user(user=user)
+        url = reverse('file-set-invalid', args=[data['id']])
+        resp = self.client.patch(
+            url
         )
-        if user:
-            req.user = user
-        else:
-            req.user = self.super_user
-        return req
+        return resp
 
-    def _build_get_request(self, data, user=None):
-        req = self.factory.get("/uc2upload/", data=data)
-        if user:
-            req.user = user
-        else:
-            req.user = self.super_user
-        return req
+    def get_request(self, data, user=None):
+        self._login_user(user=user)
+        url = reverse('file-list')
+        return self.client.get(url, data=data)
 
     def test_that_authentication_is_required(self):
-        assert self.client.post("/uc2upload/").status_code == status.HTTP_401_UNAUTHORIZED
+        resp = self.post_request("good_format_file.nc", user=AnonymousUser)
+        assert resp.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_post_bad_file(self):
-
-        req = self._build_post_request("bad_format_file.nc", ignore_errors=False, ignore_warnings=False)
-        resp = self.view(req)
-
+        resp = self.post_request("bad_format_file.nc", ignore_errors=False, ignore_warnings=False)
         self.assertEqual(resp.data['status'], uc2data.ResultCode.FATAL.value, "uc2check should result in errors")
         self.assertEqual(resp.status_code, status.HTTP_406_NOT_ACCEPTABLE)
 
     def test_post_good_file(self):
-        req = self._build_post_request("good_format_file.nc", user=self.user_3do_klima)
-        resp = self.view(req)
+        resp = self.post_request("good_format_file.nc", user=self.user_3do_klima)
         self.assertEqual(resp.data['status'], uc2data.ResultCode.OK.value)
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED, "Should create a database entry!")
         obj = get_objects_for_user(self.user_3do_klima, 'view_uc2observation', klass=UC2Observation)
@@ -132,34 +135,28 @@ class TestFileView(APITestCase):
 
     def test_super_user_can_post(self):
         # super_user can post all files
-        req = self._build_post_request("good_format_file.nc", user=self.super_user)
-        resp = self.view(req)
+        resp = self.post_request("good_format_file.nc", user=self.super_user)
         self.assertEqual(resp.data['status'], uc2data.ResultCode.OK.value)
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED, "Should create a database entry!")
 
     def test_institution(self):
-        req = self._build_post_request("good_format_file.nc", user=self.active_user)
-        resp = self.view(req)
+        resp = self.post_request("good_format_file.nc", user=self.active_user)
         self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN, "Uploading a file the user does "
                                                                       "not belong to should be forbidden")
 
     def test_version(self):
-        req = self._build_post_request("good_format_file_v2.nc")
-        resp = self.view(req)
-
+        resp = self.post_request("good_format_file_v2.nc")
         self.assertEqual(resp.data['status'], uc2data.ResultCode.ERROR.value)
         self.assertEqual(resp.status_code, status.HTTP_406_NOT_ACCEPTABLE, "Version 2 with no version 1 should be an error")
 
-        req = self._build_post_request("good_format_file.nc")
-        resp = self.view(req)
+        resp = self.post_request("good_format_file.nc")
         self.assertEqual(resp.data['status'], uc2data.ResultCode.OK.value)
 
-        req2 = self._build_post_request("good_format_file.nc")
-        resp2 = self.view(req2)
+        resp2 = self.post_request("good_format_file.nc")
+
         self.assertEqual(resp2.status_code, status.HTTP_406_NOT_ACCEPTABLE, "Posting the same version again is an error")
 
-        req = self._build_post_request("good_format_file_v2.nc")
-        resp = self.view(req)
+        resp = self.post_request("good_format_file_v2.nc")
 
         self.assertEqual(resp.data['status'], uc2data.ResultCode.OK.value)
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED, "V1 exist so we can upload v2")
@@ -182,45 +179,17 @@ class TestFileView(APITestCase):
         entry = UC2Observation.objects.get(file_standard_name=fname)
         self.assertFalse(entry.is_invalid, "Entry should not be invalid before update")
 
-        # false patch requests
-        for val in ["0", 0, False, "False", "FALSE", "no"]:
-            data = {'is_invalid': val, 'file_standard_name': fname}
-            req = self._build_patch_request(data)
-            resp = self.view(req)
-            self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED, 'Patch method should not be available for this data')
-            entry = UC2Observation.objects.get(file_standard_name=fname)
-            self.assertFalse(entry.is_invalid, "Entry should still be invalid")
-
-        data = {'is_invalid': val, 'file_standard_name': fname}
-        req = self._build_patch_request(data)
-        resp = self.view(req)
-        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED,
-                         'Patch method should not be available with this request')
+        data = {'id': entry.pk}
+        resp = self.patch_request(data)
+        self.assertEqual(resp.status_code, status.HTTP_205_RESET_CONTENT, 'Should update content')
         entry = UC2Observation.objects.get(file_standard_name=fname)
-        self.assertFalse(entry.is_invalid, "Entry should still be valid")
-
-        # correct patch requests
-        for val in ["1", 1, True, "True", "TRUE", "yes"]:
-            data = {'is_invalid': val, 'file_standard_name': fname}
-            req = self._build_patch_request(data)
-            resp = self.view(req)
-            self.assertEqual(resp.status_code, status.HTTP_205_RESET_CONTENT, 'Should update content')
-            entry = UC2Observation.objects.get(file_standard_name=fname)
-            self.assertTrue(entry.is_invalid, "Entry should be invalid")
+        self.assertTrue(entry.is_invalid, "Entry should be invalid")
 
         # unauthorized user requests
-        data = {'is_invalid': val, 'file_standard_name': fname}
-        req = self._build_patch_request(data, user=self.active_user)
-        resp = self.view(req)
+        data = {'id': entry.pk}
+        resp = self.patch_request(data, user=self.user_3do)
         self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN, 'User does not belong to institution '
                                                                       'nor is superuser')
-
-        # patch wrong field requests
-        # TODO: Should superuser be able to patch any field?
-        data = {'acronym': val, 'file_standard_name': fname}
-        req = self._build_patch_request(data)
-        resp = self.view(req)
-        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED, 'Method should only is_invalid should be patchable')
 
     def test_get(self):
         #  check if data base has entries
@@ -233,21 +202,20 @@ class TestFileView(APITestCase):
 
         # query one field
         data = {'acronym': uc2ds.ds.acronym}
-        req = self._build_get_request(data, user=AnonymousUser)
-        resp = self.view(req)
+        resp = self.get_request(data, user=AnonymousUser)
+
         self.assertEqual(resp.status_code, status.HTTP_200_OK, 'Search query should succeed')
         self.assertEqual(resp.data, [], "Anonymous user should not see a file licensed to 3DO")
 
-        req = self._build_get_request(data, user=self.user_3do_klima)
-        resp = self.view(req)
+        resp = self.get_request(data, user=self.user_3do_klima)
+
         self.assertEqual(resp.status_code, status.HTTP_200_OK, 'Search query should succeed')
         self.assertEqual(len(resp.data), 1, "3DO user should see the object")
 
         data = {'acronym': "not_in_db"}
-        req = self._build_get_request(data, user=self.user_3do_klima)
-        resp = self.view(req)
+        resp = self.get_request(data, user=self.user_3do_klima)
         self.assertEqual(resp.status_code, status.HTTP_200_OK, 'Search query should succeed')
-        self.assertEqual(resp.data, [])
+        self.assertEqual(resp.data, [], "not in db should be empty")
 
 
 class TestInstitutionView(APITestCase):
@@ -274,6 +242,15 @@ class TestInstitutionView(APITestCase):
         self.assertTrue(Institution.objects.filter(acronym='TUBklima').exists())
 
         self.assertTrue(Group.objects.filter(name='TUBklima').exists())
+
+        with open(testfile_path, 'rb') as f:
+            resp = self.client.post(
+                url,
+                data={
+                    'file': f
+                }
+            )
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_list_institution(self):
         self.client.force_login(self.super_user)
