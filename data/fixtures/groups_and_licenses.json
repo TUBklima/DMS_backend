@@ -1,4 +1,10 @@
 [
+    {
+    "model": "auth.group",
+    "fields": {
+      "name": "users"
+    }
+  },
   {
     "model": "auth.group",
     "fields": {
