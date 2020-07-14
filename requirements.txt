@@ -3,6 +3,7 @@ djangorestframework
 django-cors-headers
 django-guardian
 django-filter
+django-extensions
 mixer
 pandas
 psycopg2-binary
