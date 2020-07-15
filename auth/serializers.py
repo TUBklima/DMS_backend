@@ -7,10 +7,9 @@ from django.db.models import Q
 
 User = get_user_model()
 
+
 class IdSerializer(serializers.Serializer):
     id = serializers.IntegerField()
-
-
 
 
 class GroupSerializer(serializers.ModelSerializer):

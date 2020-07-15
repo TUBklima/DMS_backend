@@ -41,7 +41,10 @@ class AuthTokenViewSet(ViewSet):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key})
+        us = UserSerializer(user)
+        resp = us.data
+        resp['token'] = token.key
+        return Response(resp)
 
 
 class UserApi(mixins.ListModelMixin,
@@ -61,8 +64,8 @@ class UserApi(mixins.ListModelMixin,
 
     def get_queryset(self):
         qs = super().get_queryset()
-        f = UserFilter(self.request.GET, queryset=qs)
-        return f.qs
+        qs = UserFilter(self.request.GET, queryset=qs).qs
+        return qs
 
     def check_object_permissions(self, request, obj):
         if request.user.id != obj.id and not request.user.is_superuser:
