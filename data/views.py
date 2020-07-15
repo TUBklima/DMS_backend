@@ -228,7 +228,7 @@ class FileView(mixins.ListModelMixin,
         new_entry["file_standard_name"] = standard_name
         new_entry["version"] = version
 
-        new_entry["uploader"] = request.user.pk
+        new_entry["uploader"] = request.user.username
         new_entry["is_old"] = False
         new_entry["is_invalid"] = False
         new_entry["has_warnings"] = result.has_warnings
@@ -236,11 +236,14 @@ class FileView(mixins.ListModelMixin,
 
         if 'licence' in new_entry:
             try:
-                licence = License.objects.get(full_text=new_entry['licence'])
-                new_entry['licence'] = licence.id
+                i_licence = License.objects.get(full_text=new_entry['licence'])
+                new_entry['licence'] = i_licence.short_name
             except ObjectDoesNotExist:
-                licence = None
+                i_licence = None
                 result.fatal.append("No matching licence found")
+        else:
+            i_licence = License.objects.get(short_name='empty')
+            new_entry['licence'] = i_licence.short_name
 
         # Add coordinates
         lat_lon_ok = True
@@ -291,13 +294,13 @@ class FileView(mixins.ListModelMixin,
 
         serializer.save()
         # assign view permissions
-        if licence.public:
-            assign_perm(licence.view_permission, AnonymousUser(), serializer.instance)
+        if i_licence.public:
+            assign_perm(i_licence.view_permission, AnonymousUser(), serializer.instance)
             default_gr = Group.objects.get(name='users')
-            assign_perm(licence.view_permission, default_gr, serializer.instance)
+            assign_perm(i_licence.view_permission, default_gr, serializer.instance)
         else:
-            for gr in licence.view_groups.all():
-                assign_perm(licence.view_permission, gr, serializer.instance)
+            for gr in i_licence.view_groups.all():
+                assign_perm(i_licence.view_permission, gr, serializer.instance)
 
         result.result = serializer.data
         return Response(result.to_dict(), status=status.HTTP_201_CREATED)

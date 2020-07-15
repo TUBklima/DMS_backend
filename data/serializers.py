@@ -10,6 +10,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.settings import api_settings
 from rest_framework.utils import  model_meta
 from data.models import *
+from auth.models import User
 
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
@@ -27,6 +28,8 @@ class UC2Serializer(serializers.ModelSerializer):
     site = serializers.SlugRelatedField(slug_field='site', queryset=Site.objects.all())
     acronym = serializers.SlugRelatedField(slug_field='acronym', queryset=Institution.objects.all())
     variables = serializers.SlugRelatedField(slug_field='variable', queryset=Variable.objects.all(), many=True)
+    uploader = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())
+    licence = serializers.SlugRelatedField(slug_field='short_name', queryset=License.objects.all())
 
     class Meta:
         model = UC2Observation
