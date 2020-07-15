@@ -267,6 +267,7 @@ class TestInstitutionView(APITestCase):
         self.assertTrue(Institution.objects.filter(acronym='TUBklima').exists())
 
         url = reverse('institution-list')
+        url += '?limit=5'
         resp = self.client.get(url)
         self.assertGreater(len(resp.data), 0)
 

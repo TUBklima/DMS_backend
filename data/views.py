@@ -3,15 +3,14 @@ import pkg_resources
 
 import uc2data
 
-from django.http import HttpResponse, Http404
-from django.contrib.auth.models import Group, AnonymousUser
+from django.http import HttpResponse
+from django.contrib.auth.models import  AnonymousUser
 
-from rest_framework import filters, renderers, status
-from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework import filters, status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import mixins
 from rest_framework.decorators import action
 
@@ -72,6 +71,7 @@ def to_bool(input):
 
 class FileView(mixins.ListModelMixin,
                GenericViewSet):
+    pagination_class = LimitOffsetPagination
     permission_classes = (ActionBasedPermission,)
     action_permissions = {
         IsAuthenticated: ['create', 'set_invalid', 'destroy'],
@@ -402,6 +402,7 @@ class CsvViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, GenericViewSet)
 
 
 class InstitutionView(CsvViewSet):
+    pagination_class = LimitOffsetPagination
     serializer_class = InstitutionSerializer
     queryset = Institution.objects.all()
 
@@ -412,5 +413,6 @@ class SiteView(CsvViewSet):
 
 
 class VariableView(CsvViewSet):
+
     serializer_class = VariableCsvSerializer
     queryset = Variable.objects.filter(deprecated=False)
