@@ -74,14 +74,15 @@ class FileView(mixins.ListModelMixin,
                GenericViewSet):
     permission_classes = (ActionBasedPermission,)
     action_permissions = {
-        IsAuthenticated: ['create', 'set_invalid'],
-        AllowAny: ['list']
+        IsAuthenticated: ['create', 'set_invalid', 'destroy'],
+        AllowAny: ['list', 'retrieve']
     }
 
     filter_backends = (filters.SearchFilter,)
     search_fields = ['acronym__ge_title', 'acronym__en_title', 'acronym__acronym', 'variables__acronym',
                      'variables__long_name', 'variables__standard_name']
     serializer_class = UC2Serializer
+
 
     def get_queryset(self):
         """
