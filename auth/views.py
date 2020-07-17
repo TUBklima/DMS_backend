@@ -152,7 +152,8 @@ class GroupView(ModelViewSet):
     permission_classes = (ActionBasedPermission,)
     action_permissions = {
         IsAdminUser: ['update', 'partial_update', 'destroy', 'create', 'add_users', 'set_users', 'remove_users'],
-        IsAuthenticated: ['list', 'retrieve']
+        IsAuthenticated: ['retrieve'],
+        AllowAny: ['list']
     }
 
     def _get_user_by_request(self, data):
