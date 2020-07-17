@@ -43,6 +43,10 @@ class AuthTokenViewSet(ViewSet):
         token, created = Token.objects.get_or_create(user=user)
         us = UserSerializer(user)
         resp = us.data
+        # The UserSerializer only looks for the user in request however, the request to auth has no user
+        # Instead of adding a special case or a parameter to the Serializer we fix it here
+        if user.is_superuser:
+            resp['is_superuser'] = True
         resp['token'] = token.key
         return Response(resp)
 
