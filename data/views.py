@@ -80,7 +80,7 @@ class FileView(mixins.ListModelMixin,
 
     filter_backends = (filters.SearchFilter,)
     search_fields = ['acronym__ge_title', 'acronym__en_title', 'acronym__acronym', 'variables__variable',
-                     'variables__long_name', 'variables__standard_name', 'ile_standard_name']
+                     'variables__long_name', 'variables__standard_name', 'file_standard_name']
     serializer_class = UC2Serializer
 
 
