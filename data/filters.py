@@ -17,7 +17,7 @@ class UC2Filter(django_filters.FilterSet):
             'uploader': ['exact'],
             'author': ['exact'],
             'source': ['exact'],
-            'institution': ['icontains'],
+            'institution': ['exact'],
             'is_invalid': ['exact'],
             'is_old': ['exact'],
             'version': ['exact', 'gt', 'lt'],
