@@ -73,6 +73,7 @@ class TestFileView(APITestCase):
         #self.view = views.FileView.as_view()
         self.factory = APIRequestFactory()
 
+
     def _login_user(self, user=None):
         if user and user.is_anonymous:
             self.client.logout()
@@ -118,6 +119,15 @@ class TestFileView(APITestCase):
     def test_that_authentication_is_required(self):
         resp = self.post_request("good_format_file.nc", user=AnonymousUser)
         assert resp.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_user_institution(self):
+        url = reverse('user-list')
+        self.client.force_login(self.super_user)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        for user in response.data:
+            if user['username'] == 'test3':
+                self.assertEqual(user['institutions'], ['TUBklima'])
 
     def test_post_bad_file(self):
         resp = self.post_request("bad_format_file.nc", ignore_errors=False, ignore_warnings=False)

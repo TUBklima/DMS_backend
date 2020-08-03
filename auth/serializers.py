@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
+from data.models import Institution
 
 User = get_user_model()
 
@@ -24,11 +25,12 @@ class GroupSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     superuser_fields = ['is_superuser', 'is_active']
     groups = GroupSerializer(many=True, write_only=False, required=False)
+    institutions = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = ['id', 'username', 'first_name', 'last_name', 'email', 'is_superuser', 'phone_number', 'is_active',
-                  'password', 'groups']
+                  'password', 'groups', 'institutions']
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -45,6 +47,13 @@ class UserSerializer(serializers.ModelSerializer):
         if not self.is_superuser:
             for field in UserSerializer.superuser_fields:
                 self.fields.pop(field)  # removing fields is easier than adding
+
+    def get_institutions(self, obj):
+        groups = obj.groups.all().values_list('name', flat=True)
+        if groups:
+            return list(Institution.objects.filter(acronym__in=groups).values_list('acronym', flat=True))
+        else:
+            return []
 
     def create(self, validated_data):
         user_groups = None
