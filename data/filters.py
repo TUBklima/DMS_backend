@@ -3,7 +3,7 @@ from data.models import UC2Observation, Variable
 
 
 class UC2Filter(django_filters.FilterSet):
-    acronym = django_filters.CharFilter(field_name="acronym__acronym")
+    acronym = django_filters.CharFilter(field_name="acronym__acronym", lookup_expr='icontains')
     file_standard_name = django_filters.CharFilter(field_name='file_standard_name', lookup_expr='icontains')
     upload_date = django_filters.DateFromToRangeFilter()
     creation_time = django_filters.DateFromToRangeFilter()
