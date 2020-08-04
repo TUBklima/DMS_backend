@@ -1,4 +1,4 @@
-import django_filters
+import django_filters.rest_framework as django_filters
 from data.models import UC2Observation, Variable
 
 

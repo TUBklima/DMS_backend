@@ -14,6 +14,8 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import mixins
 from rest_framework.decorators import action
 
+from django_filters import rest_framework as dj_filters
+
 from guardian.shortcuts import assign_perm, get_objects_for_user
 
 
@@ -78,13 +80,15 @@ class FileView(mixins.ListModelMixin,
         AllowAny: ['list', 'retrieve']
     }
 
-    filter_backends = (filters.SearchFilter,)
+    filter_backends = (filters.SearchFilter, dj_filters.DjangoFilterBackend)
+    filter_class = UC2Filter
     search_fields = [
                      'site__site', 'site__address',
                      'acronym__ge_title', 'acronym__en_title', 'acronym__acronym',  #institution
                      'variables__variable', 'variables__long_name', 'variables__standard_name',
                      'file_standard_name', 'keywords', 'author', 'source', 'data_content'
                      ]
+
     serializer_class = UC2Serializer
 
 
@@ -99,9 +103,9 @@ class FileView(mixins.ListModelMixin,
             perm_string = license_perm.view_permission.codename
             license_set.add(perm_string)
 
+        # license
         uc2_entries = get_objects_for_user(self.request.user, license_set, klass=UC2Observation, any_perm=True)
-        f = UC2Filter(self.request.GET, queryset=uc2_entries)
-        return f.qs
+        return uc2_entries
 
     def check_object_permissions(self, request, obj):
         if self.action in ['set_invalid', 'destroy']:
