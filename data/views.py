@@ -80,8 +80,8 @@ class FileView(mixins.ListModelMixin,
         AllowAny: ['list', 'retrieve']
     }
 
-    filter_backends = (filters.SearchFilter,)
-    #filter_class = UC2Filter
+    filter_backends = (filters.SearchFilter, dj_filters.DjangoFilterBackend)
+    filter_class = UC2Filter
     search_fields = [
                      'site__site', 'site__address',
                      'acronym__ge_title', 'acronym__en_title', 'acronym__acronym',  #institution
@@ -105,8 +105,7 @@ class FileView(mixins.ListModelMixin,
 
         # license
         uc2_entries = get_objects_for_user(self.request.user, license_set, klass=UC2Observation, any_perm=True)
-        f = UC2Filter(self.request.GET, queryset=uc2_entries)
-        return f.qs
+        return uc2_entries
 
     def check_object_permissions(self, request, obj):
         if self.action in ['set_invalid', 'destroy']:
