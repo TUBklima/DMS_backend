@@ -205,7 +205,7 @@ class FileView(mixins.ListModelMixin,
             return Response(data=result.to_dict(), status=status.HTTP_406_NOT_ACCEPTABLE)
 
         if result.has_warnings and not ignore_warnings:
-            return Response(data=result.to_dict(), status=status.HTTP_300_MULTIPLE_CHOICES)
+            return Response(data=result.to_dict(), status=status.HTTP_406_NOT_ACCEPTABLE)
 
         ####
         # set attributes
