@@ -33,8 +33,10 @@ if 'DEBUG' in os.environ and bool(int(os.environ.get('DEBUG'))):
         }
     }
     MEDIA_ROOT = os.path.join(BASE_DIR, "files")
+    STATIC_URL = "/static/"
 else:
     DEBUG = False
+    STATIC_URL = "/"
     SECRET_KEY = os.environ.get('DMS_SECRET')
     STATIC_ROOT = os.environ.get('DMS_STATIC_ROOT')
     MEDIA_ROOT = os.environ.get('DMS_MEDIA_ROOT')
@@ -71,7 +73,6 @@ else:
 ALLOWED_HOSTS = ["dmsapi.klima.tu-berlin.de", "130.149.72.77", "127.0.0.1", "localhost"]
 AUTH_USER_MODEL = "custom_auth.User"
 
-STATIC_URL = "/static/"
 # Allow requests from localhost / frontend
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
