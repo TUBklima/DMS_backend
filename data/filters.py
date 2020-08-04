@@ -1,13 +1,27 @@
-import django_filters.rest_framework as django_filters
+import django_filters.rest_framework as drf_filter
 from data.models import UC2Observation, Variable
 
 
-class UC2Filter(django_filters.FilterSet):
-    acronym = django_filters.CharFilter(field_name="acronym__acronym", lookup_expr='icontains')
-    file_standard_name = django_filters.CharFilter(field_name='file_standard_name', lookup_expr='icontains')
-    upload_date = django_filters.DateFromToRangeFilter()
-    creation_time = django_filters.DateFromToRangeFilter()
-    origin_time = django_filters.DateFromToRangeFilter()
+class ListFilter(drf_filter.BaseCSVFilter, drf_filter.CharFilter):
+    def filter(self, qs, value):
+        if not value:
+            return qs
+        base = None
+        for v in value:
+            if not base:
+                base = super().filter(qs, v)
+            else:
+                base.union(super().filter(qs, v))
+        return base
+
+
+class UC2Filter(drf_filter.FilterSet):
+    acronym = ListFilter(field_name="acronym__acronym", lookup_expr='icontains')
+
+    file_standard_name = drf_filter.CharFilter(field_name='file_standard_name', lookup_expr='icontains')
+    upload_date = drf_filter.DateFromToRangeFilter()
+    creation_time = drf_filter.DateFromToRangeFilter()
+    origin_time = drf_filter.DateFromToRangeFilter()
 
     class Meta:
         model = UC2Observation

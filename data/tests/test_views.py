@@ -213,20 +213,20 @@ class TestFileView(APITestCase):
         # query one field
         data = {'acronym': uc2ds.ds.acronym}
         resp = self.get_request(data, user=AnonymousUser)
-
         self.assertEqual(resp.status_code, status.HTTP_200_OK, 'Search query should succeed')
         self.assertEqual(resp.data, [], "Anonymous user should not see a file licensed to 3DO")
 
+        data = {'acronym': uc2ds.ds.acronym + ',not_in'}
         resp = self.get_request(data, user=self.user_3do_klima)
-
         self.assertEqual(resp.status_code, status.HTTP_200_OK, 'Search query should succeed')
-        self.assertEqual(len(resp.data), 1, "3DO user should see the object")
+        self.assertEqual(len(resp.data), 1, "Should find object with or")
 
         data = {'acronym': "not_in_db"}
         resp = self.get_request(data, user=self.user_3do_klima)
         self.assertEqual(resp.status_code, status.HTTP_200_OK, 'Search query should succeed')
         self.assertEqual(resp.data, [], "not in db should be empty")
 
+        data = {'acronym': "not_in_db"}
 
 class TestInstitutionView(APITestCase):
     file_dir = Path(__file__).parent / "test_files" / "tables"
