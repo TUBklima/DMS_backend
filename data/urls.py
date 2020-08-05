@@ -12,4 +12,5 @@ router.register(r'data/file', views.FileView, basename='file')
 router.register(r'data/institution', views.InstitutionView, basename='institution')
 router.register(r'data/site', views.SiteView, basename='site')
 router.register(r'data/variable', views.VariableView, basename='variable')
+router.register(r'data/license', views.LicenseView, basename='license')
 
