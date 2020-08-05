@@ -29,6 +29,8 @@ if 'DEBUG' in os.environ and bool(int(os.environ.get('DEBUG'))):
             "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
         }
     }
+    EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+    EMAIL_FILE_PATH = os.path.join(BASE_DIR, "files", 'mails')
     MEDIA_ROOT = os.path.join(BASE_DIR, "files")
     STATIC_URL = "/static/"
 else:
