@@ -14,9 +14,6 @@ from corsheaders.defaults import default_headers
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
-
 # we must turn on debug settings explicit production is default
 # one might think to use to_bool from data.views but that adds a
 # well hidden circular dependency. Resulting in the informative error
@@ -36,10 +33,14 @@ if 'DEBUG' in os.environ and bool(int(os.environ.get('DEBUG'))):
     STATIC_URL = "/static/"
 else:
     DEBUG = False
-    STATIC_URL = "/"
     SECRET_KEY = os.environ.get('DMS_SECRET')
+
+    # File path settings
+    STATIC_URL = "/"
     STATIC_ROOT = os.environ.get('DMS_STATIC_ROOT')
     MEDIA_ROOT = os.environ.get('DMS_MEDIA_ROOT')
+
+    # Database setup
     DATABASES = {
         "default": {
             "ENGINE": os.environ.get("SQL_ENGINE"),
@@ -50,6 +51,14 @@ else:
             "PORT": os.environ.get("SQL_PORT"),
         }
     }
+    # email settings
+    EMAIL_HOST = 'exchange.tu-berlin.de'
+    EMAIL_USE_TLS = True
+    EMAIL_PORT = 587
+    EMAIL_HOST_USER = 'svc-dmsbot@win.tu-berlin.de'
+    EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASSWORD")
+
+    # Logging settings
     log_level = os.getenv('DMS_LOG_LEVEL', 'INFO')
     LOGGING = {
         'version': 1,
