@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ModelViewSet, GenericViewSet, ViewSet
-
+from dms_backend.settings import PASSWORD_RESET_BASE
 
 from rest_framework import mixins
 from rest_framework.decorators import action
@@ -16,8 +16,14 @@ from auth.serializers import *
 from auth.models import User
 from auth.filters import UserFilter
 from django.core import mail
-from auth.tokens import Actions, ActivateUserTokenGenerator
+from auth.tokens import Actions, ActivateUserTokenGenerator, UserPasswordResetTokenGenerator
 from django.urls import reverse
+
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
+from django.views.decorators.debug import sensitive_post_parameters
+
+
 
 class ActionBasedPermission(AllowAny):
     """
@@ -59,7 +65,7 @@ class UserApi(mixins.ListModelMixin,
     action_permissions = {
         IsAdminUser: ['list'],
         IsAuthenticated: ['update', 'partial_update', 'retrieve'],
-        AllowAny: ['create', 'manage_account']
+        AllowAny: ['create', 'manage_account', 'request_pw_reset', 'reset_pw']
     }
     serializer_class = UserSerializer
     queryset = User.objects.all()
@@ -81,7 +87,7 @@ class UserApi(mixins.ListModelMixin,
         if not us.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST, data=us.errors)
         new_user = us.save()
-        mail.send_mail("Account request on klima-dms",
+        mail.send_mail("Account request on dms.klima.tu-berlin.de",
                        "Your account was created successfully and is waiting for activation by an administrator.",
                        "dms@klima.tu-berlin.de",
                        [new_user.email]
@@ -101,13 +107,13 @@ class UserApi(mixins.ListModelMixin,
             user_info += "\t" + str(key) + ":" + str(value) + "\n"
 
         bp = request.build_absolute_uri('/')
-        mail.send_mail("Account request on klima-dms",
+        mail.send_mail("Account request on dms.klima.tu-berlin.de",
                        "A new account was requested. The user entered the following information: \n\n"
                        + user_info + "\n" +
                        "Click : " + bp + reverse('user-manage-account',
                                                  args=[activate_token]) + " to accept the request. \n"
                         "Click : " + bp + reverse('user-manage-account', args=[decline_token]) + " to decline the request. \n",
-                       "dms@klima.tu-berlin.de",
+                       "noreply@klima.tu-berlin.de",
                        admin_mails
                        )
         return Response(status=status.HTTP_201_CREATED, data=us.data)
@@ -119,35 +125,83 @@ class UserApi(mixins.ListModelMixin,
         gen = ActivateUserTokenGenerator()
         valid, pk, action = gen.check_token(token)
         if not valid:
-            return Response(status=status.HTTP_400_BAD_REQUEST, data="Bad token")
+            return Response(status=status.HTTP_400_BAD_REQUEST, data="Malformed token")
 
         try:
             user = User.objects.get(pk=pk)
-        except User.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist, ValidationError):
+            return Response(status=status.HTTP_400_BAD_REQUEST, data="Malformed token")
+
+        # get adminmails to inform them the request was resolved. Exclude current admin because he/she already knows
+        admin_mails = User.objects.filter(is_superuser=True).exclude(pk=request.user.pk).values_list('email', flat=True)
 
         if action == Actions.ACTIVATE:
             user.is_active = True
             user.save()
             us = UserSerializer(user)
-            mail.send_mail("Account activated on klima-dms",
+            mail.send_mail("Account activated on dms.klima.tu-berlin.de",
                            "Your account was activated. You can now login at : \n" +
                            reverse("login-list"),
-                           "dms@klima.tu-berlin.de",
+                           "noreply@klima.tu-berlin.de",
                            [user.email]
                            )
+            mail.send_mail("Account request for "+user.username+" resolved",
+                           "Access was granted by " + request.user.username,
+                           "noreply@klima.tu-berlin.de",
+                           admin_mails)
+
             return Response(status=status.HTTP_200_OK, data=us.data)
 
         elif action == Actions.DECLINE:
             user_mail = user.email
             user.delete()
-            mail.send_mail("Account request declined on klima-dms",
+            mail.send_mail("Account request declined on dms.klima.tu-berlin.de",
                            "Your account request was declined. We are sorry for this inconvenience."
                            "If you believe this is a mistake please get in touch with us.",
-                           "dms@klima.tu-berlin.de",
+                           "noreply@klima.tu-berlin.de",
                            [user_mail]
                            )
+
+            mail.send_mail("Account request for "+user.username+" resolved",
+                           "Access was declined by " + request.user.username,
+                           "noreply@klima.tu-berlin.de",
+                           admin_mails)
             return Response(status=status.HTTP_200_OK)
+
+    @action(methods=['GET', 'POST'], detail=False)
+    @method_decorator(never_cache)
+    def request_pw_reset(self, request):
+        if 'userid' not in request.data:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data='Request is expected to have a "userid" '
+                                                                     'field containing an username or email')
+        try:
+            user = User.objects.get(Q(username=request.data['userid']) | Q(email=request.data['userid']))
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND, data='The given userid does not exists')
+
+        token_generator = UserPasswordResetTokenGenerator()
+        token = token_generator.make_token(user)
+
+        mail.send_mail('Password reset on dms.klima.tu-berlin.de',
+                       'A password reset for your account on https://dms.klima.tu-berlin.de was requested. \n'
+                       'To reset your password visit ' + PASSWORD_RESET_BASE + token + '\n',
+                       "noreply@klima.tu-berlin.de",
+                       [user.email])
+        return Response(status=status.HTTP_200_OK)
+
+    @action(methods=['POST'], detail=False, url_path='reset_pw/(?P<token>[^/.]+)')
+    @method_decorator(never_cache)
+    def reset_pw(self, request, token):
+        if 'new_password' not in request.data:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data="Missing 'new_password' field")
+
+        token_generator = UserPasswordResetTokenGenerator()
+        token_ok, user = token_generator.check_user_token(token)
+        if token_ok:
+            user.set_password(request.data['new_password'])
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data="Malformed token")
 
 
 class GroupView(ModelViewSet):

@@ -81,6 +81,7 @@ else:
         },
     }
 
+PASSWORD_RESET_BASE = 'https://dms.klima.tu-berlin.de/'
 ALLOWED_HOSTS = ["dmsapi.klima.tu-berlin.de", "130.149.72.77", "127.0.0.1", "localhost"]
 AUTH_USER_MODEL = "custom_auth.User"
 
