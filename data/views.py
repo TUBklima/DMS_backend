@@ -186,6 +186,8 @@ class FileView(mixins.ListModelMixin,
         result.errors.extend(check_result['root']['ERROR'])
         result.warnings.extend(check_result['root']['WARNING'])
 
+        new_entry = {}
+
         # We don't add errors here because it is already checked by th uc2checker
         version = None
         try:
@@ -201,20 +203,19 @@ class FileView(mixins.ListModelMixin,
 
         if standard_name and version:
             version_ok, expected_version = self._is_version_valid(standard_name, version)
-            if not version_ok:
+            if version_ok:
+                new_entry["file_standard_name"] = standard_name
+                new_entry["version"] = version
+            else:
                 result.errors.insert(0, "The given version number does not match the accepted version number. "
                                         "The expected version number is "+str(expected_version) + ".")
 
-        if result.has_errors and not ignore_errors:
-            return Response(data=result.to_dict(), status=status.HTTP_406_NOT_ACCEPTABLE)
 
-        if result.has_warnings and not ignore_warnings:
-            return Response(data=result.to_dict(), status=status.HTTP_300_MULTIPLE_CHOICES)
+
 
         ####
         # set attributes
         ####
-        new_entry = {}
 
         if uc2ds.ds:
             for key in uc2ds.ds.attrs:
@@ -233,9 +234,6 @@ class FileView(mixins.ListModelMixin,
 
         new_entry['data_type'] = user_input['file_type']
         new_entry['file'] = request.data['file']
-
-        new_entry["file_standard_name"] = standard_name
-        new_entry["version"] = version
 
         new_entry["uploader"] = request.user.username
         new_entry["is_old"] = False
@@ -285,17 +283,34 @@ class FileView(mixins.ListModelMixin,
         new_entry["variables"] = uc2ds.data_vars
 
         ####
-        # serialize and save
+        # serialize, check errors, warning, fatal and save
         ####
         serializer = UC2Serializer(data=new_entry)
+
         if not serializer.is_valid():
             result.fatal.append(serializer.errors)
-            return Response(result.to_dict(), status=status.HTTP_406_NOT_ACCEPTABLE)
 
-        user_in_institution_group = request.user.groups.filter(name=serializer.validated_data['acronym'].acronym).exists()
-        if not user_in_institution_group and not request.user.is_superuser:
-            result.fatal.append("You are not part of the institution this file belongs to. Uploading prohibited.")
-            return Response(result.to_dict(), status=status.HTTP_403_FORBIDDEN)
+        try:
+            user_in_institution_group = request.user.groups.filter(
+                name=serializer.validated_data['acronym'].acronym).exists()
+            if not user_in_institution_group and not request.user.is_superuser:
+                result.fatal.append("You are not part of the institution this file belongs to. Uploading prohibited.")
+                return Response(result.to_dict(), status=status.HTTP_403_FORBIDDEN)
+
+        except (KeyError, AttributeError):
+            if serializer.is_valid:
+                result.fatal.append("Can not access 'acronym' field on validated data")
+            else:
+                pass  # we already have fatal errors which cause this to happen
+
+        if result.has_warnings and not ignore_warnings:
+            return Response(data=result.to_dict(), status=status.HTTP_300_MULTIPLE_CHOICES)
+
+        if result.has_errors and not ignore_errors:
+            return Response(data=result.to_dict(), status=status.HTTP_406_NOT_ACCEPTABLE)
+
+        if result.has_fatal:
+            return Response(data=result.to_dict(), status=status.HTTP_406_NOT_ACCEPTABLE)
 
         #  toggle old version before saving -> in case of error we don't pollute the db
         if version > 1:
