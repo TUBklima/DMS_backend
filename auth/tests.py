@@ -96,6 +96,39 @@ class UserTest(APITestCase):
         foo = User.objects.get(username='foo')
         self.assertTrue(foo.is_active, msg="New superusers are active by default") # otherwise we could never lock in the first time
 
+    def test_pw_reset(self):
+        url = reverse('user-request-pw-reset')
+
+        response = self.client.post(url,
+                                    data=json.dumps({
+                                        'userid': 'foo'
+                                    }),
+                                    content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(len(mail.outbox), 1)
+        mail_text = mail.outbox[0].body
+        token = re.search('https://(.*?/)([^/.]+)', mail_text).groups()[1].strip()
+
+        url = reverse('user-reset-pw', args=['sdfasdffad'])
+        response = self.client.post(url,
+                                    data={'new_password': 'test'})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        url = reverse('user-reset-pw', args=[token])
+        response = self.client.post(url,
+                                    data={'new_password': 'test'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        url = reverse('user-request-pw-reset')
+        response = self.client.post(url,
+                                    data=json.dumps({
+                                        'userid': 'balu'
+                                    }),
+                                    content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
     def test_account_request(self):
         url = reverse("user-list")
         response = self.client.post(url,

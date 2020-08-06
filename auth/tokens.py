@@ -4,8 +4,10 @@ from django.conf import settings
 from django.utils.crypto import constant_time_compare, salted_hmac
 from django.utils.http import base36_to_int, int_to_base36, urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.contrib.auth import get_user_model
 from enum import Enum
 
+User = get_user_model()
 
 class Actions(Enum):
     ACTIVATE = 0
@@ -91,3 +93,32 @@ class ActivateUserTokenGenerator(PasswordResetTokenGenerator):
         each token is only used once. However, the actions we take here are a lot less sensitive the password reset.
         """
         return str(user_pk) + str(action.value) + str(timestamp)
+
+
+class UserPasswordResetTokenGenerator(PasswordResetTokenGenerator):
+    """In contrast to the base implementation this includes the user pk in the token"""
+
+    def make_token(self, user):
+        token = super().make_token(user)
+        # add user information to token
+        pk_byte = str(user.pk).encode('UTF-8')
+        pk_b64 = urlsafe_base64_encode(pk_byte)
+        token = pk_b64 + '-' + token
+        return token
+
+    def check_user_token(self, token):
+        try:
+            pk_b64, token = token.split("-", 1)
+        except ValueError:
+            return False, None
+
+        pk = urlsafe_base64_decode(pk_b64).decode("UTF-8")
+        try:
+            user = User.objects.get(pk=pk)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            return False, None
+
+        if super().check_token(user, token):
+            return True, user
+
+        return False, None

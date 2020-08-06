@@ -156,7 +156,7 @@ class TestFileView(APITestCase):
 
     def test_version(self):
         resp = self.post_request("good_format_file_v2.nc")
-        self.assertEqual(resp.data['status'], uc2data.ResultCode.ERROR.value)
+        self.assertEqual(resp.data['status'], uc2data.ResultCode.FATAL.value)
         self.assertEqual(resp.status_code, status.HTTP_406_NOT_ACCEPTABLE, "Version 2 with no version 1 should be an error")
 
         resp = self.post_request("good_format_file.nc")
