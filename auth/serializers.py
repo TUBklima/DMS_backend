@@ -56,9 +56,7 @@ class UserSerializer(serializers.ModelSerializer):
             return []
 
     def create(self, validated_data):
-        user_groups = None
-        if 'groups' in validated_data:
-            user_groups = validated_data.pop('groups')
+        user_groups = validated_data.pop('groups', None)
         new_user = User.objects.create_user(**validated_data)
 
         if user_groups:
@@ -78,12 +76,17 @@ class UserSerializer(serializers.ModelSerializer):
                 query |= Q(name=name)
             update_groups = list(Group.objects.filter(query))
 
+        update_pw = validated_data.pop('password', None)
+
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
 
         if update_groups is not None:
             instance.groups.set(update_groups)
+        if update_pw is not None:
+            instance.set_password(update_pw)
         instance.save()
+
         return instance
 
 
